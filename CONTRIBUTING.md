@@ -13,9 +13,10 @@ Thanks for your interest in contributing! Arness is open source (MIT) and welcom
 1. Fork and clone the repository
 2. Create a feature branch
 3. Make your changes following the [plugin conventions](docs/contributing.md)
-4. Test locally: `claude --plugin-dir plugins/arn-spark` (or `arn-code`, `arn-infra`)
-5. Bump the version in the affected plugin's `plugin.json` and `marketplace.json`
-6. Submit a PR with a clear description of what changed and why
+4. Run repository validation: `python3 tools/validate_arness.py` or `make test`
+5. Test locally: `claude --plugin-dir plugins/arn-spark` (or `arn-code`, `arn-infra`)
+6. Bump the version in the affected plugin's `plugin.json` and `marketplace.json`
+7. Submit a PR with a clear description of what changed and why
 
 ## Code of Conduct
 
