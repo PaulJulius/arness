@@ -467,9 +467,9 @@ Write to `<plans-dir>/SWIFT_<name>/SWIFT_<name>.md`. Present it to the user.
 
 Wait for approval. If the user adjusts, update the plan and re-present.
 
-#### 3. Create Claude Code tasks
+#### 3. Create host tasks or a Codex task map
 
-Create tasks via TaskCreate (one per task in the plan). Wire dependencies so test tasks depend on implementation tasks.
+When host task APIs are available, create tasks via TaskCreate (one per task in the plan). Wire dependencies so test tasks depend on implementation tasks. In Codex fallback mode, keep the same task sequence in the session plan or a file-backed task map and execute from that source.
 
 #### 4. Execute tasks
 

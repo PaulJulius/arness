@@ -9,7 +9,7 @@ sidebar:
 
 When you have a backlog of features ready to build, the batch pipeline plans and implements them in parallel — each feature in its own isolated Git worktree, each with its own PR. Inspired by the recently announced Claude Code batch capabilities, Arness extends the concept with batch-merge for automated PR conflict resolution and batch-simplify for cross-feature deduplication after merge.
 
-Examples use Claude Code slash syntax. In Codex, prompt with the same skill names, for example `codex "arn-code-batch-planning"` or `codex "arn-code-batch-merge"`.
+Examples show host-neutral skill names. In Claude Code, invoke them with a slash prefix; in Codex, prompt with the same skill names, for example `codex "arn-code-batch-planning"` or `codex "arn-code-batch-merge"`.
 
 ## When to Use Batch
 
@@ -22,7 +22,7 @@ Examples use Claude Code slash syntax. In Codex, prompt with the same skill name
 ### 1. Batch Planning
 
 ```
-/arn-code-batch-planning
+arn-code-batch-planning
 ```
 
 Batch planning takes multiple features and specs them in parallel:
@@ -37,7 +37,7 @@ Features with dependencies are sequenced automatically — independent features 
 ### 2. Batch Implementation
 
 ```
-/arn-code-batch-implement
+arn-code-batch-implement
 ```
 
 Each planned feature gets its own background agent running in a separate Git worktree:
@@ -50,7 +50,7 @@ Each planned feature gets its own background agent running in a separate Git wor
 ### 3. Batch Merge
 
 ```
-/arn-code-batch-merge
+arn-code-batch-merge
 ```
 
 When implementation PRs are ready:
@@ -63,7 +63,7 @@ When implementation PRs are ready:
 ### 4. Batch Simplify
 
 ```
-/arn-code-batch-simplify
+arn-code-batch-simplify
 ```
 
 After merging multiple features:
@@ -77,15 +77,15 @@ After merging multiple features:
 Starting with a Spark feature backlog containing 5 features:
 
 ```
-/arn-code-batch-planning          # Specs and plans all 5 features
+arn-code-batch-planning          # Specs and plans all 5 features
                                    # 3 are independent, 2 have dependencies
 
-/arn-code-batch-implement          # 3 independent features build in parallel
+arn-code-batch-implement          # 3 independent features build in parallel
                                    # 2 dependent features queue behind their blockers
 
-/arn-code-batch-merge              # Merges all 5 PRs in dependency order
+arn-code-batch-merge              # Merges all 5 PRs in dependency order
 
-/arn-code-batch-simplify           # Finds and consolidates cross-feature duplication
+arn-code-batch-simplify           # Finds and consolidates cross-feature duplication
 ```
 
 ## Tips

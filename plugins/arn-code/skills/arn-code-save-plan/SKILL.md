@@ -211,7 +211,7 @@ List all created files with their paths.
 
 **Next steps:**
 - Optionally run `arn-code-review-plan` to validate the plan before execution
-- Run `arn-code-taskify` to convert TASKS.md into a Claude Code task list
+- Run `arn-code-taskify` to convert TASKS.md into host tasks or a Codex-compatible file-backed task map
 
 ## Output Structure
 

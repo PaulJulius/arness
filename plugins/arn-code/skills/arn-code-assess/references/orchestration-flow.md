@@ -14,7 +14,7 @@ State transitions:
 - `pending` → `specced`: After `arn-code-feature-spec` writes the spec file
 - `specced` → `planned`: After `arn-code-plan` writes the plan preview
 - `planned` → `saved`: After `arn-code-save-plan` creates the project folder
-- `saved` → `taskified`: After `arn-code-taskify` creates the Claude task list
+- `saved` → `taskified`: After `arn-code-taskify` creates host tasks or a Codex-compatible file-backed task map
 - `taskified` → `executing`: When `arn-code-execute-plan` begins
 - `executing` → `executed`: After execution completes
 - Any state → `skipped`: If the user chooses to skip during conflict resolution

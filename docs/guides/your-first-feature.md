@@ -9,6 +9,8 @@ sidebar:
 
 This guide walks through building a feature from scratch using Arness Code. You'll go from a one-sentence idea to a shipped PR.
 
+Examples show host-neutral skill names. In Claude Code, invoke them with a slash prefix; in Codex, prompt with the same skill name.
+
 ## Prerequisites
 
 - Arness Code installed in Claude Code: `/plugin install arn-code@arn-marketplace`
@@ -17,7 +19,7 @@ This guide walks through building a feature from scratch using Arness Code. You'
 ## Step 1: Start Planning
 
 ```
-/arn-planning
+arn-planning
 ```
 
 In Codex, use the same skill name in your prompt:
@@ -56,7 +58,7 @@ You review the plan and approve, adjust, or request changes.
 ## Step 4: Execute
 
 ```
-/arn-implementing
+arn-implementing
 ```
 
 In Codex:
@@ -72,7 +74,7 @@ After execution, a simplification pass looks for optimization opportunities, and
 ## Step 5: Ship
 
 ```
-/arn-shipping
+arn-shipping
 ```
 
 In Codex:
@@ -88,7 +90,7 @@ Arness commits, pushes, and creates a PR with a structured description that refe
 If reviewers leave comments:
 
 ```
-/arn-reviewing-pr
+arn-reviewing-pr
 ```
 
 In Codex:
@@ -113,9 +115,9 @@ A new team member reading these artifacts can understand the entire feature — 
 
 ## Tips
 
-- **Skip any step** — every stage has a skip option. If you already have a plan, jump to `/arn-implementing`.
+- **Skip any step** — every stage has a skip option. If you already have a plan, jump to `arn-implementing`.
 - **Change ceremony mid-stream** — if a feature turns out more complex than expected, you can escalate from swift to standard or thorough.
-- **Use `/arn-code-help`** — if you lose track of where you are in the pipeline, this skill detects your state and suggests the next step.
+- **Use `arn-code-help`** — if you lose track of where you are in the pipeline, this skill detects your state and suggests the next step.
 
 ## Next Steps
 

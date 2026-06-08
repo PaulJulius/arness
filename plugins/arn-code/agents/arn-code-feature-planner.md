@@ -195,16 +195,16 @@ Spec: <specs-dir>/<spec-filename>
 ## Next Steps
 
 After this plan is approved:
-1. Run `/arn-code-save-plan` to convert this plan into a structured project with phased implementation and testing plans
-2. Optionally run `/arn-code-review-plan` to validate the structured plan
-3. Run `/arn-code-taskify` to create a task list
+1. Run `arn-code-save-plan` to convert this plan into a structured project with phased implementation and testing plans
+2. Optionally run `arn-code-review-plan` to validate the structured plan
+3. Run `arn-code-taskify` to create a task list
 4. Execute the tasks:
-   - `/arn-code-execute-plan` — sequential execution with review gates
-   - `/arn-code-execute-plan-teams` — parallel execution with Agent Teams (higher cost)
-   - `/arn-code-execute-task` — execute a single task at a time
-5. Run `/arn-code-review-implementation` to validate the implementation
-6. Run `/arn-code-document-project` to generate developer documentation
-7. Run `/arn-code-ship` to commit, push, and create a pull request
+   - `arn-code-execute-plan` — sequential execution with review gates
+   - `arn-code-execute-plan-teams` — parallel execution with Agent Teams (higher cost)
+   - `arn-code-execute-task` — execute a single task at a time
+5. Run `arn-code-review-implementation` to validate the implementation
+6. Run `arn-code-document-project` to generate developer documentation
+7. Run `arn-code-ship` to commit, push, and create a pull request
 ```
 
 ### 5. Verify and Report

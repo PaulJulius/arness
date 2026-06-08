@@ -205,7 +205,7 @@ Present the final status to the user:
 - **If errors remain**: "Plan still has N errors — fix before proceeding."
 
 Offer the next step:
-- "Would you like to proceed to `arn-code-taskify` to create the Claude Code task list?"
+- "Would you like to proceed to `arn-code-taskify` to create host tasks or a Codex-compatible file-backed task map?"
 - If yes — run `arn-code-taskify` with the same `PROJECT_NAME`
 
 ## Error Handling

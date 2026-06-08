@@ -5,8 +5,8 @@ description: >-
   "run plan teams", "execute with agent teams", "team execution",
   "execute plan with agent teams instead of subagents", "teams mode",
   "agent teams mode", "execute with teams",
-  or wants to execute a structured project plan using Claude Code's
-  experimental Agent Teams feature. Creates a team of executor, reviewer,
+  or wants to execute a structured project plan using host Agent Teams support
+  (currently Claude Code's experimental Agent Teams feature). Creates a team of executor, reviewer,
   and architect teammates that collaborate on task implementation with
   built-in quality gates. Requires the experimental Agent Teams feature
   to be enabled. For standard subagent-based execution, use
@@ -16,7 +16,7 @@ version: 0.3.0
 
 # Arness Execute Plan Teams
 
-Execute a structured project plan using Claude Code's experimental Agent Teams feature. Creates a coordinated team of executor, reviewer, and architect teammates that work together on task implementation. Each task goes through an implement->review->gate cycle within the team.
+Execute a structured project plan using host Agent Teams support, currently Claude Code's experimental Agent Teams feature. Creates a coordinated team of executor, reviewer, and architect teammates that work together on task implementation. Each task goes through an implement->review->gate cycle within the team.
 
 Pipeline position:
 ```
@@ -29,6 +29,8 @@ This is an alternative to `arn-code-execute-plan` (subagent-based). Use this whe
 - You're working on a complex multi-phase project where quality gates matter most
 - You accept 3-7x higher token usage for better coordination
 
+**Host compatibility:** This mode requires both Agent Teams and host task APIs (`TaskList`, `TaskCreate`, `TaskUpdate`). In Codex or any host without those APIs, route to `arn-code-execute-plan`, which can execute from `TASKS.md` and `PROGRESS_TRACKER.json` without Agent Teams.
+
 ## Prerequisites
 
 If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it. Task list must exist (run `arn-code-taskify` first).
@@ -40,7 +42,7 @@ If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "A
 Run via Bash: `echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
 
 **If the variable is not set, is empty, or is set to "0" or "false":**
-Inform the user: "This skill requires Claude Code's experimental Agent Teams feature."
+Inform the user: "This skill requires host Agent Teams support. In Claude Code, that is the experimental Agent Teams feature."
 
 Provide setup instructions:
 - Add to `~/.claude/settings.json` under `"env"`:
@@ -143,7 +145,7 @@ Team composition:
 
 ### Step 4: Structure the Shared Task List
 
-For each existing task in the Claude Code task list, create a corresponding REVIEW task:
+For each existing task in the host task list, create a corresponding REVIEW task:
 
 For Task N (already in task list):
 1. Rename/annotate as `IMPL-N: [original description]` if needed for clarity
@@ -205,7 +207,7 @@ This is automatic and non-blocking. If the refresh fails, note it in the summary
 - **Agent Teams not enabled** -- provide setup instructions, suggest `arn-code-execute-plan` as alternative
 - **`## Arness` config missing in CLAUDE.md** -- suggest running `arn-implementing` to get started
 - **Project directory missing** -- suggest running `arn-code-save-plan` to create the project structure
-- **No tasks in TaskList** -- suggest running `arn-code-taskify` to convert TASKS.md into tasks
+- **No tasks in TaskList** -- suggest running `arn-code-taskify` to convert TASKS.md into host tasks, or use `arn-code-execute-plan` in Codex fallback mode
 - **Teammate crashes** -- lead reports issue, suggests retrying the failed task or falling back to subagent mode (`arn-code-execute-plan`)
 - **Teammates deadlocked** -- lead intervenes with clarifying message, breaks the cycle
 - **Executor and reviewer stuck in fix loop (>2 cycles)** -- lead escalates to user with findings

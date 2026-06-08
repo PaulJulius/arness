@@ -212,7 +212,7 @@ arn-code-review-plan
 
 arn-code-taskify
   inputs: TASKS.md from project directory
-  outputs: Claude Code task list with dependencies (via TaskCreate/TaskUpdate)
+  outputs: host task list with dependencies when task APIs are available, or a Codex-compatible file-backed task map
   consumed by: arn-code-execute-plan, arn-code-execute-task, arn-code-execute-plan-teams
 
 arn-code-execute-plan / arn-code-execute-plan-teams / arn-code-execute-task
