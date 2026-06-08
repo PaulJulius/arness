@@ -15,6 +15,8 @@ Arness Code is the development pipeline that treats AI-assisted coding like engi
 
 Most developers never need to think about individual skills. These five entry points detect what you need and chain the right steps together.
 
+In Claude Code, invoke them as slash commands. In Codex, install with `codex plugin add arn-code@arn-marketplace`, then prompt with the same name in plain language, for example `codex "arn-planning add rate limiting"` or `codex "arn-code-help"`.
+
 | Entry Point | What it does |
 |---|---|
 | `/arn-planning` | Start a new feature or bug fix. Scope router that detects complexity and routes through the appropriate ceremony tier (swift, standard, or thorough). Chains through spec, plan, save, review, and taskify. |
@@ -169,7 +171,7 @@ For full skill details including parameters and examples, see [Arness Code Skill
 
 ## Agents at Work
 
-Arness Code includes 16 specialist agents that handle different aspects of the pipeline. The **architect** develops specifications through iterative conversation. The **feature-planner** and **planner** translate specs into actionable plans. **Task-executor** agents run in parallel batches to implement tasks, with **task-reviewer** agents validating each batch before the next begins. The **codebase-analyzer** and **pattern-architect** ground every decision in your project's actual code and conventions. The **investigator** and **bug-fixer** handle diagnosis and repair. **Security-specialist**, **ux-specialist**, and **test-specialist** provide domain-specific review. The **batch-analyzer** and **batch-pr-analyzer** power the multi-feature parallel pipeline. The **sketch-builder** generates UI previews, and the **doctor** diagnoses pipeline issues.
+Arness Code includes 17 specialist agents that handle different aspects of the pipeline. The **architect** develops specifications through iterative conversation. The **feature-planner**, **planner**, and **drift-detector** keep specs and plans aligned with the current codebase. **Task-executor** agents run in parallel batches to implement tasks, with **task-reviewer** agents validating each batch before the next begins. The **codebase-analyzer** and **pattern-architect** ground every decision in your project's actual code and conventions. The **investigator** and **bug-fixer** handle diagnosis and repair. **Security-specialist**, **ux-specialist**, and **test-specialist** provide domain-specific review. The **batch-analyzer** and **batch-pr-analyzer** power the multi-feature parallel pipeline. The **sketch-builder** generates UI previews, and the **doctor** diagnoses pipeline issues.
 
 For full agent details, see [Arness Code Agents Reference](../reference/arn-code-agents.md).
 

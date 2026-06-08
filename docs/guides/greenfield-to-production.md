@@ -9,6 +9,8 @@ sidebar:
 
 This guide walks through the complete Arness lifecycle — from a raw product idea to a deployed application. It uses all three plugins: Spark for discovery, Code for development, and Infra for deployment.
 
+Examples use Claude Code slash syntax. In Codex, install the same plugins with `codex plugin add ...`, then prompt with the same skill names, for example `codex "arn-brainstorming a field service scheduling app"` or `codex "arn-infra-wizard"`.
+
 ## Phase 1: Spark — From Idea to Validated Concept
 
 ### Start the Journey

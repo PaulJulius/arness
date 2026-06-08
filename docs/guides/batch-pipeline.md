@@ -9,6 +9,8 @@ sidebar:
 
 When you have a backlog of features ready to build, the batch pipeline plans and implements them in parallel — each feature in its own isolated Git worktree, each with its own PR. Inspired by the recently announced Claude Code batch capabilities, Arness extends the concept with batch-merge for automated PR conflict resolution and batch-simplify for cross-feature deduplication after merge.
 
+Examples use Claude Code slash syntax. In Codex, prompt with the same skill names, for example `codex "arn-code-batch-planning"` or `codex "arn-code-batch-merge"`.
+
 ## When to Use Batch
 
 - You have multiple features specced and planned (or ready to be planned)

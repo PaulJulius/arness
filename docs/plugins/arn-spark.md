@@ -17,6 +17,8 @@ The fastest way to use Spark is the brainstorming wizard:
 
 **`/arn-brainstorming`** -- a guided session that walks through the entire greenfield pipeline with decision gates at every stage. You never have to remember what comes next; the wizard handles sequencing, progress tracking, and resumability. Leave mid-session and pick up where you left off.
 
+In Codex, install with `codex plugin add arn-spark@arn-marketplace`, then prompt with the same skill name in plain language, for example `codex "arn-brainstorming a habit tracker for families"`.
+
 To customize the greenfield configuration (e.g., set up Figma or Canva integration), you can optionally run **`/arn-spark-init`** — but it's not required. Arness auto-configures on first use.
 
 Spark uses progressive questioning -- it asks once and remembers your answers across sessions. Configuration choices, user profile details, and project preferences are captured during the first run and reused automatically, so subsequent sessions start faster and stay focused on the work.

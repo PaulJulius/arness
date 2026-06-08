@@ -7,13 +7,15 @@ sidebar:
 
 # Core Concepts
 
-Arness has 134 components across three plugins. You interact with 7 entry points. This page explains the architecture that makes that possible.
+Arness has 135 components across three plugins. You interact with 7 entry points. This page explains the architecture that makes that possible.
 
 ## How Arness Is Organized
 
 ### Entry Points (7 total)
 
 Commands you type to start a workflow. These are the only commands you need to remember. Each one detects your project state, asks the right questions, and orchestrates the skills and agents needed to complete the job.
+
+Claude Code commonly shows these with a slash prefix. In Codex, use the same names in prompts, for example `codex "arn-planning add rate limiting"` or `codex "arn-brainstorming a budgeting app"`.
 
 ```
 /arn-brainstorming    Spark — product discovery through feature extraction
@@ -25,13 +27,13 @@ Commands you type to start a workflow. These are the only commands you need to r
 /arn-infra-wizard     Infra — infrastructure end-to-end
 ```
 
-### Skills (85 total)
+### Skills (88 total)
 
 Pipeline steps that entry points orchestrate automatically. Each skill is a natural-language instruction file (`SKILL.md`) that defines a specific workflow stage — from "develop a feature specification" to "generate CI/CD pipelines."
 
 You *can* invoke skills directly (e.g., `/arn-code-feature-spec`), and experienced users often do for targeted work. But you rarely *need* to — the entry points handle routing.
 
-### Agents (44 total)
+### Agents (47 total)
 
 Specialist AI workers that skills dispatch behind the scenes. An agent is tuned for a specific domain — architecture design, security analysis, cost estimation, prototype building, brand naming — with its own set of tools and expertise.
 
@@ -42,7 +44,7 @@ You never invoke agents directly. When a skill needs deep expertise, it spawns t
 ```
 plugins/
 ├── arn-spark/       28 skills + 20 agents   Product discovery & prototyping
-├── arn-code/        35 skills + 16 agents   Development pipeline
+├── arn-code/        35 skills + 17 agents   Development pipeline
 └── arn-infra/       25 skills + 10 agents   Infrastructure & deployment
 ```
 
