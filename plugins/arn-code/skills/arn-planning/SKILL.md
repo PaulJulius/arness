@@ -446,7 +446,7 @@ Inform: "Creating task list..."
 
 > Codex skill `arn-code-taskify`
 
-Taskify converts TASKS.md into Claude Code tasks with dependency management.
+Taskify converts `TASKS.md` into host tasks with dependency management when task APIs are available, or records a Codex-compatible file-backed task map when they are not.
 
 ---
 

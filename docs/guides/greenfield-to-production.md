@@ -9,14 +9,14 @@ sidebar:
 
 This guide walks through the complete Arness lifecycle — from a raw product idea to a deployed application. It uses all three plugins: Spark for discovery, Code for development, and Infra for deployment.
 
-Examples use Claude Code slash syntax. In Codex, install the same plugins with `codex plugin add ...`, then prompt with the same skill names, for example `codex "arn-brainstorming a field service scheduling app"` or `codex "arn-infra-wizard"`.
+Examples show host-neutral skill names. In Claude Code, invoke them with a slash prefix; in Codex, install the same plugins with `codex plugin add ...`, then prompt with the same skill names, for example `codex "arn-brainstorming a field service scheduling app"` or `codex "arn-infra-wizard"`.
 
 ## Phase 1: Spark — From Idea to Validated Concept
 
 ### Start the Journey
 
 ```
-/arn-brainstorming
+arn-brainstorming
 ```
 
 The brainstorming wizard guides you through the entire greenfield pipeline with decision gates at every step. You can also invoke each skill individually.
@@ -57,7 +57,7 @@ A concept review consolidates all findings and updates your product vision.
 ### Extract Features
 
 ```
-/arn-spark-feature-extract
+arn-spark-feature-extract
 ```
 
 Feature extraction pulls a prioritized backlog from all your Spark artifacts — product concept, architecture, use cases, prototypes. Features are written as structured files and optionally uploaded to GitHub Issues, Jira, or Bitbucket.
@@ -67,10 +67,10 @@ Feature extraction pulls a prioritized backlog from all your Spark artifacts —
 ### Hand Off to the Development Pipeline
 
 ```
-/arn-planning
+arn-planning
 ```
 
-Run this in your scaffolded project. Arness automatically analyzes the codebase patterns Spark established and sets up the development pipeline on first use. You can optionally run `/arn-code-init` first for more control over the configuration.
+Run this in your scaffolded project. Arness automatically analyzes the codebase patterns Spark established and sets up the development pipeline on first use. You can optionally run `arn-code-init` first for more control over the configuration.
 
 ### Build Features from the Backlog
 
@@ -79,15 +79,15 @@ Arness detects the Spark feature backlog and lets you pick a feature to implemen
 For multiple features, the batch pipeline can plan and implement several features in parallel:
 
 ```
-/arn-code-batch-planning
-/arn-code-batch-implement
-/arn-code-batch-merge
+arn-code-batch-planning
+arn-code-batch-implement
+arn-code-batch-merge
 ```
 
 ### Ship Each Feature
 
 ```
-/arn-shipping
+arn-shipping
 ```
 
 Each feature gets its own PR with a structured description referencing the spec and plan.
@@ -97,7 +97,7 @@ Each feature gets its own PR with a structured description referencing the spec 
 ### Set Up Infrastructure
 
 ```
-/arn-infra-wizard
+arn-infra-wizard
 ```
 
 The wizard auto-configures and walks through the infrastructure pipeline:
@@ -116,7 +116,7 @@ The wizard auto-configures and walks through the infrastructure pipeline:
 For subsequent infrastructure changes, use the change management pipeline:
 
 ```
-/arn-infra-change-spec
+arn-infra-change-spec
 ```
 
 This mirrors Code's spec → plan → execute → review flow but with infrastructure-specific gates: blast radius assessment, rollback checkpoints, security scanning, and cost estimation.

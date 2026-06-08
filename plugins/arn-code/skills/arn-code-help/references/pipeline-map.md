@@ -128,9 +128,9 @@ When the plans directory contains multiple project subdirectories, detect the st
 
 ## Core Next Step Suggestions
 
-After detecting the current core stage, suggest the next command using fully qualified names.
+After detecting the current core stage, suggest the next skill using fully qualified names.
 
-| Current Stage | Next Command | Description |
+| Current Stage | Next Skill | Description |
 |---------------|-------------|-------------|
 | Not initialized (`none`) | `arn-planning` | Get started — sets up Arness automatically on first use |
 | Initialized (`init`) | `arn-code-feature-spec` or `arn-code-bug-spec` | Create a feature or bug specification. For quick changes (1-8 files), run `arn-code-swift`. For medium complexity, run `arn-code-standard` |
@@ -164,11 +164,11 @@ These can be used as alternatives at specific stages:
 | `arn-code-execute-plan-teams` | `arn-code-execute-plan` | User wants Agent Teams execution (requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) |
 | `arn-code-execute-task` | `arn-code-execute-plan` | User wants to execute a single specific task rather than the full plan |
 
-### Standalone Commands
+### Standalone Skills
 
 These operate outside the main pipelines and can be suggested at any time:
 
-| Command | Purpose | Prerequisite |
+| Skill | Purpose | Prerequisite |
 |---------|---------|--------------|
 | `arn-code-report` | Run a diagnostic report on Arness workflow issues | `## Arness` config exists |
 | `arn-code-review-pr` | Review a pull request and validate PR feedback | Platform (github or bitbucket) configured, PR exists |

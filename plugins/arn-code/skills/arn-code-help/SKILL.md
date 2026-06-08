@@ -11,7 +11,7 @@ version: 1.2.0
 
 # Arness Help
 
-Detect the user's current position in the Arness workflow pipeline, render an ASCII diagram with the active stage marked, and suggest the next command to run. Supports cross-plugin awareness — detects activity in Arness Spark and Arness Infra and provides hints at the bottom of the output. This skill is strictly read-only -- it never modifies files or project state.
+Detect the user's current position in the Arness workflow pipeline, render an ASCII diagram with the active stage marked, and suggest the next skill to run. Supports cross-plugin awareness — detects activity in Arness Spark and Arness Infra and provides hints at the bottom of the output. This skill is strictly read-only -- it never modifies files or project state.
 
 **Allowed tools:** Read, Glob, Grep only. This skill MUST NOT use Write, Edit, Bash, or Task tools. This skill MUST NOT invoke any agents.
 
@@ -93,7 +93,7 @@ After rendering the core pipeline status and next-step suggestion, append cross-
 - If own pipeline has NO activity but is initialized (`init`): show own suggestions FIRST (e.g., "Run `arn-code-feature-spec` to spec a feature, `arn-code-bug-spec` for a bug, `arn-code-swift` for a quick fix, or `arn-code-assess` for a codebase review"), then optionally mention other plugins.
 - When own pipeline is complete (shipped): suggest "Start a new feature? `arn-planning`". If Infra is configured: "Deploy with `arn-infra-wizard`."
 
-Keep output concise -- the user wants a quick status check, not a wall of text. Show the diagram, the detected stage, the next command, and any cross-plugin hints. That is all.
+Keep output concise -- the user wants a quick status check, not a wall of text. Show the diagram, the detected stage, the next skill, and any cross-plugin hints. That is all.
 
 ---
 

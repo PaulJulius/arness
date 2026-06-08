@@ -10,13 +10,13 @@ description: >-
 
   <example>
   Context: arn-code-plan is about to invoke the planner against an existing spec
-  user: "/arn-code-plan FEATURE_websocket-notifications"
+  user: "arn-code-plan FEATURE_websocket-notifications"
   assistant: (invokes arn-code-drift-detector to confirm the spec still matches current code before planning)
   </example>
 
   <example>
   Context: arn-code-pick-issue is routing an issue whose feature file already exists
-  user: "/arn-code-pick-issue"
+  user: "arn-code-pick-issue"
   assistant: (after user picks an issue with a pre-existing feature file, invokes arn-code-drift-detector to gate the hand-off)
   </example>
 

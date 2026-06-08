@@ -17,7 +17,7 @@ This skill does NOT execute tasks or assign them to agents — it only prepares 
 
 ## Host Compatibility
 
-- **Claude Code task API available:** use `TaskCreate`, `TaskUpdate`, and `TaskList` as described in Steps 3-5.
+- **Host task APIs available:** use `TaskCreate`, `TaskUpdate`, and `TaskList` as described in Steps 3-5.
 - **Codex or another host without task APIs:** do not call unavailable task APIs. Parse `TASKS.md`, validate dependencies, write a taskify report under `<project-folder>/reports/`, and mirror the parsed task list into the session plan or another host-native progress surface. `arn-code-execute-plan` can then execute from `TASKS.md` and `PROGRESS_TRACKER.json`.
 
 ## Workflow
@@ -150,7 +150,7 @@ If host task APIs are available, call `TaskList` and present the results to the 
 - **Total tasks created** — should match the count in TASKS.md
 - **Tasks immediately available** (no blockers) — ready to execute now
 - **Tasks blocked** — list each with what it's waiting on
-- **Dependency graph validation** — confirm the Claude Code task dependencies match what TASKS.md specified
+- **Dependency graph validation** — confirm the host task dependencies match what TASKS.md specified
 
 If any discrepancy is found between the created task list and TASKS.md, warn the user and explain what differs. For Codex fallback mode, present the same summary using the parsed `TASKS.md` task map and the generated `TASKIFY_REPORT.json`.
 

@@ -9,7 +9,7 @@ sidebar:
 
 Not every change needs the full spec-plan-execute pipeline. Arness Code offers three ceremony tiers that match process depth to change scope.
 
-Examples use Claude Code slash syntax. In Codex, prompt with the same skill name without requiring the slash, for example `codex "arn-code-swift fix the broken settings link"` or `codex "arn-planning rename the billing status field"`.
+Examples show host-neutral skill names. In Claude Code, invoke them with a slash prefix; in Codex, prompt with the same skill name, for example `codex "arn-code-swift fix the broken settings link"` or `codex "arn-planning rename the billing status field"`.
 
 ## When to Use What
 
@@ -19,15 +19,15 @@ Examples use Claude Code slash syntax. In Codex, prompt with the same skill name
 | **Standard** | Medium | 4-15 | Feature additions, moderate refactors, API changes |
 | **Thorough** | Complex | 15+ | New features, architectural changes, cross-cutting work |
 
-Arness detects complexity automatically when you run `/arn-planning` and suggests the right tier. You can always override.
+Arness detects complexity automatically when you run `arn-planning` and suggests the right tier. You can always override.
 
 ## The Swift Workflow
 
 ```
-/arn-code-swift
+arn-code-swift
 ```
 
-Or let `/arn-planning` route you there based on scope assessment.
+Or let `arn-planning` route you there based on scope assessment.
 
 Swift is a lightweight, pattern-aware workflow:
 
@@ -42,7 +42,7 @@ The output is a `SWIFT_<name>.md` change record and a `SWIFT_REPORT.json` — li
 ## The Standard Workflow
 
 ```
-/arn-code-standard
+arn-code-standard
 ```
 
 Standard bridges swift and thorough. It includes:
@@ -58,7 +58,7 @@ The output is a `STANDARD_<name>.md` and `STANDARD_REPORT.json`.
 For any change that involves UI components:
 
 ```
-/arn-code-sketch
+arn-code-sketch
 ```
 
 Sketch creates a preview of the UI change using your project's actual framework and styling system. It works for web, CLI, and TUI applications. Use it during feature spec to validate a design, or during implementation to check your work.
@@ -68,14 +68,14 @@ Sketch creates a preview of the UI change using your project's actual framework 
 Made a change outside the Arness pipeline? A 2am hotfix, an emergency patch, a quick manual edit?
 
 ```
-/arn-code-catch-up
+arn-code-catch-up
 ```
 
 Catch-up examines recent commits and generates lightweight artifact records after the fact. This ensures the artifact trail remains complete even when the pipeline was bypassed.
 
 ## Scope Routing in Practice
 
-When you run `/arn-planning` and describe your change, Arness assesses:
+When you run `arn-planning` and describe your change, Arness assesses:
 
 - How many files are likely affected
 - Whether it crosses module/service boundaries

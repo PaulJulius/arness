@@ -20,7 +20,7 @@ Most AI coding tools help you write code faster. Arness helps you build software
 
 Most projects fail before the first commit — wrong problem, wrong audience, wrong architecture. Spark takes a raw idea and puts it through product discovery, stress testing, brand naming, use case writing, architecture evaluation, and interactive prototyping. By the time you write real code, you have a validated concept, a prioritized feature backlog, and a scaffolded codebase ready for development.
 
-**Start here:** `/arn-brainstorming` | [Full guide](docs/plugins/arn-spark.md)
+**Start here:** `arn-brainstorming` | [Full guide](docs/plugins/arn-spark.md)
 
 ### Arness Code — Where products get built
 
@@ -28,7 +28,7 @@ Most projects fail before the first commit — wrong problem, wrong audience, wr
 
 The development pipeline that treats AI-assisted coding like engineering, not guesswork. Every feature flows through spec, plan, structure, execute, review, and ship — with three ceremony tiers (swift, standard, thorough) that scale process to match scope. A one-file fix gets a lightweight pass. A cross-cutting refactor gets phases, task dependencies, and quality gates.
 
-**Start here:** `/arn-planning` | [Full guide](docs/plugins/arn-code.md)
+**Start here:** `arn-planning` | [Full guide](docs/plugins/arn-code.md)
 
 ### Arness Infra — Where products go live
 
@@ -36,7 +36,7 @@ The development pipeline that treats AI-assisted coding like engineering, not gu
 
 A guided approach to containerization, IaC, deployment, and monitoring. Arness Infra audits your toolchain, generates Dockerfiles and IaC, configures environments and secrets, builds CI/CD pipelines, and walks you through deployment and verification. For complex changes, a structured change management pipeline mirrors the rigor of the development pipeline. *Infra is experimental — the newest and least mature of the three plugins. Always review generated infrastructure before applying it. Feedback and suggestions are welcome.*
 
-**Start here:** `/arn-infra-wizard` | [Full guide](docs/plugins/arn-infra.md)
+**Start here:** `arn-infra-wizard` | [Full guide](docs/plugins/arn-infra.md)
 
 ## How It Works
 
@@ -90,17 +90,17 @@ codex "arn-planning add rate limiting"
 codex "arn-brainstorming a habit tracker app"
 ```
 
-Then run the entry point that matches what you want to do — Arness auto-configures on first use. Commands are shown with Claude Code slash syntax; in Codex, use the same skill names in your prompt:
+Then run the entry point that matches what you want to do — Arness auto-configures on first use. Skill names are host-neutral: in Claude Code, invoke them as slash commands (`/arn-planning`); in Codex, prompt with the same name (`codex "arn-planning fix #42"`).
 
-```
-/arn-brainstorming    New product — discover, validate, prototype, extract features
-/arn-planning         Plan a feature or fix from scratch
-/arn-implementing     Pick up where you left off
-/arn-shipping         Commit, push, open a PR
-/arn-reviewing-pr     Handle PR feedback
-/arn-assessing        Deep-dive codebase review
-/arn-infra-wizard     Infrastructure end-to-end
-```
+| Skill | What it does |
+|---|---|
+| `arn-brainstorming` | New product — discover, validate, prototype, extract features |
+| `arn-planning` | Plan a feature or fix from scratch |
+| `arn-implementing` | Pick up where you left off |
+| `arn-shipping` | Commit, push, open a PR |
+| `arn-reviewing-pr` | Handle PR feedback |
+| `arn-assessing` | Deep-dive codebase review |
+| `arn-infra-wizard` | Infrastructure end-to-end |
 
 **Works on any project.** Install Arness on a brand-new project or an existing codebase — it adapts either way. On existing projects, Arness retroactively analyzes your code patterns, application architecture, and infrastructure tools on first run. No migration, no setup ceremony.
 

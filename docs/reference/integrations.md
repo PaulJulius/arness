@@ -51,7 +51,7 @@ Infra also supports Kubernetes/Helm for container orchestration across any provi
 
 ## How Detection Works
 
-During initialization (`/arn-code-init`, `/arn-spark-init`, or `/arn-infra-init`), Arness:
+During initialization (`arn-code-init`, `arn-spark-init`, or `arn-infra-init`), Arness:
 
 1. **Checks for Git** — detects repository status and remote configuration
 2. **Detects platform** — identifies GitHub or Bitbucket from the remote URL
@@ -69,9 +69,9 @@ Skills adapt their behavior based on detected capabilities. For example:
 If you install a CLI or configure an MCP server after init, just run init again:
 
 ```
-/arn-code-init      # Re-detects platform capabilities
-/arn-spark-init     # Re-detects design tool integrations
-/arn-infra-init     # Re-detects cloud CLIs and tools
+arn-code-init      # Re-detects platform capabilities
+arn-spark-init     # Re-detects design tool integrations
+arn-infra-init     # Re-detects cloud CLIs and tools
 ```
 
 Init is non-destructive — it preserves existing configuration and adds newly detected capabilities.

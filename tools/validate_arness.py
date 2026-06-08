@@ -280,7 +280,7 @@ def validate_reference_docs(
     for plugin_name, doc_stem in PLUGIN_DOC_STEMS.items():
         skills_doc = REPO_ROOT / f"docs/reference/{doc_stem}-skills.md"
         text = validator.read_text(skills_doc)
-        listed_skills = table_identifiers(text, "/arn-")
+        listed_skills = table_identifiers(text, "arn-")
         actual_skills = skills_by_plugin.get(plugin_name, set())
         validator.check(listed_skills == actual_skills, skills_doc, missing_extra_message("skills", actual_skills, listed_skills))
 

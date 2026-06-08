@@ -13,31 +13,31 @@ Arness has 135 components across three plugins. You interact with 7 entry points
 
 ### Entry Points (7 total)
 
-Commands you type to start a workflow. These are the only commands you need to remember. Each one detects your project state, asks the right questions, and orchestrates the skills and agents needed to complete the job.
+Skill names you invoke to start a workflow. These are the only names you need to remember. Each one detects your project state, asks the right questions, and orchestrates the skills and agents needed to complete the job.
 
-Claude Code commonly shows these with a slash prefix. In Codex, use the same names in prompts, for example `codex "arn-planning add rate limiting"` or `codex "arn-brainstorming a budgeting app"`.
+In Claude Code, invoke them with a slash prefix, such as `/arn-planning`. In Codex, use the same names in prompts, for example `codex "arn-planning add rate limiting"` or `codex "arn-brainstorming a budgeting app"`.
 
 ```
-/arn-brainstorming    Spark — product discovery through feature extraction
-/arn-planning         Code  — spec, plan, build, review, ship
-/arn-implementing     Code  — resume or execute an existing plan
-/arn-shipping         Code  — commit, push, create PR
-/arn-reviewing-pr     Code  — validate and act on PR feedback
-/arn-assessing        Code  — comprehensive codebase review
-/arn-infra-wizard     Infra — infrastructure end-to-end
+arn-brainstorming    Spark — product discovery through feature extraction
+arn-planning         Code  — spec, plan, build, review, ship
+arn-implementing     Code  — resume or execute an existing plan
+arn-shipping         Code  — commit, push, create PR
+arn-reviewing-pr     Code  — validate and act on PR feedback
+arn-assessing        Code  — comprehensive codebase review
+arn-infra-wizard     Infra — infrastructure end-to-end
 ```
 
 ### Skills (88 total)
 
 Pipeline steps that entry points orchestrate automatically. Each skill is a natural-language instruction file (`SKILL.md`) that defines a specific workflow stage — from "develop a feature specification" to "generate CI/CD pipelines."
 
-You *can* invoke skills directly (e.g., `/arn-code-feature-spec`), and experienced users often do for targeted work. But you rarely *need* to — the entry points handle routing.
+You *can* invoke skills directly (e.g., `arn-code-feature-spec`), and experienced users often do for targeted work. But you rarely *need* to — the entry points handle routing.
 
 ### Agents (47 total)
 
 Specialist AI workers that skills dispatch behind the scenes. An agent is tuned for a specific domain — architecture design, security analysis, cost estimation, prototype building, brand naming — with its own set of tools and expertise.
 
-You never invoke agents directly. When a skill needs deep expertise, it spawns the right agent automatically. For example, `/arn-planning` invokes the architect agent during spec refinement and the feature-planner agent during plan generation.
+You never invoke agents directly. When a skill needs deep expertise, it spawns the right agent automatically. For example, `arn-planning` invokes the architect agent during spec refinement and the feature-planner agent during plan generation.
 
 ## The Three Plugins
 
@@ -72,7 +72,7 @@ flowchart TB
 ```
 
 **Cross-plugin handoffs** happen at natural boundaries:
-- Spark's `/arn-spark-feature-extract` produces feature files that Code's `/arn-planning` consumes
+- Spark's `arn-spark-feature-extract` produces feature files that Code's `arn-planning` consumes
 - Code's shipped artifacts feed Infra's deployment pipeline
 - These handoffs are a bonus for multi-plugin users, not a requirement for single-plugin users
 
@@ -118,7 +118,7 @@ Arness stores its configuration in two places:
 
 ### Project configuration (`CLAUDE.md`)
 
-An `## Arness` section in your project's `CLAUDE.md` holds structural settings: directory paths, template preferences, platform detection results, and feature flags. This is committed to your repo and shared across the team.
+An `## Arness` section in your project's `CLAUDE.md` holds structural settings: directory paths, template preferences, platform detection results, and feature flags. The filename is historical; this shared project config is used from both Claude Code and Codex.
 
 ### User profile
 

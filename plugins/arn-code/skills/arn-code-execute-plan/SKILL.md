@@ -16,7 +16,7 @@ version: 0.4.0
 
 Execute a structured project plan by dispatching batches of tasks and validating each completed task before marking it done. Independent tasks can run concurrently when the host supports agent/task orchestration; dependent tasks wait for their blockers to clear. Each task goes through an execute-review-gate cycle: the executor implements and tests, the reviewer validates against patterns and acceptance criteria, and the orchestrator (this skill) decides whether to pass, retry, or escalate.
 
-**Key architectural constraint:** Subagents cannot spawn other subagents. The dispatch loop MUST stay in the main session (this skill). In Codex, if Claude Code task APIs are unavailable, execute the same loop from `TASKS.md` and `PROGRESS_TRACKER.json` using the session plan as the visible task surface.
+**Key architectural constraint:** Subagents cannot spawn other subagents. The dispatch loop MUST stay in the main session (this skill). If host task APIs are unavailable, as in Codex fallback mode, execute the same loop from `TASKS.md` and `PROGRESS_TRACKER.json` using the session plan as the visible task surface.
 
 Pipeline position:
 ```

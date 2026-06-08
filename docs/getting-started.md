@@ -38,6 +38,8 @@ codex plugin marketplace add AppsVortex/arness
 
 Install Arness Spark and let it guide you from raw idea to validated prototype:
 
+Claude Code:
+
 ```
 /plugin install arn-spark@arn-marketplace
 /arn-brainstorming
@@ -58,6 +60,8 @@ Spark walks you through product discovery, concept validation, architecture deci
 
 Install Arness Code to get the development pipeline:
 
+Claude Code:
+
 ```
 /plugin install arn-code@arn-marketplace
 /arn-planning
@@ -70,13 +74,15 @@ codex plugin add arn-code@arn-marketplace
 codex "arn-planning add rate limiting to the API"
 ```
 
-On first run, Arness analyzes your codebase, learns your patterns and conventions, and auto-configures everything it needs. Then `/arn-planning` takes your feature idea through spec, plan, build, review, and ship.
+On first run, Arness analyzes your codebase, learns your patterns and conventions, and auto-configures everything it needs. Then `arn-planning` takes your feature idea through spec, plan, build, review, and ship.
 
 [Learn more about Arness Code](plugins/arn-code.md)
 
 ### Need to deploy?
 
 Install Arness Infra for the infrastructure lifecycle:
+
+Claude Code:
 
 ```
 /plugin install arn-infra@arn-marketplace
@@ -97,6 +103,8 @@ The wizard audits your toolchain, walks you through containerization, IaC genera
 ### Want the full lifecycle?
 
 Install all three:
+
+Claude Code:
 
 ```
 /plugin install arn-spark@arn-marketplace
@@ -121,31 +129,31 @@ The first time you invoke any Arness skill, it automatically:
 1. **Creates your profile** — asks about your role, experience, and preferred tech stack (once — reused across all sessions and projects)
 2. **Analyzes your project** — detects Git, platform (GitHub/Bitbucket), issue tracker, existing patterns and conventions. On existing codebases, Arness retroactively learns your code patterns, application architecture, and infrastructure tools.
 3. **Sets up `.arness/`** — creates the artifact directory where specs, plans, reports, and other artifacts live. Your source tree stays clean.
-4. **Writes configuration** — adds an `## Arness` section to your project's `CLAUDE.md` with directory paths and preferences
+4. **Writes configuration** — adds an `## Arness` section to your project's `CLAUDE.md` with directory paths and preferences. The filename is historical; Arness uses this shared project config from both Claude Code and Codex.
 
 Everything is plain text. You can read, edit, or delete any of it.
 
-> **Optional init skills:** For more control over setup, you can run `/arn-spark-init`, `/arn-code-init`, or `/arn-infra-init` explicitly — but it's not required. Running init later also updates Arness to the latest version.
+> **Optional init skills:** For more control over setup, you can run `arn-spark-init`, `arn-code-init`, or `arn-infra-init` explicitly — but it's not required. Running init later also updates Arness to the latest version.
 
 **Works on any project.** Arness adapts to both brand-new projects and existing codebases. There's no migration, no setup ceremony — just install and go.
 
 ## The Seven Entry Points
 
-Once installed, these are the only entry points you need to remember. The table shows Claude Code slash syntax; in Codex, prompt with the same name without requiring the slash, for example `codex "arn-code-help"` or `codex "arn-planning fix #42"`.
+Once installed, these are the only entry points you need to remember. Skill names are host-neutral: in Claude Code, invoke them as slash commands (`/arn-planning`); in Codex, prompt with the same name (`codex "arn-code-help"` or `codex "arn-planning fix #42"`).
 
-| Command | What it does | Plugin |
+| Skill | What it does | Plugin |
 |---------|-------------|--------|
-| `/arn-brainstorming` | New product — discover, validate, prototype, extract features | Spark |
-| `/arn-planning` | Plan a feature or fix from scratch | Code |
-| `/arn-implementing` | Pick up where you left off | Code |
-| `/arn-shipping` | Commit, push, open a PR | Code |
-| `/arn-reviewing-pr` | Handle PR feedback | Code |
-| `/arn-assessing` | Deep-dive codebase review | Code |
-| `/arn-infra-wizard` | Infrastructure end-to-end | Infra |
+| `arn-brainstorming` | New product — discover, validate, prototype, extract features | Spark |
+| `arn-planning` | Plan a feature or fix from scratch | Code |
+| `arn-implementing` | Pick up where you left off | Code |
+| `arn-shipping` | Commit, push, open a PR | Code |
+| `arn-reviewing-pr` | Handle PR feedback | Code |
+| `arn-assessing` | Deep-dive codebase review | Code |
+| `arn-infra-wizard` | Infrastructure end-to-end | Infra |
 
 Each entry point detects your project state and guides you through the relevant workflow steps. You don't need to know the 135 skills and agents behind them — the entry points orchestrate everything.
 
-**Lost? Each plugin has a help skill** — `/arn-spark-help`, `/arn-code-help`, `/arn-infra-help` — that shows your current pipeline position and suggests what to do next. Help skills are cross-plugin aware: they detect activity in the other plugins and provide hints, so any help command can orient you across the full lifecycle.
+**Lost? Each plugin has a help skill** — `arn-spark-help`, `arn-code-help`, `arn-infra-help` — that shows your current pipeline position and suggests what to do next. Help skills are cross-plugin aware: they detect activity in the other plugins and provide hints, so any help command can orient you across the full lifecycle.
 
 ## Next Steps
 
