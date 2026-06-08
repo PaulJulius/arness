@@ -64,7 +64,7 @@ Apply rules in order. The first matching rule determines the experience level.
 
 **Action:** Ask one follow-up question:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **For infrastructure specifically, how would you rate your experience?**
 > 1. Expert — I design and manage production infrastructure
 > 2. Intermediate — I've deployed apps and managed basic cloud resources

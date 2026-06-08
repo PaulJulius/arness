@@ -21,12 +21,12 @@ This skill is expertise-adaptive: beginner users get simplified environment setu
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Environment management is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Environment management is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- cloud providers in use
 - **Providers config** -- path to `providers.md` for per-provider details
 - **Default IaC tool** -- the default IaC tool
@@ -64,7 +64,7 @@ Extract per-provider scope and IaC tool for environment-specific config generati
 |-------------|-------------|----------|---------------|
 [table of environments]"
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to do?"**
 
@@ -76,7 +76,7 @@ If **Full environment setup**: proceed through Steps 2-5 sequentially, pausing f
 
 If **Specific task**:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which task?"**
 
@@ -99,7 +99,7 @@ For each provider, recommend an isolation strategy based on experience level:
 **Expert:**
 Present all isolation options with trade-offs and let the user choose:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"For [provider], choose your isolation strategy:"**
 
@@ -267,18 +267,18 @@ Update `## Arness` in CLAUDE.md with the finalized environment list if it has ch
 
 "Environments are configured. Here is the recommended path:
 
-1. **Set up CI/CD:** Run `/arn-infra-pipeline` to generate environment-aware deployment pipelines
-2. **Manage secrets:** Run `/arn-infra-secrets` to configure per-environment secrets
-3. **Deploy:** Run `/arn-infra-deploy` to deploy to your first environment
+1. **Set up CI/CD:** Run `arn-infra-pipeline` to generate environment-aware deployment pipelines
+2. **Manage secrets:** Run `arn-infra-secrets` to configure per-environment secrets
+3. **Deploy:** Run `arn-infra-deploy` to deploy to your first environment
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No providers configured:** Suggest running `/arn-infra-init` to configure providers. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No providers configured:** Suggest running `arn-infra-init` to configure providers. Stop.
 - **No IaC tool selected:** If the default IaC tool is `none` and no per-provider IaC tools are configured, skip IaC config generation. Inform the user that platform-native environment configurations will be used.
 - **Specialist agent fails:** Report the error. Fall back to generating basic environment config files directly using the loaded reference patterns. Present with a note: "Generated using fallback patterns -- review carefully."
 - **Specialist agent returns empty output:** Inform the user and retry with additional context. If retry fails, generate minimal config files with placeholder values.

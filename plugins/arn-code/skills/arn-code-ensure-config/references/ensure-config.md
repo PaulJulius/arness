@@ -18,7 +18,7 @@ Check whether a user profile already exists:
 **Decision tree:**
 
 - **Both user-level and project-level exist:** Read the project-level override (`.claude/arness-profile.local.md` frontmatter). Use its values. Proceed to Layer 2.
-- **User-level exists, no project-level:** Read `~/.arness/user-profile.yaml`. Ask (using `AskUserQuestion`):
+- **User-level exists, no project-level:** Read `~/.arness/user-profile.yaml`. Ask the user:
 
   > **Use your existing Arness profile for this project?**
   > 1. Yes, use my existing profile
@@ -39,7 +39,7 @@ Then ask 4 questions:
 
 **Q1 — Primary role:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **What best describes your primary role?**
 > 1. Developer (frontend, backend, or full-stack)
 > 2. DevOps / Infrastructure Engineer
@@ -52,7 +52,7 @@ If the user's role does not fit these options, accept a free-text description an
 
 Skip this question if the user selected "Product Manager / Designer" in Q1.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **How would you describe your development experience?**
 > 1. Expert — I architect systems and mentor others
 > 2. Experienced — I build features independently
@@ -63,7 +63,7 @@ Ask (using `AskUserQuestion`):
 
 Skip this question if the user selected "Non-technical" in Q2.
 
-Ask as free text (not AskUserQuestion — this is open-ended):
+Ask as free text (not user prompt — this is open-ended):
 
 > **What technologies do you work with?** List your primary languages, frameworks, databases, and infrastructure tools (e.g., "TypeScript, React, Next.js, PostgreSQL, AWS, Docker").
 
@@ -75,7 +75,7 @@ Parse the response into structured categories:
 
 **Q4 — Expertise-aware recommendations:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **Should Arness tailor recommendations to your experience level?** When enabled, guidance adapts to your expertise — experts get terse, direct advice while learners get more context and explanation.
 > 1. Yes, tailor to my experience
 > 2. No, give me the standard experience
@@ -164,7 +164,7 @@ Show the user the detected and default values:
 | Platform | (detected) |
 | Issue tracker | (detected) |
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **Use these defaults or customize folder locations?**
 > 1. Use defaults
 > 2. Let me customize
@@ -204,9 +204,9 @@ Run via Bash: `mkdir -p` for each configured directory (plans, specs, templates,
 
 **Template setup:**
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/template-setup.md` and follow the Default Templates procedure. This copies report templates and generates SHA-256 checksums. This is a silent operation (~5 seconds).
+Read `<arn-code-plugin-root>/skills/arn-code-init/references/template-setup.md` and follow the Default Templates procedure. This copies report templates and generates SHA-256 checksums. This is a silent operation (~5 seconds).
 
-Read the plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` and write:
+Read the plugin version from `<arn-code-plugin-root>/.codex-plugin/plugin.json` and write:
 - `Template version` field to `## Arness` with the plugin version
 
 ### 2c. If `## Arness` Exists But ANY Required Field Is Missing (including Linting)
@@ -227,7 +227,7 @@ If the `Linting:` field is missing (separate logic — this field is not a direc
 1. Check whether `<code-patterns-dir>/linting.md` already exists.
    - If it exists, read it to determine the suggested default: contains `No linters detected.` → suggest `None`; otherwise → suggest `Enabled`.
    - If it does not exist, suggest `Enabled` (the user can then opt in to detection).
-2. Ask (using `AskUserQuestion`):
+2. Ask the user:
 
    > **No linting setting found. How should Arness handle linting for this project? \<suggested default shown above\>**
    > 1. **Enabled** — discover the project's linters and use them as a gate before commits
@@ -243,20 +243,20 @@ The Linting field is intentionally handled separately from directory fields: dir
 
 If the `Code agent model profile:` field is missing (separate logic — this field requires a real choice and downstream artifact copy):
 
-1. Run the **Profile selection** procedure documented in the "Model profile field" section below. The procedure handles the AskUserQuestion prompt, writes the field to the `## Arness` block, copies the chosen preset to `.arness/agent-models/code.md`, and records the SHA-256 checksum.
+1. Run the **Profile selection** procedure documented in the "Model profile field" section below. The procedure handles the user prompt, writes the field to the `## Arness` block, copies the chosen preset to `.arness/agent-models/code.md`, and records the SHA-256 checksum.
 
 If the `Code agent model profile:` field is **present** (Layer 2d-style consistency check — runs before the fast path completes):
 
 1. **If value is `all-opus` or `balanced`:**
    a. Compute the SHA-256 checksum of `.arness/agent-models/code.md` and compare it to the recorded checksum in `.arness/agent-models/.checksums.json`.
    b. If checksums **differ** (user edited the file): flip the field value in `## Arness` from its current value to `custom` and inform the user with a one-line message: `"Detected your edits to .arness/agent-models/code.md — set profile to 'custom' so future updates won't overwrite your changes."` Do NOT overwrite the user's edits; do NOT recompute the checksum (the `custom` profile means "user-managed").
-   c. If checksums match: read the `# Version:` header from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/<value>.md` (the upstream preset) and compare to the `# Version:` header recorded in `.arness/agent-models/code.md`. If they differ, apply the project's `Template updates:` policy (reuse the procedure in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md`):
+   c. If checksums match: read the `# Version:` header from `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/<value>.md` (the upstream preset) and compare to the `# Version:` header recorded in `.arness/agent-models/code.md`. If they differ, apply the project's `Template updates:` policy (reuse the procedure in `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md`):
       - `auto`: copy the new preset, regenerate the checksum, inform the user "Refreshed `.arness/agent-models/code.md` from preset `<value>` v<old>→v<new>."
       - `ask`: prompt the user; on accept, copy + regenerate; on decline, leave file alone and skip until the user re-runs.
       - `manual`: do nothing this run.
 
 2. **If value is `custom`:**
-   a. Read the canonical agent list from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/all-opus.md` (every entry of the form `<agent-name>: <model>`).
+   a. Read the canonical agent list from `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/all-opus.md` (every entry of the form `<agent-name>: <model>`).
    b. Read the user's `.arness/agent-models/code.md` and collect the agent names present.
    c. For any agent in the canonical list that is NOT present in the user's file, surface as an info-level diagnostic: `"Note: .arness/agent-models/code.md is missing entries for: <comma-separated agent list>. Add them or run with 'all-opus'/'balanced' profile to refresh."` This is informational only — do not block the workflow.
 
@@ -272,7 +272,7 @@ If all required fields are present, no action needed; proceed to Layer 3.
 
 ## Layer 3: Platform Labels
 
-Ensure that Arness labels exist on the platform. This layer runs after Layer 2 so that the `Platform` field is available. Labels are required by issue management skills (`/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr`).
+Ensure that Arness labels exist on the platform. This layer runs after Layer 2 so that the `Platform` field is available. Labels are required by issue management skills (`arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr`).
 
 ### 3a. Check Platform
 
@@ -284,7 +284,7 @@ If Platform is `github`:
 
 1. **Fast-path check:** Run via Bash: `gh label list --json name --jq '.[].name' | grep -c '^arness-'`
 2. If count is **7** (all labels exist): skip. No action needed.
-3. If count is **less than 7**: Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md` for the full label definitions (names, colors, descriptions). Run `gh label create <name> --color <color> --description "<desc>" --force` for each of the 7 labels. The `--force` flag makes this idempotent — it updates existing labels and creates missing ones.
+3. If count is **less than 7**: Read `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md` for the full label definitions (names, colors, descriptions). Run `gh label create <name> --color <color> --description "<desc>" --force` for each of the 7 labels. The `--force` flag makes this idempotent — it updates existing labels and creates missing ones.
 4. This is a **silent operation** — no user prompt. Log only if labels were created: "Created N missing GitHub labels."
 
 ### 3c. Jira / Bitbucket
@@ -295,7 +295,7 @@ No label creation needed. Jira labels are implicit (created on first use by Jira
 
 ## Layer 4: Cache Write
 
-After Layers 1–3 complete successfully, write the validation cache so future ensure-config invocations can fast-path via `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/scripts/cache-check.sh`. This is the final step of the validation flow.
+After Layers 1–3 complete successfully, write the validation cache so future ensure-config invocations can fast-path via `<arn-code-plugin-root>/skills/arn-code-ensure-config/scripts/cache-check.sh`. This is the final step of the validation flow.
 
 ### Why a cache?
 
@@ -329,7 +329,7 @@ Entry-point skills invoke ensure-config as Step 0 on every workflow trigger (~30
 
 1. **Compute the 7 fingerprints** using `sha256sum` (Linux + Git Bash) || `shasum -a 256` (Mac BSD). For the `claudeMdArnessSection` hash, extract the `## Arness` block via `awk '/^## Arness$/{flag=1;next} /^## /{flag=0} flag' CLAUDE.md` then pipe to the hasher. For each file fingerprint: if the file does not exist, use the literal string `MISSING` instead of computing a hash.
 
-2. **Read plugin version** from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` if present (legacy), else from the marketplace's `marketplace.json` entry for `arn-code`. Use the empty string if neither is resolvable (cache will not enforce version match in that case).
+2. **Read plugin version** from `<arn-code-plugin-root>/.codex-plugin/plugin.json` if present and non-empty; otherwise read `<arn-code-plugin-root>/.claude-plugin/plugin.json` if present and non-empty; otherwise read the root legacy `.claude-plugin/marketplace.json` entry for `arn-code`. Use the empty string if none are resolvable (cache will not enforce version match in that case).
 
 3. **Construct the JSON object** with the schema above. `validatedAt` is the current ISO 8601 UTC timestamp. `validationStatus` is `"pass"` (only written on successful Layers 1–3).
 
@@ -378,13 +378,13 @@ This procedure is the single source of truth for the prompt + write + copy + che
 - `arn-code-init` ("Choose model profile" step), and
 - `arn-code-ensure-config` Layer 2c (when the field is missing).
 
-Both call sites must read this section and follow it verbatim — do NOT duplicate the AskUserQuestion + write + copy + checksum logic at the call sites.
+Both call sites must read this section and follow it verbatim — do NOT duplicate the user prompt + write + copy + checksum logic at the call sites.
 
 **Steps:**
 
-1. **Cross-plugin default suggestion.** Before asking, read the project's CLAUDE.md `## Arness` block. If a sibling plugin's profile field (`Spark agent model profile:` or `Infra agent model profile:`) is set to `all-opus` or `balanced`, suggest that value as the default in the AskUserQuestion options ordering (the recommended/default option goes first, with `(Recommended)` appended). If both siblings are set to different values, prefer the most recently written field; if neither is set, the default is `all-opus`.
+1. **Cross-plugin default suggestion.** Before asking, read the project's CLAUDE.md `## Arness` block. If a sibling plugin's profile field (`Spark agent model profile:` or `Infra agent model profile:`) is set to `all-opus` or `balanced`, suggest that value as the default in the user prompt options ordering (the recommended/default option goes first, with `(Recommended)` appended). If both siblings are set to different values, prefer the most recently written field; if neither is set, the default is `all-opus`.
 
-2. **Ask the user.** Ask (using `AskUserQuestion`):
+2. **Ask the user.** Ask the user:
 
    > **Choose model profile for arn-code agents**
    > 1. **all-opus (Recommended)** — Every agent uses Opus. Maximum quality, maximum cost. (Current behavior.)
@@ -394,7 +394,7 @@ Both call sites must read this section and follow it verbatim — do NOT duplica
 
 3. **Write the field.** Append `- **Code agent model profile:** <choice>` to the `## Arness` block in CLAUDE.md, using the existing field-write idiom (preserve all other fields, replace the single field if it already exists).
 
-4. **Copy the preset.** Create `.arness/agent-models/` if it does not exist (`mkdir -p .arness/agent-models`). Copy `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/code.md`.
+4. **Copy the preset.** Create `.arness/agent-models/` if it does not exist (`mkdir -p .arness/agent-models`). Copy `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/code.md`.
 
 5. **Record the checksum.** Compute the SHA-256 checksum of the copied file via Bash:
    ```bash
@@ -419,8 +419,8 @@ Both call sites must read this section and follow it verbatim — do NOT duplica
 Layer 2c runs steps 1-3 of the following whenever the field is present:
 
 1. **Checksum check.** Compute the current sha256 of `.arness/agent-models/code.md` and compare to the recorded checksum in `.arness/agent-models/.checksums.json`. If they differ, flip the field to `custom` (one-line user message; do NOT overwrite the user's file).
-2. **Version check** (only when value is `all-opus` or `balanced` and checksums match): compare the `# Version:` header in the user's `.arness/agent-models/code.md` against the upstream preset at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/<value>.md`. On mismatch, apply the `Template updates:` policy (reuse `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md`).
-3. **Custom diagnostic** (only when value is `custom`): read the canonical agent list from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/all-opus.md` and surface info-level diagnostics for any canonical agent missing from the user's file.
+2. **Version check** (only when value is `all-opus` or `balanced` and checksums match): compare the `# Version:` header in the user's `.arness/agent-models/code.md` against the upstream preset at `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/<value>.md`. On mismatch, apply the `Template updates:` policy (reuse `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md`).
+3. **Custom diagnostic** (only when value is `custom`): read the canonical agent list from `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/all-opus.md` and surface info-level diagnostics for any canonical agent missing from the user's file.
 
 ---
 
@@ -428,18 +428,18 @@ Layer 2c runs steps 1-3 of the following whenever the field is present:
 
 1. **Never hard-block.** If auto-detection fails for a non-critical field (Platform, Issue tracker), default gracefully (`none`). Only the profile welcome flow is mandatory on first invocation.
 2. **Preserve ALL existing `## Arness` fields** not managed by Arness Code. When writing or updating the section, read all existing fields first and include them unchanged. Arness Spark fields (Vision directory, Use cases directory, Prototypes directory, Spikes directory, Visual grounding directory, Reports directory) and Arness Infra fields (Infra plans directory, Infra specs directory, Infra docs directory, etc.) must be preserved.
-3. **Use `${CLAUDE_PLUGIN_ROOT}`** for all plugin-internal path references. Never hardcode absolute paths.
-4. **Template setup** uses the procedure from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/template-setup.md`. Do not duplicate that logic inline — read the reference.
+3. **Use `<arn-code-plugin-root>`** for all plugin-internal path references. Never hardcode absolute paths.
+4. **Template setup** uses the procedure from `<arn-code-plugin-root>/skills/arn-code-init/references/template-setup.md`. Do not duplicate that logic inline — read the reference.
 5. **Profile YAML uses structured `technology_preferences`** with separate `languages`, `frameworks`, `databases`, `infrastructure` arrays. Do not store technologies as a flat string.
 6. **Profile data is non-sensitive** (role, technology preferences — no credentials or secrets). The `.claude/*.local.md` gitignore pattern protects against accidental commits of the project-level override while keeping `.claude/settings.json` committable for team sharing.
 7. **Folder preference coordination:** When setting `Folder preference`, this value is shared across all three plugins. If another plugin already set it, respect that value.
-8. **Template version field** must be set from the plugin version in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`, not hardcoded.
+8. **Template version field** must be set from the plugin version in `<arn-code-plugin-root>/.codex-plugin/plugin.json`, not hardcoded.
 
 ---
 
 ## Dispatch convention (agent model lookup)
 
-Every skill in this plugin that dispatches a subagent via the Task tool consults a per-plugin model profile to decide which model the agent runs on. The profile lives at `.arness/agent-models/code.md` (project-relative, NOT plugin-relative — this path is project-rooted while plugin assets use `${CLAUDE_PLUGIN_ROOT}` per Pattern 8 in INTRODUCTION.md). The file is created during init and is one of the presets shipped under `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/`.
+Every skill in this plugin that dispatches a subagent via the Task tool consults a per-plugin model profile to decide which model the agent runs on. The profile lives at `.arness/agent-models/code.md` (project-relative, NOT plugin-relative — this path is project-rooted while plugin assets use `<arn-code-plugin-root>` per Pattern 8 in INTRODUCTION.md). The file is created during init and is one of the presets shipped under `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/`.
 
 ### Lookup procedure (apply at every dispatch site)
 

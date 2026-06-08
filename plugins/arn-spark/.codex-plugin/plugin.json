@@ -1,0 +1,31 @@
+{
+  "name": "arn-spark",
+  "version": "2.4.0",
+  "description": "Greenfield exploration for Codex. Discover product ideas, generate use cases, scaffold projects, and validate prototypes.",
+  "author": {
+    "name": "Fryderyk Benigni",
+    "url": "https://github.com/fredcallagan"
+  },
+  "repository": "https://github.com/AppsVortex/arness",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Arness Spark",
+    "shortDescription": "Explore, shape, and prototype new product ideas.",
+    "longDescription": "Arness Spark guides greenfield work from raw idea through discovery, personas, use cases, architecture vision, naming, scaffolding, visual direction, and prototype validation. It preserves durable project artifacts under .arness.",
+    "developerName": "AppsVortex",
+    "category": "Productivity",
+    "capabilities": [
+      "Product discovery",
+      "Use case generation",
+      "Prototype validation",
+      "Project scaffolding",
+      "Visual strategy"
+    ],
+    "defaultPrompt": [
+      "Explore a product idea with Arness Spark.",
+      "Define use cases for this product.",
+      "Validate a prototype and extract features."
+    ]
+  }
+}

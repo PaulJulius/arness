@@ -6,7 +6,7 @@ Lightweight review procedure performed after implementation, before offering to 
 
 ## Review Procedure
 
-**Note:** If `/arn-code-simplify` was run before this review, the code may have been modified since the initial implementation. The review should validate the post-simplification state, not the pre-simplification state. Check the SIMPLIFICATION_REPORT.json in the project directory for details on what was changed.
+**Note:** If `arn-code-simplify` was run before this review, the code may have been modified since the initial implementation. The review should validate the post-simplification state, not the pre-simplification state. Check the SIMPLIFICATION_REPORT.json in the project directory for details on what was changed.
 
 ### 1. Pattern Compliance
 

@@ -33,9 +33,9 @@ Read the project's CLAUDE.md and look for a `## Arness` section. If no CLAUDE.md
 
 **If the section exists:**
 1. Parse all config fields from the existing `## Arness` block
-2. Read the current plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
+2. Read the current plugin version from `<arn-spark-plugin-root>/.codex-plugin/plugin.json`
 3. Show the user their current configuration
-4. Ask via `AskUserQuestion`:
+4. Ask via `user prompt`:
    - **Review** — Show current configuration summary, no changes
    - **Update** — Check for missing greenfield fields and fill them in
    - **Reconfigure** — Re-run the full setup flow from scratch
@@ -56,35 +56,35 @@ Ask the user about each output directory. All defaults are under `.arness/` to c
 "Where should Arness store greenfield vision documents (product concept, architecture vision, style brief, spike results, feature backlog)?"
 
 - Default: `.arness/vision`
-- Used by: `/arn-spark-discover`, `/arn-spark-arch-vision`, `/arn-spark-spike`, `/arn-spark-style-explore`, `/arn-spark-feature-extract`, `/arn-spark-dev-setup`
+- Used by: `arn-spark-discover`, `arn-spark-arch-vision`, `arn-spark-spike`, `arn-spark-style-explore`, `arn-spark-feature-extract`, `arn-spark-dev-setup`
 
 **2.2. Use cases directory:**
 
 "Where should Arness store use case documents?"
 
 - Default: `.arness/use-cases`
-- Used by: `/arn-spark-use-cases`, `/arn-spark-use-cases-teams`
+- Used by: `arn-spark-use-cases`, `arn-spark-use-cases-teams`
 
 **2.3. Prototypes directory:**
 
 "Where should Arness store prototype versions and review reports?"
 
 - Default: `.arness/prototypes`
-- Used by: `/arn-spark-static-prototype`, `/arn-spark-clickable-prototype`
+- Used by: `arn-spark-static-prototype`, `arn-spark-clickable-prototype`
 
 **2.4. Spikes directory:**
 
 "Where should Arness store technical spike POC code?"
 
 - Default: `.arness/spikes`
-- Used by: `/arn-spark-spike`
+- Used by: `arn-spark-spike`
 
 **2.5. Visual grounding directory:**
 
 "Where should Arness store visual grounding assets (reference images, design mockups, brand assets)?"
 
 - Default: `.arness/visual-grounding`
-- Used by: `/arn-spark-style-explore`, `/arn-spark-static-prototype`, `/arn-spark-clickable-prototype`
+- Used by: `arn-spark-style-explore`, `arn-spark-static-prototype`, `arn-spark-clickable-prototype`
 
 Create three subfolders inside the visual grounding directory: `references/`, `designs/`, `brand/`.
 
@@ -93,7 +93,7 @@ Create three subfolders inside the visual grounding directory: `references/`, `d
 "Where should Arness store stress test reports and other analysis output?"
 
 - Default: `.arness/reports`
-- Used by: `/arn-spark-stress-interview`, `/arn-spark-stress-competitive`, `/arn-spark-stress-premortem`, `/arn-spark-stress-prfaq`, `/arn-spark-concept-review`
+- Used by: `arn-spark-stress-interview`, `arn-spark-stress-competitive`, `arn-spark-stress-premortem`, `arn-spark-stress-prfaq`, `arn-spark-concept-review`
 
 After creating the Reports directory (`mkdir -p <chosen-path>`), also create the `stress-tests/` subdirectory: `mkdir -p <chosen-path>/stress-tests/`
 
@@ -112,7 +112,7 @@ Check if the project uses Git, determine the code hosting platform, and identify
 
 **3.1. Git check:**
 1. Run `git rev-parse --is-inside-work-tree` to check for a git repository
-2. If Git is not detected, inform the user: "This project is not a git repository. Git-dependent skills (Arness Code: `/arn-code-ship`, `/arn-code-review-pr`, `/arn-code-create-issue`, `/arn-code-pick-issue`) will be unavailable." Record Git: no, Platform: none, Issue tracker: none and proceed to Step 4.
+2. If Git is not detected, inform the user: "This project is not a git repository. Git-dependent skills (Arness Code: `arn-code-ship`, `arn-code-review-pr`, `arn-code-create-issue`, `arn-code-pick-issue`) will be unavailable." Record Git: no, Platform: none, Issue tracker: none and proceed to Step 4.
 
 **3.2. Remote classification:**
 1. Run `git remote -v` and classify the remote URL:
@@ -136,15 +136,15 @@ Check if the project uses Git, determine the code hosting platform, and identify
 | `arness-priority-low` | `c5def5` | Low priority |
 | `arness-rejected` | `e4e669` | Issue reviewed and rejected as invalid or out of scope |
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/platform-labels.md` for label details and which skills use each label.
+> Read `<arn-spark-plugin-root>/skills/arn-spark-init/references/platform-labels.md` for label details and which skills use each label.
 
 **3.3b. If candidate is bitbucket:**
 1. Run `bkt --version` to check if the Bitbucket CLI is installed
-   - If NOT available → read and show the setup instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/bkt-setup.md`, then **STOP init**
+   - If NOT available → read and show the setup instructions from `<arn-spark-plugin-root>/skills/arn-spark-init/references/bkt-setup.md`, then **STOP init**
 2. Run `bkt auth status` to check authentication
-   - If NOT authenticated → read and show the auth instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/bkt-setup.md`, then **STOP init**
+   - If NOT authenticated → read and show the auth instructions from `<arn-spark-plugin-root>/skills/arn-spark-init/references/bkt-setup.md`, then **STOP init**
 3. Platform: **bitbucket** (confirmed)
-4. Ask (using `AskUserQuestion`):
+4. Ask the user:
 
    > **Do you use Jira for issue tracking on this project?**
    > 1. **Yes** — Verify Atlassian MCP server and select a Jira project
@@ -152,12 +152,12 @@ Check if the project uses Git, determine the code hosting platform, and identify
 
    - **Yes** → verify the Atlassian MCP server:
      - Attempt to list Jira projects via the MCP tool
-     - If MCP NOT available → read and show the setup instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/jira-mcp-setup.md`, then **STOP init**
+     - If MCP NOT available → read and show the setup instructions from `<arn-spark-plugin-root>/skills/arn-spark-init/references/jira-mcp-setup.md`, then **STOP init**
      - If MCP available → list projects, present to user, user picks one
      - Store: Issue tracker: **jira**, Jira site: (from MCP context or ask user), Jira project: (user's pick)
-     - No label creation needed (Jira labels are implicit — see `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/platform-labels.md`)
+     - No label creation needed (Jira labels are implicit — see `<arn-spark-plugin-root>/skills/arn-spark-init/references/platform-labels.md`)
    - **No** → Issue tracker: **none**
-     - Inform the user: "Issue management skills (Arness Code: `/arn-code-create-issue`, `/arn-code-pick-issue`) will be unavailable. PR and code workflow skills still work via bkt."
+     - Inform the user: "Issue management skills (Arness Code: `arn-code-create-issue`, `arn-code-pick-issue`) will be unavailable. PR and code workflow skills still work via bkt."
 
 **3.4. Design tool integration:**
 
@@ -184,7 +184,7 @@ Show the detection context first:
 - [If Canva MCP detected:] "Canva MCP is available on this machine."
 - [If Canva MCP not detected:] "Canva MCP is not configured. ([Setup instructions](https://www.canva.dev/docs/connect/mcp-server/))"
 
-Then ask (using `AskUserQuestion`, multiSelect: true):
+Then ask (using `user prompt`, multiSelect: true):
 
 > **Which design tools do you want to use for this project?** (Even if an MCP is available, you may not need it for every project.)
 > 1. **Figma** — Pull design data and export screens during style exploration and prototype validation [only show if MCP available]
@@ -212,13 +212,13 @@ Downstream skills check these flags — not MCP availability — to decide wheth
 
 ### Step 3.6: Choose Model Profile for arn-spark Agents
 
-Run the **Profile selection** procedure documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the AskUserQuestion or file-copy logic here.
+Run the **Profile selection** procedure documented in `<arn-spark-plugin-root>/skills/arn-spark-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the user prompt or file-copy logic here.
 
 The procedure performs (in order):
 1. Cross-plugin default suggestion (read sibling plugin profile fields if present in the existing `## Arness` block — e.g., if the user previously chose `balanced` for arn-code, suggest `balanced` here too)
-2. AskUserQuestion with title "Choose model profile for arn-spark agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
+2. Ask the user with title "Choose model profile for arn-spark agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
 3. Append `- **Spark agent model profile:** <choice>` to the `## Arness` block
-4. `mkdir -p .arness/agent-models/` then copy `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/spark.md`
+4. `mkdir -p .arness/agent-models/` then copy `<arn-spark-plugin-root>/skills/arn-spark-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/spark.md`
 5. Compute SHA-256 and record it in `.arness/agent-models/.checksums.json` along with the profile name and version
 6. Inform the user with a one-line confirmation
 
@@ -288,18 +288,18 @@ List all created/modified files with their paths.
 
 "Arness Spark is ready. Here is the recommended exploration pipeline:
 
-1. **Define the product:** Run `/arn-spark-discover` to shape your product idea into a structured concept
-2. **Stress-test the concept (optional):** Run `/arn-spark-stress-interview`, `/arn-spark-stress-competitive`, `/arn-spark-stress-premortem`, `/arn-spark-stress-prfaq` to validate the concept, then `/arn-spark-concept-review` to apply findings
-3. **Define the architecture:** Run `/arn-spark-arch-vision` to choose technologies and design the system
-4. **Write use cases:** Run `/arn-spark-use-cases` (or `/arn-spark-use-cases-teams` for expert debate) to specify system behavior
-5. **Scaffold the project:** Run `/arn-spark-scaffold` to create the project skeleton
-6. **Validate risks:** Run `/arn-spark-spike` to test critical technical assumptions
-7. **Explore visual direction:** Run `/arn-spark-visual-sketch` to generate visual direction proposals and select a direction
-8. **Define the style:** Run `/arn-spark-style-explore` to translate the visual direction into a complete design system
-9. **Prototype:** Run `/arn-spark-static-prototype` and `/arn-spark-clickable-prototype` to validate the UI
-10. **Extract features:** Run `/arn-spark-feature-extract` to build the backlog
+1. **Define the product:** Run `arn-spark-discover` to shape your product idea into a structured concept
+2. **Stress-test the concept (optional):** Run `arn-spark-stress-interview`, `arn-spark-stress-competitive`, `arn-spark-stress-premortem`, `arn-spark-stress-prfaq` to validate the concept, then `arn-spark-concept-review` to apply findings
+3. **Define the architecture:** Run `arn-spark-arch-vision` to choose technologies and design the system
+4. **Write use cases:** Run `arn-spark-use-cases` (or `arn-spark-use-cases-teams` for expert debate) to specify system behavior
+5. **Scaffold the project:** Run `arn-spark-scaffold` to create the project skeleton
+6. **Validate risks:** Run `arn-spark-spike` to test critical technical assumptions
+7. **Explore visual direction:** Run `arn-spark-visual-sketch` to generate visual direction proposals and select a direction
+8. **Define the style:** Run `arn-spark-style-explore` to translate the visual direction into a complete design system
+9. **Prototype:** Run `arn-spark-static-prototype` and `arn-spark-clickable-prototype` to validate the UI
+10. **Extract features:** Run `arn-spark-feature-extract` to build the backlog
 
-When you are ready to transition from exploration to development: if you have the Arness Code plugin installed, run `/arn-planning` to start the development pipeline. Arness auto-configures code patterns, report templates, plans, and documentation directories on first use."
+When you are ready to transition from exploration to development: if you have the Arness Code plugin installed, run `arn-planning` to start the development pipeline. Arness auto-configures code patterns, report templates, plans, and documentation directories on first use."
 
 ---
 
@@ -307,6 +307,6 @@ When you are ready to transition from exploration to development: if you have th
 
 - **User cancels at any step:** Confirm cancellation and exit gracefully. Do not leave partially written configuration. If some directories were already created, inform the user they can be removed manually.
 - **Writing to CLAUDE.md fails:** Print the full `## Arness` config block in the conversation so the user can insert it manually. Suggest checking file permissions.
-- **`gh auth login` or `bkt auth login` not resolved:** Explain the issue and stop init. The user must resolve authentication before proceeding. They can re-run `/arn-spark-init` after fixing auth.
+- **`gh auth login` or `bkt auth login` not resolved:** Explain the issue and stop init. The user must resolve authentication before proceeding. They can re-run `arn-spark-init` after fixing auth.
 - **Re-running is safe:** Step 1 detects the existing config and offers Update / Reconfigure / Keep. No data is lost on re-run.
 - **Arness Init run after Spark Init:** Fully supported. Arness Init's upgrade flow detects the existing greenfield fields and adds the missing development fields (Plans, Specs, Templates, Code patterns, Docs). Greenfield fields are preserved.

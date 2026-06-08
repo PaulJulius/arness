@@ -48,7 +48,7 @@ JSON schema for `.reference-checksums.json` -- the checksum tracking file for ex
 | Field | Type | Valid Values | Description |
 |-------|------|-------------|-------------|
 | `sha256` | string | 64-character hex string | SHA-256 hash of the file content at time of last write. Used to detect user modifications during plugin upgrades and refresh operations. |
-| `source` | string | Relative path from `${CLAUDE_PLUGIN_ROOT}/skills/` | The original source path within the plugin. Used to locate the plugin default when computing diffs or falling back. |
+| `source` | string | Relative path from `<arn-infra-plugin-root>/skills/` | The original source path within the plugin. Used to locate the plugin default when computing diffs or falling back. |
 | `category` | string | `"registries"` \| `"iac-patterns"` \| `"container-patterns"` \| `"cicd-patterns"` \| `"cloud-patterns"` \| `"infra-guides"` | The refresh category this file belongs to. Used by `arn-infra-refresh` for category-based refresh operations. |
 | `lastUpdated` | string | ISO 8601 timestamp | When this specific file was last written (by init, refresh, or plugin update). |
 | `updatedBy` | string | `"init"` \| `"refresh"` \| `"plugin-update"` | Which operation last wrote this file. Helps users understand the provenance of each override. |

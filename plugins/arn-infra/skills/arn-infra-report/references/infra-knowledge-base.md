@@ -25,15 +25,15 @@ arn-infra-change-spec → arn-infra-change-plan → arn-infra-save-plan → arn-
 ### Standalone Skills
 
 These skills operate outside both pipeline modes:
-- `/arn-infra-wizard` — guided pipeline orchestrator (sequences either Quick or Full Pipeline mode)
-- `/arn-infra-assess` — comprehensive infrastructure assessment, un-deferral, backlog generation
-- `/arn-infra-cleanup` — TTL-based resource expiry and destruction
-- `/arn-infra-migrate` — provider migration, PaaS graduation, consolidation
-- `/arn-infra-refresh` — update evolving reference files via online research
-- `/arn-infra-triage` — process incoming infrastructure request issues from Arness Code
-- `/arn-infra-help` — pipeline position detection and next-step guidance
-- `/arn-infra-init` — optional provider/environment/IaC tool configuration
-- `/arn-infra-report` — diagnostic reporting (this skill)
+- `arn-infra-wizard` — guided pipeline orchestrator (sequences either Quick or Full Pipeline mode)
+- `arn-infra-assess` — comprehensive infrastructure assessment, un-deferral, backlog generation
+- `arn-infra-cleanup` — TTL-based resource expiry and destruction
+- `arn-infra-migrate` — provider migration, PaaS graduation, consolidation
+- `arn-infra-refresh` — update evolving reference files via online research
+- `arn-infra-triage` — process incoming infrastructure request issues from Arness Code
+- `arn-infra-help` — pipeline position detection and next-step guidance
+- `arn-infra-init` — optional provider/environment/IaC tool configuration
+- `arn-infra-report` — diagnostic reporting (this skill)
 
 ## Config Requirements
 
@@ -183,7 +183,7 @@ The `## Arness` section in CLAUDE.md can contain up to 25 infrastructure-specifi
 ### Reference Files Directory (28 evolving files)
 
 ```
-${CLAUDE_PLUGIN_ROOT}/
+<arn-infra-plugin-root>/
 ├── skills/arn-infra-discover/references/
 │   ├── mcp-registry.md
 │   ├── cli-registry.md
@@ -359,7 +359,7 @@ Maintainers update this section when bumping the plugin version to document what
 
 ## Version Information
 
-- Plugin version is in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (field: `version`)
+- Plugin version is in `<arn-infra-plugin-root>/.codex-plugin/plugin.json` (field: `version`)
 - Template version in user config tracks which plugin version templates were copied from
 - Skill versions are in each SKILL.md frontmatter (field: `version`)
 - Reference version tracks the evolving reference file set version

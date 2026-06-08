@@ -14,21 +14,21 @@ version: 1.0.0
 
 Set up a working project skeleton from architecture vision decisions through guided conversation, aided by the `arn-spark-scaffolder` agent for project creation and optionally the `arn-spark-tech-evaluator` agent for UI toolkit comparisons. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is a **buildable project** with all dependencies installed and configured.
 
-This skill covers the initial project setup: framework scaffolding, dependency installation, build configuration, linting, and UI toolkit setup. It does not implement features, create screens, or write application logic -- those are handled by subsequent skills (`/arn-spark-spike`, `/arn-spark-style-explore`, `/arn-spark-static-prototype`, `/arn-spark-clickable-prototype`).
+This skill covers the initial project setup: framework scaffolding, dependency installation, build configuration, linting, and UI toolkit setup. It does not implement features, create screens, or write application logic -- those are handled by subsequent skills (`arn-spark-spike`, `arn-spark-style-explore`, `arn-spark-static-prototype`, `arn-spark-clickable-prototype`).
 
 ## Prerequisites
 
 An architecture vision document must exist. Check in order:
 
 1. Read the project's `CLAUDE.md` for a `## Arness` section. If found, check the configured Vision directory for `architecture-vision.md`
-2. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+2. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 3. If `## Arness` exists but no architecture vision found, check `.arness/vision/architecture-vision.md` at the project root
 
 **If an architecture vision is found:** Read it and proceed to Step 1.
 
 **If no architecture vision is found:** Inform the user:
 
-"No architecture vision document found. I recommend running `/arn-spark-arch-vision` first to define your technology stack. The scaffold needs to know which frameworks, build tools, and libraries to set up."
+"No architecture vision document found. I recommend running `arn-spark-arch-vision` first to define your technology stack. The scaffold needs to know which frameworks, build tools, and libraries to set up."
 
 Do not proceed without an architecture vision or explicit technology stack from the user.
 
@@ -67,7 +67,7 @@ Present the extracted stack and relevant pillars to the user:
 - **[Pillar]:** [what it implies for CSS/component library decisions]
 - ...
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Does this stack look right?"**
 
@@ -87,7 +87,7 @@ Ask the user about each:
 
 **CSS approach:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which CSS framework should we use?"**
 
@@ -101,7 +101,7 @@ Options:
 
 **Component library:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which component library should we use?"**
 
@@ -117,7 +117,7 @@ Note: Limit to 4 options. If more options exist, group or prioritize based on th
 
 **Icon library (optional):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Do you want an icon library?"**
 
@@ -147,7 +147,7 @@ The agent creates the project structure, installs dependencies, configures build
 
 After the scaffolder reports completion, verify using the scaffold checklist:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-scaffold/references/scaffold-checklist.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-scaffold/references/scaffold-checklist.md`
 
 Walk through all checklist categories:
 
@@ -170,7 +170,7 @@ For any failed checks:
 Write a scaffold summary document so downstream skills have a record of the full technology stack including UI toolkit decisions made during scaffolding.
 
 1. Read the template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-scaffold/references/scaffold-summary-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-scaffold/references/scaffold-summary-template.md`
 
 2. Populate the template with the scaffolding results:
    - Technology stack with actual installed versions (from the scaffolder's report)
@@ -212,9 +212,9 @@ Present what was created:
 Scaffold summary saved to `[path]/scaffold-summary.md`.
 
 Recommended next steps:
-1. **Set up development environment:** Run `/arn-spark-dev-setup` to configure setup scripts, CI, dev containers, and developer onboarding
-2. **Validate critical risks:** Run `/arn-spark-spike` to test technical risks from your architecture vision
-3. **Explore visual style:** Run `/arn-spark-style-explore` to define the look and feel"
+1. **Set up development environment:** Run `arn-spark-dev-setup` to configure setup scripts, CI, dev containers, and developer onboarding
+2. **Validate critical risks:** Run `arn-spark-spike` to test technical risks from your architecture vision
+3. **Explore visual style:** Run `arn-spark-style-explore` to define the look and feel"
 
 Adapt next steps based on context. If the architecture vision identified critical risks, emphasize spiking first. If the user is eager to see UI, suggest style exploration.
 
@@ -226,14 +226,14 @@ Adapt next steps based on context. If the architecture vision identified critica
 | User unsure about CSS framework | Invoke `arn-spark-tech-evaluator` with comparison request |
 | User unsure about component library | Invoke `arn-spark-tech-evaluator` with comparison request |
 | User asks about code patterns | Defer: "Code patterns will be established when features are built. The scaffold just sets up the foundation." |
-| User asks about features or screens | Defer: "Features come after the scaffold. Next steps are `/arn-spark-spike` or `/arn-spark-style-explore`." |
+| User asks about features or screens | Defer: "Features come after the scaffold. Next steps are `arn-spark-spike` or `arn-spark-style-explore`." |
 | Build fails after scaffold | Ask `arn-spark-scaffolder` to diagnose and fix |
 
 ## Error Handling
 
-- **Architecture vision not found:** Cannot proceed. Suggest `/arn-spark-arch-vision` first.
+- **Architecture vision not found:** Cannot proceed. Suggest `arn-spark-arch-vision` first.
 - **Project directory already has code:** Warn the user. Offer to extend the existing project or scaffold in a subdirectory.
 - **Scaffold build fails:** Report the error. Invoke scaffolder to fix. If it fails after 3 attempts, present the error and suggest the user investigate manually.
 - **Dependency installation fails:** Check network connectivity. Report the specific package that failed. Suggest the user try installing it manually.
 - **UI toolkit comparison requested but arn-spark-tech-evaluator unavailable:** Provide a brief comparison from general knowledge and note that it was not verified via web search.
-- **User cancels mid-scaffold:** Note what was completed. The user can re-run `/arn-spark-scaffold` to continue or start fresh.
+- **User cancels mid-scaffold:** Note what was completed. The user can re-run `arn-spark-scaffold` to continue or start fresh.

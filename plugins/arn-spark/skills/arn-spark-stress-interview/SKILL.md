@@ -27,14 +27,14 @@ The process produces brutally honest feedback from 3 distinct adversarial perspe
 
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured **Vision directory** and **Reports directory** paths
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. Create the reports directory structure if it does not exist: `mkdir -p <reports-dir>/stress-tests/`
 
 ### Data Availability
 
 | Artifact | Status | Location | Fallback |
 |----------|--------|----------|----------|
-| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `/arn-spark-discover` |
+| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `arn-spark-discover` |
 | Persona moulds | REQUIRED | Target Personas section of product concept | Fallback cascade below |
 | Product pillars | ENRICHES | Product Pillars section of product concept | Interview proceeds but questions are less targeted |
 | Competitive landscape | ENRICHES | Competitive Landscape section of product concept | Phase 3 competitive comparison questions are skipped |
@@ -43,8 +43,8 @@ The process produces brutally honest feedback from 3 distinct adversarial perspe
 
 If the product concept exists but the Target Personas section is missing or contains "Not explored" sentinel:
 
-Ask (using `AskUserQuestion`): **"The product concept does not include persona moulds, which are needed to generate synthetic interview subjects. How would you like to proceed?"**
-1. Run `/arn-spark-discover` to generate personas through product discovery
+Ask the user: **"The product concept does not include persona moulds, which are needed to generate synthetic interview subjects. How would you like to proceed?"**
+1. Run `arn-spark-discover` to generate personas through product discovery
 2. Describe 3 target user types now (I will generate personas from your descriptions)
 3. Skip the interview stress test
 
@@ -55,9 +55,9 @@ If the user chooses option 2, collect brief descriptions and invoke `arn-spark-p
 ### Step 1: Load References
 
 Load the interview protocol, persona casting spec, and report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-interview/references/interview-protocol.md`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-interview/references/persona-casting-spec.md`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-interview/references/interview-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-interview/references/interview-protocol.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-interview/references/persona-casting-spec.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-interview/references/interview-report-template.md`
 
 ### Step 2: Read Product Concept and Extract Context
 
@@ -210,7 +210,7 @@ Present a summary to the user:
 **Recommended concept updates:** [N] recommendations ([X] Add, [Y] Modify, [Z] Remove)
 **Unresolved questions:** [N]
 
-This report will be used by `/arn-spark-concept-review` to propose changes to the product concept."
+This report will be used by `arn-spark-concept-review` to propose changes to the product concept."
 
 ## Agent Invocation Guide
 
@@ -228,7 +228,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 ## Error Handling
 
 - **Persona architect returns generic personas:** Retry with more specific mould details and casting overlay instructions. If retry fails:
-  Ask (using `AskUserQuestion`): **"Persona generation produced generic results. How would you like to proceed?"**
+  Ask the user: **"Persona generation produced generic results. How would you like to proceed?"**
   1. Retry with additional context
   2. Skip this persona and continue with remaining
   3. Abort the interview stress test
@@ -236,7 +236,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 - **Persona impersonator breaks character:** Retry once with a simplified prompt that re-emphasizes the persona profile and casting overlay. If retry fails, record what was captured and note the gap in the report. Continue with remaining phases/personas.
 
 - **Persona impersonator breaks character (persistent):** After retry failure:
-  Ask (using `AskUserQuestion`): **"The persona impersonator is not maintaining character. How would you like to proceed?"**
+  Ask the user: **"The persona impersonator is not maintaining character. How would you like to proceed?"**
   1. Retry this phase
   2. Skip this phase and continue
   3. Abort the interview stress test
@@ -244,7 +244,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 - **Product strategist returns unhelpful questions:** Use the interview protocol's question types directly as fallback questions. Note in the report that strategist-formulated questions were replaced with protocol defaults.
 
 - **Any agent invocation fails entirely:** Retry once with a simplified prompt. If retry fails:
-  Ask (using `AskUserQuestion`): **"Agent invocation failed. How would you like to proceed?"**
+  Ask the user: **"Agent invocation failed. How would you like to proceed?"**
   1. Retry
   2. Skip this step
   3. Abort

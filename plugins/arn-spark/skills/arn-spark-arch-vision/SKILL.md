@@ -17,11 +17,11 @@ version: 1.0.0
 
 Explore technology options and define the system architecture for a greenfield project through iterative conversation, aided by technology research from the `arn-spark-tech-evaluator` agent. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is an **architecture vision document**.
 
-This skill covers the HOW at a high level: what technologies to use and how the system is structured. It does not cover implementation details like file structure, specific APIs, or code patterns -- that is the plan's job (via `/arn-code-plan`).
+This skill covers the HOW at a high level: what technologies to use and how the system is structured. It does not cover implementation details like file structure, specific APIs, or code patterns -- that is the plan's job (via `arn-code-plan`).
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Spark fields before proceeding.
+Read `<arn-spark-plugin-root>/skills/arn-spark-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Spark fields before proceeding.
 
 After Step 0 completes, extract from `## Arness`:
 - Vision directory, Use cases directory, Prototypes directory, Spikes directory, Visual grounding directory, Reports directory
@@ -37,7 +37,7 @@ A product concept document should exist. Check in order:
 
 **If no product concept is found:** Inform the user:
 
-"No product concept document found. I recommend running `/arn-spark-discover` first to define what you are building. Alternatively, you can describe your product briefly and I will work with that."
+"No product concept document found. I recommend running `arn-spark-discover` first to define what you are building. Alternatively, you can describe your product briefly and I will work with that."
 
 If the user provides an inline description, proceed with that as the product context. Do not hard-block.
 
@@ -138,7 +138,7 @@ Enter a conversation loop. Cover these architectural categories (not necessarily
 
 | Situation | Action |
 |-----------|--------|
-| User asks "which is better, X or Y?" | Load `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-arch-vision/references/technology-evaluation-guide.md` if not already loaded, then invoke `arn-spark-tech-evaluator` with head-to-head comparison request |
+| User asks "which is better, X or Y?" | Load `<arn-spark-plugin-root>/skills/arn-spark-arch-vision/references/technology-evaluation-guide.md` if not already loaded, then invoke `arn-spark-tech-evaluator` with head-to-head comparison request |
 | User asks "will X work for our use case?" | Invoke `arn-spark-tech-evaluator` with validation question |
 | User asks about a technology's current status | Invoke `arn-spark-tech-evaluator` (uses WebSearch to verify) |
 | User wants a full recommendation for a layer | Invoke `arn-spark-tech-evaluator` with layer evaluation request |
@@ -162,7 +162,7 @@ Ready for me to write the architecture vision document, or do you want to explor
 When the user is ready:
 
 1. Read the template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-arch-vision/references/architecture-vision-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-arch-vision/references/architecture-vision-template.md`
 
 2. Populate the template with all decisions from the conversation:
    - Replace all bracketed placeholders with concrete content
@@ -188,10 +188,10 @@ After writing the document, inform the user:
 
 You now have both product concept and architecture vision defined. Recommended next steps:
 
-1. **Start developing:** If you have the Arness Code plugin installed, run `/arn-planning` to begin the development pipeline. Arness auto-configures code patterns based on your architecture choices.
+1. **Start developing:** If you have the Arness Code plugin installed, run `arn-planning` to begin the development pipeline. Arness auto-configures code patterns based on your architecture choices.
 2. **Scaffold the project:** Set up the development environment with your chosen stack
 3. **Validate critical risks:** [list the top 1-2 validation points from the document]
-4. **Start feature specs:** Run `/arn-code-feature-spec` to spec your first feature"
+4. **Start feature specs:** Run `arn-code-feature-spec` to spec your first feature"
 
 Adapt the next steps based on what makes sense for the project. If critical validation points were identified, emphasize those as the immediate priority.
 
@@ -206,21 +206,21 @@ Adapt the next steps based on what makes sense for the project. If critical vali
 | Full layer recommendation needed | Invoke `arn-spark-tech-evaluator` with layer evaluation |
 | User makes a technology decision | Record directly, no agent needed |
 | Architecture pattern question | Answer directly from conversation context |
-| Product or scope question | Defer to product concept or `/arn-spark-discover` |
+| Product or scope question | Defer to product concept or `arn-spark-discover` |
 
 ## Error Handling
 
-- **User cancels mid-conversation:** Confirm cancellation. If enough decisions have been made for a partial document, offer to write it. Otherwise, inform the user they can restart with `/arn-spark-arch-vision` at any time.
+- **User cancels mid-conversation:** Confirm cancellation. If enough decisions have been made for a partial document, offer to write it. Otherwise, inform the user they can restart with `arn-spark-arch-vision` at any time.
 - **arn-spark-tech-evaluator returns unhelpful response:** Summarize the issue briefly and continue the conversation directly. Try a more specific or narrower question on the next agent invocation.
 - **WebSearch unavailable (for arn-spark-tech-evaluator):** The agent will fall back to its training data. Note to the user that technology recommendations have not been verified against current release status and suggest the user manually check version currency for critical choices.
 - **Writing the document fails:** Print the full document content in the conversation so the user can copy it. Suggest checking file permissions or the output directory path.
 - **Architecture vision already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **An architecture vision already exists at `[path]`. How would you like to proceed?**
   > 1. **Replace** — Start a fresh architecture exploration
   > 2. **Update** — Focus on specific sections that need changes
 
   If **Update**, read the existing document and focus the conversation on the sections that need changes.
-- **No product concept and user declines to describe product:** Cannot proceed meaningfully. Suggest: "Without understanding what we are building, technology choices would be arbitrary. Run `/arn-spark-discover` first to define the product, then come back to architecture."
+- **No product concept and user declines to describe product:** Cannot proceed meaningfully. Suggest: "Without understanding what we are building, technology choices would be arbitrary. Run `arn-spark-discover` first to define the product, then come back to architecture."

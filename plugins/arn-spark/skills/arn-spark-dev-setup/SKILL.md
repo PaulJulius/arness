@@ -18,7 +18,7 @@ version: 1.0.0
 
 Define or follow a standardized development environment through guided conversation, aided by the `arn-spark-dev-env-builder` agent for file generation and optionally the `arn-spark-tech-evaluator` agent for environment comparisons. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifacts are **development environment infrastructure files** (setup scripts, container configs, CI workflows, toolchain pins) and a **dev-setup document**.
 
-This skill covers the development environment: how developers get the project running on their machines, how CI builds and tests, and how toolchain versions are pinned for reproducibility. It does not create project source code (that is `/arn-spark-scaffold`) or validate technical risks (that is `/arn-spark-spike`).
+This skill covers the development environment: how developers get the project running on their machines, how CI builds and tests, and how toolchain versions are pinned for reproducibility. It does not create project source code (that is `arn-spark-scaffold`) or validate technical risks (that is `arn-spark-spike`).
 
 This skill operates in two modes:
 
@@ -42,7 +42,7 @@ Check for `package.json`, `Cargo.toml`, or similar at the project root to detect
 
 **If the project is scaffolded:** Use existing manifests and configs for context.
 
-**If the project is not scaffolded:** Warn the user: "The project does not appear to be scaffolded yet. I can define the development environment conceptually, but setup scripts will be more useful after running `/arn-spark-scaffold`." Proceed with the conversation.
+**If the project is not scaffolded:** Warn the user: "The project does not appear to be scaffolded yet. I can define the development environment conceptually, but setup scripts will be more useful after running `arn-spark-scaffold`." Proceed with the conversation.
 
 ## Workflow
 
@@ -57,7 +57,7 @@ Read CLAUDE.md and check for a `## Arness` section with a `### Dev Environment` 
 **Type:** [type from CLAUDE.md]
 **Platforms:** [platforms from CLAUDE.md]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"A development environment is already configured. What would you like to do?"**
 
@@ -95,7 +95,7 @@ Present the environment options, informed by the project context:
 
 "Your project uses **[stack summary]**, targeting **[platforms]**. Based on your stack, I would suggest **[recommendation with brief rationale]**."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which development environment approach fits your project?"**
 
@@ -121,7 +121,7 @@ Based on the chosen approach, explore the details conversationally:
 
 **For all approaches:**
 
-Ask (using `AskUserQuestion`) with `multiSelect: true`:
+Ask (using `user prompt`) with `multiSelect: true`:
 
 **"Which platforms should the setup support? (select multiple)"**
 
@@ -132,7 +132,7 @@ Options:
 
 Default to all platforms from the architecture vision.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Do you want CI configured?"**
 
@@ -194,7 +194,7 @@ The agent creates all infrastructure files, setup scripts, CI workflows, toolcha
 ### Step 6: Write Dev Setup Document
 
 1. Read the template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-dev-setup/references/dev-setup-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-dev-setup/references/dev-setup-template.md`
 
 2. Populate the template with all decisions from the conversation and the builder's report:
    - Environment type and rationale
@@ -208,7 +208,7 @@ The agent creates all infrastructure files, setup scripts, CI workflows, toolcha
 3. Determine the output directory:
    - Read the project's `CLAUDE.md` and check for a `## Arness` section
    - If found, extract the configured Vision directory path — this is the source of truth
-   - If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+   - If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
    - If the output directory does not exist, create it
 
 4. Write the document as `dev-setup.md`
@@ -243,7 +243,7 @@ Replace it with the updated configuration.
 ### Step 8: Verify and Present Results
 
 Read the verification checklist:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-dev-setup/references/dev-setup-checklist.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-dev-setup/references/dev-setup-checklist.md`
 
 Walk through the applicable checklist categories. Then present results:
 
@@ -262,9 +262,9 @@ Walk through the applicable checklist categories. Then present results:
 - CI config: [valid/skipped]
 
 Recommended next steps:
-1. **Validate critical risks:** Run `/arn-spark-spike` to test technical risks from your architecture vision
-2. **Explore visual style:** Run `/arn-spark-style-explore` to define the look and feel
-3. **Share with team:** Commit the generated files so other developers can run `/arn-spark-dev-setup` to onboard"
+1. **Validate critical risks:** Run `arn-spark-spike` to test technical risks from your architecture vision
+2. **Explore visual style:** Run `arn-spark-style-explore` to define the look and feel
+3. **Share with team:** Commit the generated files so other developers can run `arn-spark-dev-setup` to onboard"
 
 ---
 
@@ -316,7 +316,7 @@ Record the deviation but do not block the developer.
 ### Step O4: Verify and Complete
 
 Read the verification checklist:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-dev-setup/references/dev-setup-checklist.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-dev-setup/references/dev-setup-checklist.md`
 
 Focus on Build Verification (category 4):
 - Project builds successfully
@@ -342,7 +342,7 @@ You are ready to start developing. If you encounter issues, check the troublesho
 | User asks about container image options | Discuss options, invoke `arn-spark-tech-evaluator` for comparison if needed |
 | User asks about CI provider differences | Discuss briefly, invoke `arn-spark-tech-evaluator` for deep comparison if needed |
 | User asks about technology choices (framework, languages) | Defer: "Technology choices are in the architecture vision. This skill configures the development environment for the chosen stack." |
-| User asks about project structure or dependencies | Defer: "Project structure is set up by `/arn-spark-scaffold`. This skill configures the environment around the existing project." |
+| User asks about project structure or dependencies | Defer: "Project structure is set up by `arn-spark-scaffold`. This skill configures the environment around the existing project." |
 | User asks about code patterns or features | Defer: "Code patterns come during feature development. The dev environment just needs to support building and testing." |
 | Setup script fails during onboard | Consult troubleshooting, invoke builder to diagnose if needed |
 
@@ -352,7 +352,7 @@ You are ready to start developing. If you encounter issues, check the troublesho
 - **Project not scaffolded:** Warn that auto-detection of dependencies will be limited. Proceed with manual specification. Setup scripts can be updated after scaffolding.
 - **Dev setup already configured (Define mode):**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **A development environment is already configured at `[path]`. How would you like to proceed?**
   > 1. **Replace** — Reconfigure the entire development environment
@@ -360,7 +360,7 @@ You are ready to start developing. If you encounter issues, check the troublesho
 - **Setup script fails:** Report the error. Invoke the builder to fix. If it fails after 3 attempts, present the error and the manual steps the developer can follow.
 - **Container build fails:** Report the error. Invoke the builder to diagnose. Common issues: missing system dependencies, wrong base image, network problems during build.
 - **CI workflow invalid:** Report the YAML error. Invoke the builder to fix the syntax.
-- **User cancels mid-setup:** Note what was completed. The user can re-run `/arn-spark-dev-setup` to continue. In Define mode, any files already generated are usable.
+- **User cancels mid-setup:** Note what was completed. The user can re-run `arn-spark-dev-setup` to continue. In Define mode, any files already generated are usable.
 - **Writing CLAUDE.md fails:** Print the configuration block in the conversation so the user can add it manually.
 - **Platform not available for testing:** Note the platform as untested. The setup script and CI will validate on that platform when it becomes available.
-- **dev-setup.md not found (Onboard mode):** Check for CONTRIBUTING.md or README with setup instructions as fallback. If nothing found, inform the developer: "The setup document is missing. Ask the project maintainer to run `/arn-spark-dev-setup` in Define mode, or describe the setup and I will guide you."
+- **dev-setup.md not found (Onboard mode):** Check for CONTRIBUTING.md or README with setup instructions as fallback. If nothing found, inform the developer: "The setup document is missing. Ask the project maintainer to run `arn-spark-dev-setup` in Define mode, or describe the setup and I will guide you."

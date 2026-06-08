@@ -50,7 +50,7 @@ WHILE there are pending tasks:
        - If the project has `### Visual Testing` configured in CLAUDE.md, include the Layer 1
          visual testing config in the spawn prompt (top-level fields only: capture script path,
          compare script path, baseline directory, diff threshold). Do NOT include `#### Layer N:`
-         subsection configs — multi-layer validation runs during `/arn-code-review-implementation`.
+         subsection configs — multi-layer validation runs during `arn-code-review-implementation`.
        - If a sketch manifest was detected in Step 1, include the following in the spawn prompt:
          --- SKETCH CONTEXT ---
          **Sketch manifest path:** <absolute path to sketch-manifest.json>

@@ -30,7 +30,7 @@ This is a self-contained review -- it does not invoke sub-agents. The review is 
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
 
 ## Workflow
 
@@ -162,7 +162,7 @@ This step is conditional. Check if `### Visual Testing` is configured in the pro
 
 3. **Stop dev server** after all layers that require it have been checked.
 
-4. **Deferred layers:** If any layers have Status = deferred, add a single INFO finding: `VR-DEFERRED: Deferred visual testing layers: [layer names]. Run /arn-spark-visual-readiness to check if they can be activated.`
+4. **Deferred layers:** If any layers have Status = deferred, add a single INFO finding: `VR-DEFERRED: Deferred visual testing layers: [layer names]. Run arn-spark-visual-readiness to check if they can be activated.`
 
 ---
 
@@ -171,7 +171,7 @@ This step is conditional. Check if `### Visual Testing` is configured in the pro
 > **Conditional:** Only execute this step if 2 or more active layers produced captures in Step 3b. If only one layer (or no layers) have captures, skip this step silently.
 
 1. Read the cross-layer comparison guide:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-review-implementation/references/cross-layer-comparison-guide.md`
+   > Read `<arn-code-plugin-root>/skills/arn-code-review-implementation/references/cross-layer-comparison-guide.md`
 
 2. **Determine threshold:**
    - Check the project's CLAUDE.md `### Visual Testing` section for `**Cross-layer threshold:**` -- use that value if present
@@ -271,15 +271,15 @@ Present findings in this format:
 
 If the verdict is **NEEDS FIXES** -> ask the user if they want help fixing the errors.
 If the verdict is **PASS** or **PASS WITH WARNINGS** -> confirm the project implementation is ready and suggest next steps:
-- "Run `/arn-code-document-project` to generate developer documentation for this feature."
-- "Run `/arn-code-ship` to commit your changes and create a pull request."
+- "Run `arn-code-document-project` to generate developer documentation for this feature."
+- "Run `arn-code-ship` to commit your changes and create a pull request."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing in CLAUDE.md** -> suggest running `/arn-implementing` to get started.
-- **Project directory missing** -> suggest running `/arn-code-save-plan` and `/arn-code-execute-plan` first.
-- **Reports missing from reports/ directory** -> suggest running `/arn-code-execute-plan` to generate reports.
+- **`## Arness` config missing in CLAUDE.md** -> suggest running `arn-implementing` to get started.
+- **Project directory missing** -> suggest running `arn-code-save-plan` and `arn-code-execute-plan` first.
+- **Reports missing from reports/ directory** -> suggest running `arn-code-execute-plan` to generate reports.
 - **Stored pattern docs missing** -> skip Pattern Compliance Review (Step 3) entirely, add an INFO finding noting that pattern compliance could not be checked, proceed with Plan Compliance (Step 2) and Cross-Phase Integration (Step 4) only.
 - **Implementation file from report doesn't exist on disk** -> record as PC04 WARNING and continue the review.

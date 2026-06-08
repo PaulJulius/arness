@@ -15,7 +15,7 @@ version: 1.0.0
 
 # Arness Infra Change Spec
 
-Develop an infrastructure change idea into a well-formed specification through iterative conversation, aided by the `arn-infra-request-analyzer` and `arn-infra-cost-analyst` agents. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is an **infrastructure change specification** written to the project's infra specs directory that captures affected resources, blast radius, environment scope, rollback requirements, compliance constraints, and cost impact. The spec then informs plan creation via `/arn-infra-change-plan`.
+Develop an infrastructure change idea into a well-formed specification through iterative conversation, aided by the `arn-infra-request-analyzer` and `arn-infra-cost-analyst` agents. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is an **infrastructure change specification** written to the project's infra specs directory that captures affected resources, blast radius, environment scope, rollback requirements, compliance constraints, and cost impact. The spec then informs plan creation via `arn-infra-change-plan`.
 
 This skill supports two entry paths:
 - **Fresh:** Guide the user through an iterative conversation to develop the change from scratch
@@ -26,13 +26,13 @@ arn-infra-init -> arn-infra-wizard (Full Pipeline) -> [arn-infra-change-spec] ->
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change specification is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change specification is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra specs directory** -- path where INFRA_CHANGE_*.md specs are stored (default: `.arness/infra-specs`)
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- which cloud providers are configured
 - **Environments** -- which environments exist and their promotion order
 - **Cost threshold** -- budget threshold for cost impact warnings
@@ -117,9 +117,9 @@ Acknowledge the idea with a brief restatement to confirm understanding.
 
 ### Step 3: Load References and Analyze
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-change-spec/references/infra-change-spec-template.md` for the spec template.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-change-spec/references/infra-change-spec-template.md` for the spec template.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-change-spec/references/blast-radius-guide.md` for blast radius classification.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-change-spec/references/blast-radius-guide.md` for blast radius classification.
 
 Using the change description (from Step 2a or 2b), perform initial analysis:
 
@@ -228,22 +228,22 @@ When the user approves:
 
    "Infrastructure change specification saved to `<infra-specs-dir>/INFRA_CHANGE_<name>.md`.
 
-   Next step: Run `/arn-infra-change-plan` to generate a phased implementation plan from this spec."
+   Next step: Run `arn-infra-change-plan` to generate a phased implementation plan from this spec."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
 - **Infra specs directory does not exist:** Create it with `mkdir -p`. Continue.
 - **Request analyzer agent fails:** Report the error. Continue without cross-project analysis. Note in the spec: "Application context analysis was unavailable. Review affected resources manually."
 - **Cost analyst agent fails:** Report the error. Continue without cost estimation. Note in the spec: "Cost estimation was unavailable. Estimate costs before executing the change."
 - **Cost analyst returns empty output:** Inform: "The cost analyst could not determine cost impact from the available information. Add cost estimates manually before proceeding."
 - **Ambiguous scope:** If the user describes a change that could apply to multiple environments or providers, ask for clarification rather than guessing.
-- **Missing provider info:** If the change references a provider not configured in `## Arness`, warn: "Provider [name] is not configured in your Arness Infra setup. Run `/arn-infra-init` to add it, or specify the provider details manually."
+- **Missing provider info:** If the change references a provider not configured in `## Arness`, warn: "Provider [name] is not configured in your Arness Infra setup. Run `arn-infra-init` to add it, or specify the provider details manually."
 - **Existing spec with same name:** If `INFRA_CHANGE_<name>.md` already exists:
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   **"A spec with this name already exists. What would you like to do?"**
 

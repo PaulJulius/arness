@@ -21,7 +21,7 @@ This skill does NOT require Arness Core. It writes infra configuration fields in
 
 The infra configuration written by this skill contains up to 25 fields that govern the behavior of all downstream infrastructure skills and agents. The configuration is expertise-adaptive: experience level is derived from your user profile (set during first Arness skill invocation) and governs conversational tone and recommendations. Beginner users get opinionated PaaS recommendations, while expert users have full control over provider and IaC tool selection.
 
-> **Note:** Experience level is now derived from your user profile and is no longer stored in `## Arness` config. The derivation mapping is at `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists when init runs, the welcome flow in ensure-config runs first to create one.
+> **Note:** Experience level is now derived from your user profile and is no longer stored in `## Arness` config. The derivation mapping is at `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists when init runs, the welcome flow in ensure-config runs first to create one.
 
 ## Workflow
 
@@ -66,7 +66,7 @@ Check for any infra-specific field within `## Arness` (such as `Deferred`, `Proj
 **If infra fields exist:**
 1. Parse all infra config fields from the `## Arness` section
 2. Show the user their current configuration
-3. Ask (using `AskUserQuestion`):
+3. Ask the user:
 
    **"What would you like to do with your existing configuration?"**
 
@@ -86,7 +86,7 @@ Check for any infra-specific field within `## Arness` (such as `Deferred`, `Proj
 
 Before any configuration:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"When do you want to set up infrastructure?"**
 
@@ -103,9 +103,9 @@ Options:
   # Deferred Infrastructure Backlog
 
   Infrastructure observations accumulated during feature development.
-  Run `/arn-infra-assess` when ready to produce a full infrastructure plan.
+  Run `arn-infra-assess` when ready to produce a full infrastructure plan.
   ```
-- Present: "Infrastructure is deferred. As you build features with Arness Core, infrastructure observations will accumulate in `.arness/infra/deferred-backlog.md`. When ready, run `/arn-infra-assess` to produce a full infrastructure plan from the accumulated notes."
+- Present: "Infrastructure is deferred. As you build features with Arness Core, infrastructure observations will accumulate in `.arness/infra/deferred-backlog.md`. When ready, run `arn-infra-assess` to produce a full infrastructure plan from the accumulated notes."
 - Stop init here.
 
 **If now:** Continue to Step 2.
@@ -117,8 +117,8 @@ Options:
 Experience level governs conversational tone and recommendations throughout the init flow. Instead of asking the user directly, derive the experience level from the user profile.
 
 1. Read the user profile from `~/.arness/user-profile.yaml` or `.claude/arness-profile.local.md` (project override takes precedence)
-2. If no user profile exists, run the welcome flow first by reading `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/step-0-fast-path.md` -- the welcome flow creates the profile
-3. Apply the experience derivation mapping at `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md` to determine the infrastructure experience level (expert, intermediate, or beginner)
+2. If no user profile exists, run the welcome flow first by reading `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/step-0-fast-path.md` -- the welcome flow creates the profile
+3. Apply the experience derivation mapping at `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md` to determine the infrastructure experience level (expert, intermediate, or beginner)
 4. If the derivation is ambiguous (the mapping indicates a follow-up is needed), ask one focused question: "For infrastructure specifically, would you say expert, intermediate, or beginner?"
 5. Use the derived experience level for all subsequent steps (provider recommendations, cost threshold defaults, etc.)
 
@@ -129,7 +129,7 @@ Experience level governs conversational tone and recommendations throughout the 
 ### Step 3: Provider Configuration (Multi-Provider Aware)
 
 > Read the local override or plugin default for `provider-overview.md`.
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/recommendation-matrix.md` for expertise-adaptive recommendations. *(Static reference -- not part of the evolving reference set.)*
+> Read `<arn-infra-plugin-root>/skills/arn-infra-init/references/recommendation-matrix.md` for expertise-adaptive recommendations. *(Static reference -- not part of the evolving reference set.)*
 > Read the local override or plugin default for `iac-tool-guide.md`.
 
 Adapt the conversation based on experience level:
@@ -156,7 +156,7 @@ For each provider selected:
 
 ### Step 4: Project Topology and Application Linking
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Where does your application code live?"**
 
@@ -223,7 +223,7 @@ Record the result as `CI/CD platform: github-actions | gitlab-ci | bitbucket-pip
 
 ### Step 6: Environment Strategy
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How do you want to manage environments?"**
 
@@ -263,13 +263,13 @@ Ask:
 
 ### Step 7.5: Choose Model Profile for arn-infra Agents
 
-Run the **Profile selection** procedure documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the AskUserQuestion or file-copy logic here.
+Run the **Profile selection** procedure documented in `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the user prompt or file-copy logic here.
 
 The procedure performs (in order):
 1. Cross-plugin default suggestion (read sibling plugin profile fields if present in the existing `## Arness` block — e.g., if the user previously chose `balanced` for arn-code or arn-spark, suggest `balanced` here too)
-2. AskUserQuestion with title "Choose model profile for arn-infra agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
+2. Ask the user with title "Choose model profile for arn-infra agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
 3. Append `- **Infra agent model profile:** <choice>` to the `## Arness` block
-4. `mkdir -p .arness/agent-models/` then copy `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/infra.md`
+4. `mkdir -p .arness/agent-models/` then copy `<arn-infra-plugin-root>/skills/arn-infra-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/infra.md`
 5. Compute SHA-256 and record it in `.arness/agent-models/.checksums.json` along with the profile name and version
 6. Inform the user with a one-line confirmation
 
@@ -318,7 +318,7 @@ Record the chosen profile for the config write in Step 8.
 
 4. Create the Arness Infra labels defined in the reference file (if Platform is github or Issue tracker is jira).
 
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/infra-labels.md` for the full label list with colors and descriptions.
+   > Read `<arn-infra-plugin-root>/skills/arn-infra-init/references/infra-labels.md` for the full label list with colors and descriptions.
 
    For GitHub: use `gh label create --force` for each label (idempotent).
    For Jira: labels are implicit (no creation needed).
@@ -326,7 +326,7 @@ Record the chosen profile for the config write in Step 8.
 
 5. Write infra configuration fields to the `## Arness` section in CLAUDE.md.
 
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/config-schema.md` for the full field documentation.
+   > Read `<arn-infra-plugin-root>/skills/arn-infra-init/references/config-schema.md` for the full field documentation.
 
    The following infra fields are written to `## Arness`:
 
@@ -376,7 +376,7 @@ Record the chosen profile for the config write in Step 8.
 
 Set up locally-owned copies of the 28 evolving reference files so they survive plugin updates and can be refreshed via online research. This step creates the overrides directory, copies files from the plugin, generates SHA-256 checksums, and asks the user for their Reference updates preference.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/reference-override-protocol.md` (Step 8b section) for the full initialization procedure (sub-steps 8b.1 through 8b.6).
+> Read `<arn-infra-plugin-root>/skills/arn-infra-init/references/reference-override-protocol.md` (Step 8b section) for the full initialization procedure (sub-steps 8b.1 through 8b.6).
 
 ---
 
@@ -414,15 +414,15 @@ List all created/modified files with their paths.
 
 "Arness Infra is configured. Here is the recommended next step:
 
-1. **Discover tools:** Run `/arn-infra-discover` to audit your installed tools, MCPs, CLIs, and configure provider access.
+1. **Discover tools:** Run `arn-infra-discover` to audit your installed tools, MCPs, CLIs, and configure provider access.
 
 After discovery, the infrastructure pipeline continues:
-2. **Containerize:** Run `/arn-infra-containerize` to generate Docker configurations
-3. **Define infrastructure:** Run `/arn-infra-define` to generate IaC in your chosen tool
-4. **Deploy:** Run `/arn-infra-deploy` to deploy to your environments
-5. **Verify:** Run `/arn-infra-verify` to validate your deployment
+2. **Containerize:** Run `arn-infra-containerize` to generate Docker configurations
+3. **Define infrastructure:** Run `arn-infra-define` to generate IaC in your chosen tool
+4. **Deploy:** Run `arn-infra-deploy` to deploy to your environments
+5. **Verify:** Run `arn-infra-verify` to validate your deployment
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
@@ -432,7 +432,7 @@ Or run `/arn-infra-wizard` for the full guided pipeline."
 
 This step runs during the Update flow (from Step 1) to check whether reference files need upgrading after a plugin update. It compares version numbers, performs checksum-based conflict detection on all 28 files, and applies updates based on the user's `Reference updates` preference (ask, auto, or manual).
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-init/references/reference-override-protocol.md` (Step U1 section) for the full upgrade procedure (sub-steps U1.1 through U1.4).
+> Read `<arn-infra-plugin-root>/skills/arn-infra-init/references/reference-override-protocol.md` (Step U1 section) for the full upgrade procedure (sub-steps U1.1 through U1.4).
 
 ---
 
@@ -441,7 +441,7 @@ This step runs during the Update flow (from Step 1) to check whether reference f
 - **No existing `## Arness` section:** This is expected for standalone or separate-repo usage. A new `## Arness` section will be created with infra fields.
 - **User cancels at any step:** Confirm cancellation and exit gracefully. Do not leave partially written configuration.
 - **Writing to CLAUDE.md fails:** Print the infra config fields in the conversation so the user can insert them manually. Suggest checking file permissions.
-- **`gh auth login` not resolved:** Explain the issue and stop init. The user must resolve authentication before proceeding. They can re-run `/arn-infra-init` after fixing auth.
+- **`gh auth login` not resolved:** Explain the issue and stop init. The user must resolve authentication before proceeding. They can re-run `arn-infra-init` after fixing auth.
 - **Application path unreachable (separate-repo):** Warn that cross-project features will be limited. Still allow init to proceed with the path recorded -- the user can fix the path later.
 - **Reference checksums missing or corrupt:** If `.reference-checksums.json` is missing or unparseable during upgrade, treat all files as unmodified and re-initialize from plugin defaults. Regenerate the checksums file.
 - **Reference overrides directory missing:** If the Reference overrides directory does not exist during upgrade, run Step 8b (Initialize Reference Overrides) as a fresh setup.

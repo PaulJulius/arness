@@ -22,7 +22,7 @@ Reviews PR comments from GitHub or Bitbucket, validates each finding against the
 
 Read the **Platform** field from `## Arness` config in CLAUDE.md (values: `github`, `bitbucket`, or `none`). If the `Platform` field is not present, fall back to legacy detection: check for `GitHub: yes` and treat as `github`; otherwise treat as `none`.
 
-If Platform is `none`, inform the user: "No platform configured for PR review. Run `/arn-reviewing-pr` to get started." and exit.
+If Platform is `none`, inform the user: "No platform configured for PR review. Run `arn-reviewing-pr` to get started." and exit.
 
 ### If Platform is github
 
@@ -36,7 +36,7 @@ git remote -v | grep github.com
 gh auth status
 ```
 
-If GitHub is not available, inform the user and exit. Suggest configuring via `/arn-reviewing-pr`.
+If GitHub is not available, inform the user and exit. Suggest configuring via `arn-reviewing-pr`.
 
 Try to detect the PR automatically:
 
@@ -57,7 +57,7 @@ Try to detect the PR automatically:
 1. If the user provided a PR number or URL, use that directly: `bkt pr view <id> --json`
 2. Otherwise, list open PRs: `bkt pr list --state OPEN --limit 5 --json`
    - Match the current branch name to find the PR for this branch.
-3. If no PR is found, ask the user for a PR number or URL. Suggest creating one via `/arn-code-ship`.
+3. If no PR is found, ask the user for a PR number or URL. Suggest creating one via `arn-code-ship`.
 
 Display the PR title, number, and URL for confirmation.
 
@@ -138,7 +138,7 @@ For each substantive review comment:
 
 ## Step 4: Report
 
-Present findings using the format from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-review-pr/references/pr-report-format.md`.
+Present findings using the format from `<arn-code-plugin-root>/skills/arn-code-review-pr/references/pr-report-format.md`.
 
 Summary counts plus per-comment details with category, severity, assessment, and suggested fix (for VALID items).
 
@@ -150,7 +150,7 @@ If Platform is `none`, skip this step entirely (no remote PR to checkout).
 
 After the report is presented, before offering actions:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like to test this PR locally before deciding on actions?"**
 
@@ -175,7 +175,7 @@ If **Yes, checkout and test**:
    - If tests fail: show the failures, offer to investigate.
 
 4. **Open-ended exploration:** "Take your time testing locally. Say 'done testing' when ready to continue."
-   - This is plain text (not AskUserQuestion — it is conversational).
+   - This is plain text (not user prompt — it is conversational).
    - The user can ask questions, run commands, and explore the code.
    - When they say "done testing" or similar, proceed to Step 5.
 
@@ -188,11 +188,11 @@ If **Yes, checkout and test**:
 
 ## Step 5: Offer Actions
 
-Use `AskUserQuestion` with `multiSelect: true` so the user can combine actions. If no options are selected, treat as "do nothing" (take the report as information only).
+Use `user prompt` with `multiSelect: true` so the user can combine actions. If no options are selected, treat as "do nothing" (take the report as information only).
 
 1. **Fix valid issues now** — apply suggested fixes for VALID issues directly in the code.
-2. **Create tracking issues for deferred items** — for items that don't need to be fixed in this PR but should be tracked. Tag with `arness-backlog` label. Ask for priority level (`arness-priority-high`, `arness-priority-medium`, `arness-priority-low` — default low). Use the deferred issue template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-review-pr/references/deferred-issue-template.md`.
-3. **Plan and fix via Arness pipeline** — for Critical/Moderate VALID items, route through the Arness pipeline (run `/arn-code-plan` to generate an implementation plan). Only available if `## Arness` config exists in CLAUDE.md.
+2. **Create tracking issues for deferred items** — for items that don't need to be fixed in this PR but should be tracked. Tag with `arness-backlog` label. Ask for priority level (`arness-priority-high`, `arness-priority-medium`, `arness-priority-low` — default low). Use the deferred issue template from `<arn-code-plugin-root>/skills/arn-code-review-pr/references/deferred-issue-template.md`.
+3. **Plan and fix via Arness pipeline** — for Critical/Moderate VALID items, route through the Arness pipeline (run `arn-code-plan` to generate an implementation plan). Only available if `## Arness` config exists in CLAUDE.md.
 
 ---
 
@@ -222,7 +222,7 @@ For each VALID finding the user approved for fixing:
 
 5. **Ask before committing and pushing:**
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"Fixes applied and tested. Commit and push these changes?"**
 
@@ -241,20 +241,20 @@ For each VALID finding the user approved for fixing:
 
 ### Create Issues
 
-For each deferred item, create a tracking issue. On GitHub, use `gh issue create` with the deferred issue template. On Bitbucket with Jira, use the Atlassian MCP server. See `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-review-pr/references/deferred-issue-template.md` for platform-specific commands and templates. Ensure labels exist (create if missing). Report created issue numbers and URLs.
+For each deferred item, create a tracking issue. On GitHub, use `gh issue create` with the deferred issue template. On Bitbucket with Jira, use the Atlassian MCP server. See `<arn-code-plugin-root>/skills/arn-code-review-pr/references/deferred-issue-template.md` for platform-specific commands and templates. Ensure labels exist (create if missing). Report created issue numbers and URLs.
 
 ### Pipeline Route
 
-Run `/arn-code-plan` with the VALID findings as context for the plan.
+Run `arn-code-plan` with the VALID findings as context for the plan.
 
 ---
 
 ## Error Handling
 
-- **GitHub not available** — inform user, suggest configuring via `/arn-reviewing-pr`.
+- **GitHub not available** — inform user, suggest configuring via `arn-reviewing-pr`.
 - **Bitbucket `bkt` CLI not available or not authenticated** — inform user, suggest checking `bkt auth status` and `bkt auth login`.
 - **No PR found for current branch (GitHub)** — ask user for a PR number.
-- **No PR found for current branch (Bitbucket)** — ask user for a PR number or URL. Suggest creating one via `/arn-code-ship`.
+- **No PR found for current branch (Bitbucket)** — ask user for a PR number or URL. Suggest creating one via `arn-code-ship`.
 - **PR is MERGED/CLOSED (GitHub)** — warn that comments may be stale, proceed if user confirms.
 - **PR is MERGED/DECLINED (Bitbucket)** — warn that comments may be stale, proceed if user confirms.
 - **No substantive comments** — inform user and exit.

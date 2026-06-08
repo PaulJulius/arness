@@ -44,7 +44,7 @@ The skill simulates the debate through sequential expert invocations, manually p
 
 **When:** `arn-spark-ux-specialist` is unavailable.
 
-No debate occurs. The product strategist reviews independently. Strategist scores become the combined scores directly. The debate report notes "Single-Reviewer Mode" throughout. The skill suggests using `/arn-spark-static-prototype` instead, which handles single-reviewer identically.
+No debate occurs. The product strategist reviews independently. Strategist scores become the combined scores directly. The debate report notes "Single-Reviewer Mode" throughout. The skill suggests using `arn-spark-static-prototype` instead, which handles single-reviewer identically.
 
 ## Debate Phases
 
@@ -73,7 +73,7 @@ Both experts independently score ALL criteria against the showcase screenshots. 
 - Does dark mode (if applicable) maintain contrast and readability?
 - Are spacing tokens consistent across components?
 
-**Phase 1 file output:** Each expert writes their review to a file using the expert visual review template (`${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`). The skill tells each agent the exact file path to write to:
+**Phase 1 file output:** Each expert writes their review to a file using the expert visual review template (`<arn-spark-plugin-root>/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`). The skill tells each agent the exact file path to write to:
 - Product strategist -> `prototypes/static/reviews/round-N-strategist-review.md`
 - UX specialist -> `prototypes/static/reviews/round-N-ux-review.md`
 
@@ -153,7 +153,7 @@ Invoke the `arn-spark-product-strategist` agent via the Task tool, passing the m
 - Screenshots from capture step
 - All criteria with descriptions, scoring scale, and threshold
 - Style brief, product concept, visual grounding assets (with category context)
-- Expert visual review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`
+- Expert visual review template path: `<arn-spark-plugin-root>/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`
 - File path to write to: `prototypes/static/reviews/round-N-strategist-review.md`
 - Instruction: "Score every criterion independently against the screenshots. Write your complete review to the specified file path using the expert visual review template. Return a brief summary in conversation."
 

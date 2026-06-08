@@ -18,7 +18,7 @@ Generate a clickable interactive prototype with all main application screens lin
 
 The primary artifacts are **versioned clickable prototype applications**, **journey screenshots** documenting user flows, **review reports** with per-criterion scores, and a **final report** documenting the complete validation history. All output is versioned so the user can compare evolution across cycles.
 
-This skill covers interactive behavior validation: do the screens link correctly, do interactions work, can users complete journeys? For visual-only validation of component rendering, use `/arn-spark-static-prototype` first.
+This skill covers interactive behavior validation: do the screens link correctly, do interactions work, can users complete journeys? For visual-only validation of component rendering, use `arn-spark-static-prototype` first.
 
 ## Prerequisites
 
@@ -27,7 +27,7 @@ The following artifacts inform the prototype. Check in order:
 Determine the prototypes output directory:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Prototypes directory path — this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the directory does not exist, create it
 
 > All references to `prototypes/` in this skill refer to the configured prototypes directory determined above.
@@ -57,7 +57,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 **Fresh design assets (optional):**
 1. Read the `## Arness` section for `Figma` and `Canva` fields
 2. If either is `yes` AND the visual grounding directory already has assets in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **Design assets exist from a previous step. Would you like to pull fresh versions from [Figma/Canva] before starting validation?**
    > 1. **Yes** — Pull fresh design assets
@@ -65,7 +65,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
    - If yes: ask the user to specify which assets to fetch (Figma file URL, page, or frame names / Canva design URL). Use the corresponding MCP to fetch and save to `[visual-grounding]/designs/` or `[visual-grounding]/brand/`. Show a summary of what was downloaded or replaced.
    - If no: proceed with existing assets on disk.
 3. If either is `yes` but NO existing design assets found in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **No design mockups found yet. Would you like to pull design assets from [Figma/Canva]?**
    > 1. **Yes** — Pull design assets now
@@ -81,7 +81,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 
 **If use cases are found:** Read the README index and all use case files. Use them alongside the product concept for richer screen and journey derivation (see Step 1b).
 
-**If no use cases are found:** Derive screens and journeys from the product concept alone. Note: "No use cases found. Screen derivation will use the product concept directly. Run `/arn-spark-use-cases` first for richer screen derivation from structured behavioral specs."
+**If no use cases are found:** Derive screens and journeys from the product concept alone. Note: "No use cases found. Screen derivation will use the product concept directly. Run `arn-spark-use-cases` first for richer screen derivation from structured behavioral specs."
 
 **If a product concept is found:** Use it to derive the screen list and user journeys.
 
@@ -89,9 +89,9 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 
 **If a style brief is found:** Apply the visual style to all screens.
 
-**If no style brief is found:** Use sensible defaults for the installed component library. Note: "No style brief found. The prototype will use default styling. Run `/arn-spark-style-explore` first for a custom visual direction."
+**If no style brief is found:** Use sensible defaults for the installed component library. Note: "No style brief found. The prototype will use default styling. Run `arn-spark-style-explore` first for a custom visual direction."
 
-**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. If not, inform the user: "The project needs to be scaffolded before building a prototype. Run `/arn-spark-scaffold` first."
+**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. If not, inform the user: "The project needs to be scaffolded before building a prototype. Run `arn-spark-scaffold` first."
 
 ## Workflow
 
@@ -104,7 +104,7 @@ Check for existing versioned output:
 
 **If existing versions found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"I found existing clickable prototype versions up to v[N]. Which would you prefer?"**
 
@@ -146,7 +146,7 @@ This structure supports both human reviewers (who can explore freely or follow a
 - If use cases exist: each user-goal level use case maps directly to a user journey. The main success scenario steps become the journey steps. Extensions become alternate journey paths or error scenarios to test.
 - If no use cases: extract from user flows in the product concept. Each primary user goal becomes a journey.
 - Read the journey template for structure:
-  > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype/references/journey-template.md`
+  > Read `<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype/references/journey-template.md`
 
 Propose the screen list and journeys:
 
@@ -197,14 +197,14 @@ Adjust any parameter or criterion, or confirm to proceed."
 
 To propose criteria:
 1. Read the default criteria template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype/references/clickable-prototype-criteria.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype/references/clickable-prototype-criteria.md`
 2. Adapt based on the screen list and journeys (add journey-specific criteria, remove inapplicable ones)
 3. Incorporate relevant items from these additional categories if not already covered: screen completeness, navigation, visual style consistency, component library usage, content quality, responsive considerations, and build/run verification
 4. Present the adapted list
 
 When the user confirms, write the agreed criteria to `prototypes/criteria.md` (create `prototypes/` directory if needed). If the file already exists from a static prototype run:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Criteria file already exists from the static prototype. What would you like to do?**
 > 1. **Reuse** — Use existing criteria as-is
@@ -290,7 +290,7 @@ For each criterion, use the LOWER of the two expert scores as the combined score
 
 1. Check all combined scores against the minimum threshold
 2. Read the review report template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype/references/review-report-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype/references/review-report-template.md`
 3. Write the review report to `prototypes/clickable/v[N]/review-report.md`
 4. Write version notes to `prototypes/clickable/v[N]/version-notes.md`
 
@@ -332,7 +332,7 @@ Write the judge's report to `prototypes/clickable/v[N]/judge-report.md`.
 **If Judge returns FAIL and cycle budget remains:**
 - Present the judge's failing criteria to the user
 - Calculate remaining budget
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **The judge flagged [N] criteria below threshold. You have [M] cycles remaining. Run more fix cycles?**
 > 1. **Yes** — Run [M] more fix cycles
@@ -348,7 +348,7 @@ Ask (using `AskUserQuestion`):
 Generate structured visual assets so the user can review all screens and journey flows at a glance without running the dev server.
 
 1. Read the showcase capture guide:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype/references/showcase-capture-guide.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype/references/showcase-capture-guide.md`
 
 2. Read the screen manifest from `prototypes/clickable/v[N]/screen-manifest.json` (written by the prototype builder). If the manifest does not exist, note the limitation and capture the hub page only.
 
@@ -402,7 +402,7 @@ Present the complete validation history:
 The prototype is at `prototypes/clickable/v[N]/app/`.
 [If showcase images were generated:] Visual showcase is at `prototypes/clickable/v[N]/showcase/showcase-index.md` — open this file to see all screens and journey flows at a glance without running the dev server.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Are you satisfied with this result?**
 > 1. **Yes, finalize** — Write the final report
@@ -425,10 +425,10 @@ Write `prototypes/clickable/final-report.md` with:
 "Clickable prototype validation complete. Results saved to `prototypes/clickable/`.
 
 Recommended next steps:
-1. **Lock the prototype:** Run `/arn-spark-prototype-lock` to freeze a snapshot of the validated prototype before development modifies shared source files
-2. **Set up dev environment:** Run `/arn-spark-dev-setup` to configure the development environment
-3. **Define visual testing:** Run `/arn-spark-visual-strategy` to set up visual regression testing against the prototype
-4. **Extract features:** Run `/arn-spark-feature-extract` to create a prioritized feature backlog from the product concept and prototype
+1. **Lock the prototype:** Run `arn-spark-prototype-lock` to freeze a snapshot of the validated prototype before development modifies shared source files
+2. **Set up dev environment:** Run `arn-spark-dev-setup` to configure the development environment
+3. **Define visual testing:** Run `arn-spark-visual-strategy` to set up visual regression testing against the prototype
+4. **Extract features:** Run `arn-spark-feature-extract` to create a prioritized feature backlog from the product concept and prototype
 
 The prototype serves as a visual reference during feature development. Locking it first ensures the reference is preserved even as production code evolves."
 
@@ -443,9 +443,9 @@ The prototype serves as a visual reference during feature development. Locking i
 | Generate visual showcase (Step 5b) | Read the showcase capture guide, start the prototype, generate and run a Playwright capture script per the screen manifest, organize journey screenshots, write `showcase-index.md`. Skip screen capture if Playwright unavailable. |
 | User wants targeted screen updates | Invoke `arn-spark-prototype-builder` with specific screen changes only |
 | User wants to re-test a specific journey | Invoke `arn-spark-ui-interactor` with just that journey |
-| User asks about visual-only validation | Suggest `/arn-spark-static-prototype` for component showcase validation |
-| User asks about style changes | Defer to `/arn-spark-style-explore` for style brief updates |
-| User asks about features | Defer: "Feature work starts after `/arn-spark-feature-extract`. If Arness Code is installed, continue with `/arn-code-feature-spec` for detailed specifications." |
+| User asks about visual-only validation | Suggest `arn-spark-static-prototype` for component showcase validation |
+| User asks about style changes | Defer to `arn-spark-style-explore` for style brief updates |
+| User asks about features | Defer: "Feature work starts after `arn-spark-feature-extract`. If Arness Code is installed, continue with `arn-code-feature-spec` for detailed specifications." |
 | Builder fails | Retry up to 3 times. If still failing, present the error for manual investigation. |
 | Interactor reports Playwright unavailable | Fall back to manual journey testing. User walks through and provides screenshots. |
 | Expert returns unhelpful scores | Re-invoke with more specific prompt referencing exact criteria and journey screenshots. |
@@ -453,8 +453,8 @@ The prototype serves as a visual reference during feature development. Locking i
 ## Error Handling
 
 - **No product concept found:** Proceed with user's verbal screen and journey descriptions.
-- **No style brief found:** Use component library defaults. Note that `/arn-spark-style-explore` can be run for custom styling.
-- **Project not scaffolded:** Cannot build prototype. Suggest `/arn-spark-scaffold` first.
+- **No style brief found:** Use component library defaults. Note that `arn-spark-style-explore` can be run for custom styling.
+- **Project not scaffolded:** Cannot build prototype. Suggest `arn-spark-scaffold` first.
 - **Builder fails (3 times):** Present the error for manual investigation.
 - **Playwright unavailable for interaction testing:** Fall back to manual testing. User walks through journeys and provides screenshots. The skill continues without automated interaction capture.
 - **Prototype fails to start (Step 4b):** Check for port conflicts, build errors, missing dependencies. Present the error.

@@ -6,27 +6,27 @@ Arness uses labels for issue management and tracking across supported platforms.
 
 ## GitHub
 
-Labels created during `/arn-spark-init` (or `/arn-code-init`) when GitHub integration is detected. These labels are used by Arness skills for issue management and tracking.
+Labels created during `arn-spark-init` (or `arn-code-init`) when GitHub integration is detected. These labels are used by Arness skills for issue management and tracking.
 
 ### Labels
 
 | Label | Color | Purpose | Used By |
 |-------|-------|---------|---------|
-| `arness-backlog` | `#d4c5f9` (lavender) | Deferred items from PRs or postponed features | `/arn-code-review-pr`, `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-feature-issue` | `#0e8a16` (green) | Feature requests tracked via Arness | `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-bug-issue` | `#d93f0b` (red) | Bug reports tracked via Arness | `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-priority-high` | `#b60205` (dark red) | High priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
-| `arness-priority-medium` | `#fbca04` (yellow) | Medium priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
-| `arness-priority-low` | `#c5def5` (light blue) | Low priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
-| `arness-rejected` | `#e4e669` (olive) | Issue reviewed and rejected as invalid or out of scope | `/arn-code-pick-issue` |
+| `arness-backlog` | `#d4c5f9` (lavender) | Deferred items from PRs or postponed features | `arn-code-review-pr`, `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-feature-issue` | `#0e8a16` (green) | Feature requests tracked via Arness | `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-bug-issue` | `#d93f0b` (red) | Bug reports tracked via Arness | `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-priority-high` | `#b60205` (dark red) | High priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
+| `arness-priority-medium` | `#fbca04` (yellow) | Medium priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
+| `arness-priority-low` | `#c5def5` (light blue) | Low priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
+| `arness-rejected` | `#e4e669` (olive) | Issue reviewed and rejected as invalid or out of scope | `arn-code-pick-issue` |
 
 ### Plugin Repository Label
 
-The following label lives on the **Arness plugin repository** (not on user projects). It is pre-created by plugin maintainers and used by `/arn-code-report` to tag diagnostic issues.
+The following label lives on the **Arness plugin repository** (not on user projects). It is pre-created by plugin maintainers and used by `arn-code-report` to tag diagnostic issues.
 
 | Label | Color | Purpose | Used By |
 |-------|-------|---------|---------|
-| `arness-report` | `#1d76db` (blue) | Issue reported via /arn-code-report diagnostic | `/arn-code-report` (plugin repo only) |
+| `arness-report` | `#1d76db` (blue) | Issue reported via arn-code-report diagnostic | `arn-code-report` (plugin repo only) |
 
 ### Creation Command
 
@@ -44,7 +44,7 @@ gh label create "arness-rejected" --color "e4e669" --description "Issue reviewed
 
 ### Notes
 
-- Labels are only created when GitHub integration is detected during `/arn-spark-init` (or `/arn-code-init`)
+- Labels are only created when GitHub integration is detected during `arn-spark-init` (or `arn-code-init`)
 - The `--force` flag updates existing labels if the color or description has changed
 - Projects without GitHub integration skip label creation entirely
 - Skills that use labels check for their existence and create missing ones on demand
@@ -61,13 +61,13 @@ Arness uses the following label names when creating and filtering Jira issues:
 
 | Label | Purpose | Used By |
 |-------|---------|---------|
-| `arness-feature-issue` | Feature requests tracked via Arness | `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-bug-issue` | Bug reports tracked via Arness | `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-backlog` | Deferred items from PRs or postponed features | `/arn-code-review-pr`, `/arn-code-create-issue`, `/arn-code-pick-issue` |
-| `arness-rejected` | Issue reviewed and rejected as invalid or out of scope | `/arn-code-pick-issue` |
-| `arness-priority-high` | High priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
-| `arness-priority-medium` | Medium priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
-| `arness-priority-low` | Low priority | `/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr` |
+| `arness-feature-issue` | Feature requests tracked via Arness | `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-bug-issue` | Bug reports tracked via Arness | `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-backlog` | Deferred items from PRs or postponed features | `arn-code-review-pr`, `arn-code-create-issue`, `arn-code-pick-issue` |
+| `arness-rejected` | Issue reviewed and rejected as invalid or out of scope | `arn-code-pick-issue` |
+| `arness-priority-high` | High priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
+| `arness-priority-medium` | Medium priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
+| `arness-priority-low` | Low priority | `arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr` |
 
 ### Issue Type Mapping
 

@@ -7,7 +7,7 @@ This template defines the structure for the `LOCKED.md` manifest file written by
 ```markdown
 # Prototype Lock Manifest
 
-Locked by `/arn-spark-prototype-lock` on [date].
+Locked by `arn-spark-prototype-lock` on [date].
 
 ## Locked Versions
 

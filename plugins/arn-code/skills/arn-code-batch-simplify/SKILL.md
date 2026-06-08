@@ -26,13 +26,13 @@ arn-code-batch-merge -> **arn-code-batch-simplify** -> (optional: review-impleme
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
 
 ## Workflow
 
 ### Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. Extract from `## Arness`:
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. Extract from `## Arness`:
 
 - **Plans directory** (default: `.arness/plans`)
 - **Code patterns** path (default: `.arness`)
@@ -52,7 +52,7 @@ Load pattern documentation from the code patterns directory:
 4. `ui-patterns.md` (if it exists)
 5. `security-patterns.md` (if it exists)
 
-If any required pattern doc is missing, invoke the `arn-code-codebase-analyzer` agent to generate fresh analysis. If the analyzer is unavailable, suggest running `/arn-implementing` to get started.
+If any required pattern doc is missing, invoke the `arn-code-codebase-analyzer` agent to generate fresh analysis. If the analyzer is unavailable, suggest running `arn-implementing` to get started.
 
 Hold all loaded pattern documentation for use throughout the workflow.
 
@@ -79,7 +79,7 @@ Scan the plans directory for `CHANGE_RECORD.json` files across all feature subdi
 
 **Exit conditions:**
 
-- If zero merged features found: inform the user "No recently merged batch features found. Run `/arn-code-batch-merge` first." and exit.
+- If zero merged features found: inform the user "No recently merged batch features found. Run `arn-code-batch-merge` first." and exit.
 - If the unified file list is empty: inform the user "No files to review — all features were merged but produced no file changes." and exit.
 
 ---
@@ -101,7 +101,7 @@ Total unique files: [N] (across [M] features)
 Files touched by 2+ features: [K] (priority review)
 ```
 
-Ask (using `AskUserQuestion`): **"Proceed with cross-feature simplification?"**
+Ask the user: **"Proceed with cross-feature simplification?"**
 
 1. "Yes" (Recommended)
 2. "Skip" — exit
@@ -112,11 +112,11 @@ If the user selects "Skip", exit gracefully.
 
 ### Step 4: Dispatch Parallel Reviewers
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-simplify/references/cross-feature-prompts.md` for the extended reviewer prompt templates.
+Read `<arn-code-plugin-root>/skills/arn-code-batch-simplify/references/cross-feature-prompts.md` for the extended reviewer prompt templates.
 
 Build the `{cross_feature_context}` block from the data collected in Step 2 — listing each feature's name, its files, and its change record path.
 
-Dispatch three Agent tool calls **in a single message** so they run in parallel. Each call passes the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-reviewer`) as the `model` parameter (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). The three reviewers share the same synthetic name — apply the multi-agent rule by passing the looked-up value to each call independently. Note: `arn-code-simplify-reviewer` is shared with `arn-code-simplify` since both skills perform the same conceptual review work.
+Dispatch three Agent tool calls **in a single message** so they run in parallel. Each call passes the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-reviewer`) as the `model` parameter (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). The three reviewers share the same synthetic name — apply the multi-agent rule by passing the looked-up value to each call independently. Note: `arn-code-simplify-reviewer` is shared with `arn-code-simplify` since both skills perform the same conceptual review work.
 
 1. **Code Reuse Reviewer** — fill the cross-feature-prompts.md template with the file list, pattern documentation, and cross-feature context. Instruct the agent to focus on duplicated logic, missed utilities, and copy-paste patterns, with special attention to utilities created independently by different features.
 
@@ -185,7 +185,7 @@ If zero findings from all reviewers: inform the user "No cross-feature simplific
 
 ### Step 6: User Approval
 
-**Auto-all mode check:** Read `pipeline.simplification` using the two-tier preference lookup (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`). If the resolved value is `auto-all`:
+**Auto-all mode check:** Read `pipeline.simplification` using the two-tier preference lookup (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`). If the resolved value is `auto-all`:
 
 - Auto-approve all non-deferred findings (mark as `"approved"`)
 - Skip the user prompt entirely
@@ -211,7 +211,7 @@ The user may also change individual finding statuses (e.g., "approve SIM-001 but
 
 The orchestrator pre-sorts the approved findings by dependency order (if finding B depends on finding A's changes, A comes first), then dispatches a single anonymous Agent call to perform the apply work. The model is configurable via the agent-models config.
 
-**Dispatch the applier as an anonymous Agent tool call**, passing the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-applier`) as the `model` parameter (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). Do NOT add any tool restriction — the applier inherits `Edit`, `Write`, `Bash`, `Read`, `Grep`, `Glob` from the orchestrator's toolbelt by default, and needs all of them. Note: `arn-code-simplify-applier` is shared with `arn-code-simplify` since both skills perform the same conceptual apply work; the cross-feature scope is conveyed via the findings list itself.
+**Dispatch the applier as an anonymous Agent tool call**, passing the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-applier`) as the `model` parameter (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). Do NOT add any tool restriction — the applier inherits `Edit`, `Write`, `Bash`, `Read`, `Grep`, `Glob` from the orchestrator's toolbelt by default, and needs all of them. Note: `arn-code-simplify-applier` is shared with `arn-code-simplify` since both skills perform the same conceptual apply work; the cross-feature scope is conveyed via the findings list itself.
 
 **Applier prompt contents:**
 
@@ -270,7 +270,7 @@ If you crash or have to abort partway through, return the JSON with results for 
 
 ### Step 8: Generate Report
 
-1. Read `{template_path}/BATCH_SIMPLIFICATION_REPORT_TEMPLATE.json` where `{template_path}` is the template path extracted in Step 0. If the template file does not exist at the configured path, fall back to `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/BATCH_SIMPLIFICATION_REPORT_TEMPLATE.json`.
+1. Read `{template_path}/BATCH_SIMPLIFICATION_REPORT_TEMPLATE.json` where `{template_path}` is the template path extracted in Step 0. If the template file does not exist at the configured path, fall back to `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/BATCH_SIMPLIFICATION_REPORT_TEMPLATE.json`.
 
 2. Populate all fields:
    - `reportType`: `"batch-simplification"`
@@ -301,7 +301,7 @@ If any fixes were applied (at least one finding has status `"applied"`):
 
 #### 9a. Run Tests
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Simplification fixes applied. Run the project's test suite to verify nothing is broken?"**
 
@@ -359,14 +359,14 @@ If no fixes were applied (all findings were rejected, deferred, or reverted), sk
 
 ## Error Handling
 
-- **`## Arness` config missing** — inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started."
-- **Pattern docs missing** — invoke `arn-code-codebase-analyzer` to generate fresh analysis. If unavailable, suggest running `/arn-implementing` to get started.
+- **`## Arness` config missing** — inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started."
+- **Pattern docs missing** — invoke `arn-code-codebase-analyzer` to generate fresh analysis. If unavailable, suggest running `arn-implementing` to get started.
 - **Reviewer agent fails** — merge findings from the other two reviewers and note the missing perspective in the report. Add a warning about incomplete coverage for that axis.
 - **All three reviewers fail** — inform the user that cross-feature simplification analysis could not be completed. Suggest retrying or proceeding to the next pipeline step.
 - **BATCH_SIMPLIFICATION_REPORT_TEMPLATE.json missing** — generate the report with a minimal structure and warn the user.
 - **Test self-heal exhaustion** — after 3 failed attempts for a finding, revert that finding's changes and continue with the next finding. Record the failure details in the report.
 - **No findings** — generate a clean report with `summary.totalFindings: 0` and inform the user: "No cross-feature simplification opportunities found. The implementation looks clean across all features."
-- **No merged features** — inform the user: "No recently merged batch features found. Run `/arn-code-batch-merge` first."
+- **No merged features** — inform the user: "No recently merged batch features found. Run `arn-code-batch-merge` first."
 
 ## Constraints
 

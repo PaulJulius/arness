@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code and Codex when working with code in this repository.
 
 ## Project Purpose
 
-Arness is a plugin marketplace for Claude Code containing three independently installable plugins for development, greenfield exploration, and infrastructure. The repository is itself a valid Claude Code marketplace, so plugins can be tested locally.
+Arness is a plugin marketplace for Claude Code and Codex containing three independently installable plugins for development, greenfield exploration, and infrastructure. The repository is itself a valid local plugin marketplace, so plugins can be tested from the checkout.
 
 ## Architecture
 
@@ -12,16 +12,21 @@ Arness is a plugin marketplace for Claude Code containing three independently in
 arness/                                 # Marketplace repository
 ├── .claude-plugin/
 │   └── marketplace.json                # Marketplace catalog (lists all 3 plugins)
+├── .agents/
+│   └── plugins/marketplace.json        # Codex marketplace catalog
 ├── plugins/
 │   ├── arn-code/                        # Core development plugin
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── skills/                     # 25 pipeline skills
 │   │   └── agents/                     # 14 specialist agents
 │   ├── arn-spark/                       # Greenfield exploration plugin
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── skills/                     # 19 exploration skills
 │   │   └── agents/                     # 13 specialist agents
 │   └── arn-infra/                      # Infrastructure plugin
+│       ├── .codex-plugin/plugin.json
 │       ├── .claude-plugin/plugin.json
 │       ├── skills/                     # 23 infrastructure skills
 │       └── agents/                     # 9 specialist agents
@@ -35,7 +40,7 @@ arness/                                 # Marketplace repository
 When updating default report templates in `plugins/arn-code/skills/arn-code-save-plan/report-templates/default/`:
 
 1. Make changes to the template JSON files
-2. Bump `version` in the relevant plugin's `.claude-plugin/plugin.json`
+2. Bump `version` in the relevant plugin's `.codex-plugin/plugin.json`, the matching legacy `.claude-plugin/plugin.json` when it carries a version, and the root `.claude-plugin/marketplace.json` entry
 3. Test by running `arn-code-init` in a test project -- templates will be copied and fresh checksums generated
 4. Projects using the previous version will be prompted to update on next Arness skill invocation (behavior depends on their `Template updates` preference)
 
@@ -65,26 +70,28 @@ Every new agent must be wired into both model profile presets so that users on e
 5. If the new agent is invoked from any skill, that dispatch site must include the model lookup per the "Dispatch convention" in `plugins/<plugin>/skills/<plugin>-ensure-config/references/ensure-config.md`.
 
 ### User Interaction Convention
-- All discrete user choices (numbered options, yes/no decisions, multi-select menus) MUST use `Ask (using \`AskUserQuestion\`):` followed by the bold question text and numbered options
+- In Codex-facing instructions, use normal user prompt language for discrete choices. In Claude Code-only instructions, use `Ask (using \`AskUserQuestion\`):` followed by the bold question text and numbered options
 - Conversational exploration loops (open-ended back-and-forth) remain as plain text
 - Free-form text input prompts ("describe what you want") remain as plain text
 - Informational "next steps" lists (sequential workflow guidance) remain as plain text
 - Multi-select choices use `multiSelect: true` with clear multi-select instruction text
 - Menus with more than 4 options MUST be restructured into layered questions (2-4 options per layer)
-- AskUserQuestion is only available in the main conversation — agents/subagents cannot use it
+- AskUserQuestion is only available in Claude Code's main conversation — agents/subagents and Codex fallback flows cannot use it
 
 ### Path References
-**No user-specific paths in committed files.** Never embed usernames, home directories, or machine-specific absolute paths (e.g., `/home/username/...`) in any file that gets committed — including skills, agents, specs, plans, and documentation. Use `${CLAUDE_PLUGIN_ROOT}`, relative paths, or generic placeholders like `/path/to/arness` instead.
+**No user-specific paths in committed files.** Never embed usernames, home directories, or machine-specific absolute paths (e.g., `/home/username/...`) in any file that gets committed — including skills, agents, specs, plans, and documentation. Use host-neutral placeholders such as `<arn-code-plugin-root>`, `<arn-spark-plugin-root>`, `<arn-infra-plugin-root>`, relative paths, or generic placeholders like `/path/to/arness` instead.
+
+When running from this repository, resolve `<arn-code-plugin-root>` to `plugins/arn-code`, `<arn-spark-plugin-root>` to `plugins/arn-spark`, and `<arn-infra-plugin-root>` to `plugins/arn-infra`. When installed, resolve each placeholder to that plugin's installed root. Existing `${CLAUDE_PLUGIN_ROOT}` references are legacy Claude Code placeholders; new or edited cross-host instructions should prefer the explicit Arness placeholders above.
 
 ## Versioning
 
-When creating a PR, always suggest bumping the `version` in the affected plugin's `.claude-plugin/plugin.json`. Follow semver:
+When creating a PR, always suggest bumping the `version` in the affected plugin's `.codex-plugin/plugin.json` and keeping the legacy `.claude-plugin/marketplace.json` version for that plugin in sync. If a per-plugin `.claude-plugin/plugin.json` carries a version, keep that in sync too. Follow semver:
 
 - **Patch** (0.1.0 → 0.1.1): Bug fixes, typo corrections, minor wording changes
 - **Minor** (0.1.0 → 0.2.0): New features, new skills/commands/agents, significant behavior changes to existing components
 - **Major** (0.2.0 → 1.0.0): Breaking changes that require users to re-run `arn-code-init` or manually update their `## Arness` config
 
-Include the version bump in the PR commit, not as a separate commit.
+Include the version bump in the PR commit, not as a separate commit. Validate metadata with `jq . .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/*/.codex-plugin/plugin.json`.
 
 ## Linting Configuration
 

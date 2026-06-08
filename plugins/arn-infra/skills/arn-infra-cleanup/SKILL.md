@@ -9,7 +9,7 @@ description: >-
   "resource cleanup", "destroy old resources", "prune resources",
   "delete expired deployments", "decommission", or wants to check for and
   destroy expired ephemeral infrastructure resources. This skill also supports periodic
-  monitoring via `/loop 6h /arn-infra-cleanup` for
+  monitoring via `/loop 6h arn-infra-cleanup` for
   session-duration TTL enforcement.
 version: 1.0.0
 ---
@@ -22,12 +22,12 @@ This skill never auto-destroys resources. Every destruction requires explicit us
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Cleanup is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Cleanup is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- which cloud providers are configured
 - **Providers config** -- path to `providers.md`
 - **Default IaC tool** -- for determining destroy commands
@@ -142,7 +142,7 @@ Present each expired resource group (grouped by environment):
 
 **Total cost of expired resources:** $[total] (estimated charges since TTL expired)
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to handle the expired resources?"**
 
@@ -258,7 +258,7 @@ Present the cleanup summary:
 
 **Periodic monitoring:**
 To automatically check for expired resources, use:
-`/loop 6h /arn-infra-cleanup`
+`/loop 6h arn-infra-cleanup`
 
 This will check TTLs every 6 hours during the current session and prompt for cleanup when resources expire."
 
@@ -269,7 +269,7 @@ This will check TTLs every 6 hours during the current session and prompt for cle
 This skill supports periodic execution via the `/loop` command:
 
 ```
-/loop 6h /arn-infra-cleanup
+/loop 6h arn-infra-cleanup
 ```
 
 When running in loop mode:
@@ -288,8 +288,8 @@ Recommended loop intervals:
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No TTL sources available:** If there is no issue tracker, no TTL registry, and no resource manifest, inform the user: "No TTL tracking is configured. Deploy ephemeral resources with `/arn-infra-deploy` (which creates cleanup issues) or manually add resources to `.arness/infra/ttl-registry.md`." Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No TTL sources available:** If there is no issue tracker, no TTL registry, and no resource manifest, inform the user: "No TTL tracking is configured. Deploy ephemeral resources with `arn-infra-deploy` (which creates cleanup issues) or manually add resources to `.arness/infra/ttl-registry.md`." Stop.
 - **Resource manifest missing:** Check other TTL sources (issues, registry). If found, proceed with those. If the manifest should exist, warn: "Resource manifest not found at [path]. Resource tracking may be incomplete."
 - **Issue tracker unavailable:** Skip Source 1, proceed with Sources 2 and 3. Note: "Issue tracker was not reachable. Checking TTL registry and resource manifest only."
 - **Destroy command fails:** Report the error with the full error output. Offer to retry or skip. Do NOT mark the resource as destroyed if the destroy command failed. Update the issue/registry with the failure.

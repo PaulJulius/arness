@@ -31,7 +31,7 @@ This is an alternative to `arn-code-execute-plan` (subagent-based). Use this whe
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed without it. Task list must exist (run `/arn-code-taskify` first).
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it. Task list must exist (run `arn-code-taskify` first).
 
 ## Workflow
 
@@ -80,14 +80,14 @@ Suggest the alternative: "You can use `arn-code-execute-plan` instead, which use
    └── reports/
    ```
 
-4. If the project directory is missing, suggest running `/arn-code-save-plan` first
+4. If the project directory is missing, suggest running `arn-code-save-plan` first
 5. If PROGRESS_TRACKER.json is missing, warn that progress tracking will not be available. Execution can still proceed.
 
 6. Call `TaskList` to check for existing tasks
-   - If **no tasks exist**, tell the user to run `/arn-code-taskify` first
+   - If **no tasks exist**, tell the user to run `arn-code-taskify` first
    - If **tasks already exist with progress**, show state and:
 
-     Ask (using `AskUserQuestion`):
+     Ask the user:
 
      **"Tasks already exist with progress. How would you like to proceed?"**
 
@@ -190,7 +190,7 @@ When all IMPL and REVIEW tasks are completed:
 
 **Pattern refresh (auto):** After finalizing progress tracking, refresh stored pattern documentation.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
 
 This is automatic and non-blocking. If the refresh fails, note it in the summary but do not block completion.
 
@@ -198,19 +198,19 @@ This is automatic and non-blocking. If the refresh fails, note it in the summary
 - Show: "Progress tracker finalized in `<project-folder>/PROGRESS_TRACKER.json`"
 - List all reports in `<project-folder>/reports/`
 - Note token usage if available
-- Offer: "Would you like to run `/arn-code-review-implementation` for a full project review?"
+- Offer: "Would you like to run `arn-code-review-implementation` for a full project review?"
 
 ## Error Handling
 
-- **Agent Teams not enabled** -- provide setup instructions, suggest `/arn-code-execute-plan` as alternative
-- **`## Arness` config missing in CLAUDE.md** -- suggest running `/arn-implementing` to get started
-- **Project directory missing** -- suggest running `/arn-code-save-plan` to create the project structure
-- **No tasks in TaskList** -- suggest running `/arn-code-taskify` to convert TASKS.md into tasks
-- **Teammate crashes** -- lead reports issue, suggests retrying the failed task or falling back to subagent mode (`/arn-code-execute-plan`)
+- **Agent Teams not enabled** -- provide setup instructions, suggest `arn-code-execute-plan` as alternative
+- **`## Arness` config missing in CLAUDE.md** -- suggest running `arn-implementing` to get started
+- **Project directory missing** -- suggest running `arn-code-save-plan` to create the project structure
+- **No tasks in TaskList** -- suggest running `arn-code-taskify` to convert TASKS.md into tasks
+- **Teammate crashes** -- lead reports issue, suggests retrying the failed task or falling back to subagent mode (`arn-code-execute-plan`)
 - **Teammates deadlocked** -- lead intervenes with clarifying message, breaks the cycle
 - **Executor and reviewer stuck in fix loop (>2 cycles)** -- lead escalates to user with findings
 - **Architect unresponsive** -- lead messages architect directly, or provides architectural guidance itself based on pattern docs
-- **Token budget exceeded** -- warn user, suggest completing remaining tasks with `/arn-code-execute-plan` (lower cost)
+- **Token budget exceeded** -- warn user, suggest completing remaining tasks with `arn-code-execute-plan` (lower cost)
 - **Task list inconsistency** -- if IMPL/REVIEW pairs get out of sync, lead reconciles by checking task statuses and re-aligning
 
 ## Cost Considerations
@@ -223,4 +223,4 @@ Agent Teams use significantly more tokens than the subagent-based arn-code-execu
 To keep costs manageable:
 - All teammates use Opus. The architect's cost is justified by its strategic role — it stays idle until consulted.
 - Shut down the team promptly when all tasks complete
-- For simpler projects (fewer than 5 tasks, no complex dependencies), prefer `/arn-code-execute-plan` instead
+- For simpler projects (fewer than 5 tasks, no complex dependencies), prefer `arn-code-execute-plan` instead

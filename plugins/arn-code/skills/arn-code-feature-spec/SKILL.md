@@ -16,11 +16,11 @@ version: 1.3.0
 
 # Arness Feature Spec
 
-Develop a feature idea into a well-formed specification through iterative conversation, aided by architectural analysis from the `arn-code-architect` agent and, when the feature involves UI, user experience design from the `arn-code-ux-specialist` agent. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is a **feature specification** written to the project's specs directory that captures requirements, architectural assessment, and decisions from the exploration conversation. The spec then informs plan creation via the `/arn-code-plan` skill.
+Develop a feature idea into a well-formed specification through iterative conversation, aided by architectural analysis from the `arn-code-architect` agent and, when the feature involves UI, user experience design from the `arn-code-ux-specialist` agent. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is a **feature specification** written to the project's specs directory that captures requirements, architectural assessment, and decisions from the exploration conversation. The spec then informs plan creation via the `arn-code-plan` skill.
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ## Workflow
 
@@ -45,7 +45,7 @@ Before asking the user to describe their feature, check if the trigger includes 
 
 Only runs when a backlog entry is detected in Step 1a. Loads the feature file, referenced UC documents, and scope boundary context (related features from the Feature Tracker) to provide rich context for the spec exploration. If any greenfield artifact is missing, falls back gracefully.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/greenfield-loading.md` for the full loading sequence and error handling.
+> Read `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/greenfield-loading.md` for the full loading sequence and error handling.
 
 - If the style-brief has an "Animation and Motion" section, extract it as animation context. This will be passed to both the architect and UX specialist.
 
@@ -63,14 +63,14 @@ Only runs after Step 1b successfully loads a greenfield feature.
 
 3. **If the feature is XL but has NO or insufficient decomposition hints** (fewer than 2 sub-features): Warn the user:
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"Feature F-NNN is estimated as XL but has no decomposition hints (or fewer than 2 sub-features). How would you like to proceed?"**
 
    Options:
    1. **Provide decomposition hints now** -- Suggest 2-4 sub-features with journey segment mappings
    2. **Proceed with a single spec anyway** -- Not recommended for XL features
-   3. **Return to the backlog** -- Run `/arn-spark-feature-extract` to add decomposition hints
+   3. **Return to the backlog** -- Run `arn-spark-feature-extract` to add decomposition hints
 
    If **Provide decomposition hints now**: the user provides hints inline, capture them in the same structure as the feature entry template's `## Decomposition Hints` section and set `decomposition_mode = true`. If **Proceed with a single spec anyway**: set `decomposition_mode = false` and continue normally.
 
@@ -175,7 +175,7 @@ Before invoking agents, determine whether the feature involves UI:
 
 #### 3b. Pre-check security relevance and invoke agents
 
-Before invoking any agents, read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the security relevance pre-check using the pattern documentation loaded in Step 2 and the feature description:
+Before invoking any agents, read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the security relevance pre-check using the pattern documentation loaded in Step 2 and the feature description:
 
 - `security_relevant`: true if BOTH: (1) `security-patterns.md` exists in the code patterns directory, AND (2) the feature description contains security terms (auth, login, password, token, payment, upload, API key, PII, encrypt, permission, session, cookie, CORS, CSRF, rate limit, secret, credential -- case-insensitive)
 
@@ -279,7 +279,7 @@ Present the combined output to the user as the **initial proposal**. Highlight:
 
 Then include in the proposal presentation:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"This feature involves interface work. Would you like to see a visual preview before we dive deeper?"**
 
@@ -287,7 +287,7 @@ Options:
 1. **Yes, sketch it** -- Generate a sketch showing what the [components/screens/output] would look like
 2. **No, continue with the spec** -- Proceed to exploration
 
-If **Yes, sketch it**: Invoke `Skill: arn-code:arn-code-sketch` with the current feature context (description, architectural assessment, UX specialist output). After the sketch session completes, resume the exploration conversation. The sketch output informs subsequent spec decisions.
+If **Yes, sketch it**: Invoke Codex skill `arn-code-sketch` with the current feature context (description, architectural assessment, UX specialist output). After the sketch session completes, resume the exploration conversation. The sketch output informs subsequent spec decisions.
 If **No, continue with the spec**: Proceed to exploration.
 
 If sketch conditions are NOT met (no UI involvement or no Sketch Strategy), skip this offer entirely — do not mention sketch.
@@ -298,7 +298,7 @@ Then ask: "What do you think? Any questions, concerns, or changes?"
 
 After presenting the initial proposal to the user (3c), write the draft spec to disk as an automatic save point.
 
-1. Read the feature spec template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/feature-spec-template.md`.
+1. Read the feature spec template at `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/feature-spec-template.md`.
 
 2. Populate the template with what is available from the initial analysis:
 
@@ -321,7 +321,7 @@ After presenting the initial proposal to the user (3c), write the draft spec to 
 3. Add a draft status marker at the top of the file (before the title):
 
    ```
-   > **Status: DRAFT** — This specification is under active development. Last updated during exploration. Run `/arn-code-feature-spec` to resume or finalize.
+   > **Status: DRAFT** — This specification is under active development. Last updated during exploration. Run `arn-code-feature-spec` to resume or finalize.
    ```
 
 4. Write to `<specs-dir>/DRAFT_FEATURE_<name>.md`.
@@ -344,7 +344,7 @@ If the draft write fails (permissions, path issues), continue without the draft 
 
 - **If the concern IS covered by another feature:** Do not ask the user whether to include it. Instead, note it as a cross-feature dependency: "That's handled by F-NNN: [Feature Name] — I'll note it as a dependency in this spec's Scope & Boundaries." Continue without expanding scope.
 - **If the concern is PARTIALLY covered by another feature:** Note what the other feature covers and identify the specific gap. Only raise the uncovered portion: "F-NNN: [Name] covers [X], but [Y] isn't addressed by any feature. Should we include [Y] in this spec or flag it as a backlog gap?"
-- **If the concern is NOT covered by any feature in the backlog:** Flag it as a genuine gap and ask the user: "This isn't covered by any feature in the backlog: [description]. Options: (1) include it in this spec, (2) note it as a gap for a future feature, (3) add it to the backlog via `/arn-spark-feature-extract`."
+- **If the concern is NOT covered by any feature in the backlog:** Flag it as a genuine gap and ask the user: "This isn't covered by any feature in the backlog: [description]. Options: (1) include it in this spec, (2) note it as a gap for a future feature, (3) add it to the backlog via `arn-spark-feature-extract`."
 
 This prevents scope creep by ensuring the agent knows what sibling features already handle, and only escalates genuine gaps to the user.
 
@@ -368,7 +368,7 @@ This is a conversation loop. Each iteration:
 
 **Note:** The proactive sketch offer happens in Step 3c (after the initial proposal). This section handles the case where the user requests a sketch later during exploration — either because they declined the initial offer, or because the conversation evolved and they now want to visualize something specific.
 
-During exploration, if the user asks to see what the feature would look like (e.g., "show me what this looks like", "can I see a preview", "what would the UI look like", "sketch this"), and the feature involves interface work (detected in Step 3a), and `ui-patterns.md` exists with a `## Sketch Strategy` section, invoke `Skill: arn-code:arn-code-sketch` with the current feature context (description, architectural assessment, UX specialist output if available). After the sketch session completes, resume the exploration conversation where it left off. The sketch output can inform subsequent spec decisions (component structure, layout choices, interaction patterns).
+During exploration, if the user asks to see what the feature would look like (e.g., "show me what this looks like", "can I see a preview", "what would the UI look like", "sketch this"), and the feature involves interface work (detected in Step 3a), and `ui-patterns.md` exists with a `## Sketch Strategy` section, invoke Codex skill `arn-code-sketch` with the current feature context (description, architectural assessment, UX specialist output if available). After the sketch session completes, resume the exploration conversation where it left off. The sketch output can inform subsequent spec decisions (component structure, layout choices, interaction patterns).
 
 If the feature involves interface work but `ui-patterns.md` does not exist or has no `## Sketch Strategy` section, inform the user: "Sketch is not available for this project. Pattern documentation will be generated on first use and will include a Sketch Strategy if your project has a UI framework." Continue the exploration without sketching.
 
@@ -426,13 +426,13 @@ When the user says yes to writing the spec:
 
 Create multiple sub-feature specs, update the Feature Tracker, and optionally create child issues. After writing all sub-feature specs, delete the DRAFT file.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/xl-decomposition.md` for the full decomposition procedure, Feature Tracker updates, child issue creation, and error handling.
+> Read `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/xl-decomposition.md` for the full decomposition procedure, Feature Tracker updates, child issue creation, and error handling.
 
 The decomposition flow is self-contained. Do not proceed to the standard single-spec flow below.
 
 **If `decomposition_mode` is false (standard single-spec flow):**
 
-1. Read the feature spec template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/feature-spec-template.md`.
+1. Read the feature spec template at `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/feature-spec-template.md`.
 
 2. Read the current draft from `<specs-dir>/DRAFT_FEATURE_<name>.md`. Review each section against the template and the full exploration conversation. Fill in any remaining gaps, refine partial content, and ensure all sections are complete.
 
@@ -475,7 +475,7 @@ The decomposition flow is self-contained. Do not proceed to the standard single-
 
    "Feature specification saved to `<specs-dir>/FEATURE_<name>.md`.
 
-   To create an implementation plan, run `/arn-code-plan FEATURE_<name>`.
+   To create an implementation plan, run `arn-code-plan FEATURE_<name>`.
 
    The skill will load this spec and your project's codebase patterns, invoke the planner agent to generate a plan, and let you review and refine it before saving."
 
@@ -483,11 +483,11 @@ The decomposition flow is self-contained. Do not proceed to the standard single-
 
 ## Agent Invocation Guide
 
-Consult `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/agent-invocation-guide.md` to determine when to invoke each agent (arn-code-architect, arn-code-ux-specialist, arn-code-security-specialist) vs. answer directly during exploration.
+Consult `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/agent-invocation-guide.md` to determine when to invoke each agent (arn-code-architect, arn-code-ux-specialist, arn-code-security-specialist) vs. answer directly during exploration.
 
 ## Error Handling
 
-- If the user cancels at any point, confirm and exit gracefully. If a draft spec exists, inform the user of its location (`<specs-dir>/DRAFT_FEATURE_<name>.md`) so they can resume later by running `/arn-code-feature-spec` again (the draft will be detected in Step 2b).
+- If the user cancels at any point, confirm and exit gracefully. If a draft spec exists, inform the user of its location (`<specs-dir>/DRAFT_FEATURE_<name>.md`) so they can resume later by running `arn-code-feature-spec` again (the draft will be detected in Step 2b).
 - If `arn-code-architect` or `arn-code-ux-specialist` returns an unhelpful or empty response, summarize the issue to the user and offer to try a more specific question or proceed with what is known.
 - If writing the spec file fails (permissions, path issues), print the spec content in the conversation so the user can save it manually.
 - **Draft pattern errors:**
@@ -495,5 +495,5 @@ Consult `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/agent-inv
   - Draft update fails during Step 4 exploration: log a warning but continue the conversation. The draft may be partially stale but the conversation holds the latest state — Step 5 finalization will reconcile.
   - Draft file deleted externally during exploration: detect at next update attempt, recreate the draft from conversation context, and continue.
   - Resume finds a DRAFT from a different feature: the DRAFT filename includes the feature name, so mismatches are unlikely. If the user starts a new feature and an unrelated DRAFT exists, do not auto-resume — only offer resume for DRAFTs that match the current feature context (matched by filename or F-NNN prefix for greenfield).
-- **Greenfield path errors:** See `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/greenfield-loading.md` (Error Handling section).
-- **XL Decomposition errors:** See `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/xl-decomposition.md` (Error Handling section).
+- **Greenfield path errors:** See `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/greenfield-loading.md` (Error Handling section).
+- **XL Decomposition errors:** See `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/xl-decomposition.md` (Error Handling section).

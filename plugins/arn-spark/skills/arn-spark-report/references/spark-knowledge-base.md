@@ -289,5 +289,5 @@ arn-brainstorming (entry point)
 
 ## Version Information
 
-- Plugin version is in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (field: `version`)
+- Plugin version is in `<arn-spark-plugin-root>/.codex-plugin/plugin.json` (field: `version`)
 - Skill versions are in each SKILL.md frontmatter (field: `version`)

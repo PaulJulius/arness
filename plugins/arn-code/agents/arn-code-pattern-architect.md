@@ -41,7 +41,7 @@ The caller provides technology choices gathered during project initialization:
 
 ## Core Process
 
-0. **Load the output schema** — Before starting, read the pattern documentation schema at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md`. This defines the exact structure your output must follow. Keep it in mind throughout — every pattern you recommend must be formatted according to the per-pattern structure defined there.
+0. **Load the output schema** — Before starting, read the pattern documentation schema at `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md`. This defines the exact structure your output must follow. Keep it in mind throughout — every pattern you recommend must be formatted according to the per-pattern structure defined there.
 
 1. **Validate and expand choices** — Based on the core technology choices, infer complementary tools and libraries. For example:
    - FastAPI → pydantic for validation, alembic for migrations, uvicorn for serving
@@ -107,7 +107,7 @@ The caller provides technology choices gathered during project initialization:
 
 ## Output Format
 
-Your output MUST conform to the pattern documentation schema at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md`.
+Your output MUST conform to the pattern documentation schema at `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md`.
 
 Structure your response with up to five clearly separated sections using top-level headings that map to the pattern documentation files:
 

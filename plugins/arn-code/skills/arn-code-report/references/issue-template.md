@@ -1,6 +1,6 @@
 # Issue Report Template
 
-Template for GitHub issues created by `/arn-code-report`. The skill assembles this template with data from the user's description and the arn-code-doctor agent's diagnostic findings.
+Template for GitHub issues created by `arn-code-report`. The skill assembles this template with data from the user's description and the arn-code-doctor agent's diagnostic findings.
 
 ## Template Format
 
@@ -38,7 +38,7 @@ The issue body follows this structure:
 - **gh CLI:** <authenticated/not authenticated/not installed>
 
 ---
-*Filed via `/arn-code-report` — Arness v<version>*
+*Filed via `arn-code-report` — Arness v<version>*
 ```
 
 ## Issue Title Format

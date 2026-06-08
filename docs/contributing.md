@@ -24,17 +24,22 @@ Please be respectful and constructive in all interactions. See our [Code of Cond
 arness/
 ├── .claude-plugin/
 │   └── marketplace.json           # Marketplace catalog (lists all 3 plugins)
+├── .agents/
+│   └── plugins/marketplace.json    # Codex marketplace catalog
 ├── plugins/
 │   ├── arn-code/                   # Core development plugin
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── skills/                # 35 pipeline skills
 │   │   ├── agents/                # 16 specialist agents
 │   │   └── hooks/                 # Event handlers
 │   ├── arn-spark/                  # Greenfield exploration plugin
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── skills/                # 28 exploration skills
 │   │   └── agents/                # 20 specialist agents
 │   └── arn-infra/                  # Infrastructure plugin
+│       ├── .codex-plugin/plugin.json
 │       ├── .claude-plugin/plugin.json
 │       ├── skills/                # 25 infrastructure skills
 │       └── agents/                # 10 specialist agents
@@ -61,7 +66,7 @@ description: "This skill should be used when... [trigger conditions]"
 ---
 ```
 
-- **name**: The command name (invoked as `/skill-name`)
+- **name**: The command name (invoked as `skill-name` in Codex-style prompts, and often shown as `/skill-name` in Claude Code docs)
 - **description**: Must start with "This skill should be used when..." — this is how Claude Code matches user intent to skills
 
 Supporting files (references, scripts, examples) go in the same subdirectory as the SKILL.md.
@@ -96,22 +101,24 @@ color: blue
 
 ## User Interaction Convention
 
-- All discrete user choices (numbered options, yes/no) MUST use `Ask (using AskUserQuestion):` followed by bold question text
+- In Codex-facing instructions, use normal user prompt language for discrete choices. In Claude Code-only instructions, use `Ask (using AskUserQuestion):` followed by bold question text.
 - Conversational exploration loops remain as plain text
 - Multi-select choices use `multiSelect: true`
 - Menus with more than 4 options MUST be restructured into layered questions (2-4 per layer)
-- AskUserQuestion is only available in the main conversation — agents cannot use it
+- AskUserQuestion is only available in Claude Code's main conversation — agents and Codex fallback flows cannot use it.
 
 ## Path References
 
 Never embed user-specific paths (e.g., `/home/username/...`) in committed files. Use:
-- `${CLAUDE_PLUGIN_ROOT}` for paths relative to the plugin root
+- `<arn-code-plugin-root>`, `<arn-spark-plugin-root>`, or `<arn-infra-plugin-root>` for paths relative to a plugin root
 - Relative paths within the plugin
 - Generic placeholders like `/path/to/project`
 
+When running from this repository, those placeholders resolve to `plugins/arn-code`, `plugins/arn-spark`, and `plugins/arn-infra`. When installed, resolve them to the installed plugin roots. Keep existing `${CLAUDE_PLUGIN_ROOT}` only in intentionally legacy Claude Code guidance.
+
 ## Versioning
 
-When creating a PR, bump the `version` in the affected plugin's `.claude-plugin/plugin.json`:
+When creating a PR, bump the `version` in the affected plugin's `.codex-plugin/plugin.json`, then keep the legacy root `.claude-plugin/marketplace.json` entry in sync:
 
 | Change type | Version bump | Example |
 |-------------|-------------|---------|
@@ -119,7 +126,13 @@ When creating a PR, bump the `version` in the affected plugin's `.claude-plugin/
 | New features, new skills/agents, significant behavior changes | Minor | 2.0.0 → 2.1.0 |
 | Breaking changes requiring re-init | Major | 2.1.0 → 3.0.0 |
 
-Also update the version in `.claude-plugin/marketplace.json` to match. Include both version bumps in the PR commit, not as separate commits.
+If a per-plugin `.claude-plugin/plugin.json` carries a version, keep that in sync too. Include version bumps in the PR commit, not as separate commits.
+
+Validate metadata before opening a PR:
+
+```bash
+jq . .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/*/.codex-plugin/plugin.json
+```
 
 ## Testing Locally
 

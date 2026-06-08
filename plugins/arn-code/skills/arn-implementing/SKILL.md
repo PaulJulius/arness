@@ -21,7 +21,7 @@ This skill is a **sequencer and decision-gate handler**. It MUST NOT duplicate s
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 After Step 0 completes, extract the following from `## Arness`:
 - **Plans directory** — for detecting structured plans and project folders
@@ -78,16 +78,16 @@ Show progress:
 Implementing: [no plan detected]
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"No implementation plan found. What would you like to do?"**
 
 Options:
 1. **Quick implementation** — Describe a small change for swift mode
-2. **Go to planning first** — Run `/arn-planning` to create a spec and plan
+2. **Go to planning first** — Run `arn-planning` to create a spec and plan
 
 If **Quick implementation**: Ask for a description, then route to Swift Path (Step S1).
-If **Go to planning first**: `Skill: arn-code:arn-planning`. After planning completes and chains back, re-run state detection (Step 1). If the scope router assigned `standard` tier, route to Standard Path (Step ST1) instead of full execution.
+If **Go to planning first**: Codex skill `arn-planning`. After planning completes and chains back, re-run state detection (Step 1). If the scope router assigned `standard` tier, route to Standard Path (Step ST1) instead of full execution.
 
 ---
 
@@ -97,7 +97,7 @@ If state detection found `INTRODUCTION.md` but no `TASKS.md`, run taskify automa
 
 Inform: "Creating task list from plan..."
 
-> `Skill: arn-code:arn-code-taskify`
+> Codex skill `arn-code-taskify`
 
 After taskify completes, proceed to G2.
 
@@ -111,7 +111,7 @@ Implementing: EXECUTE -> simplify -> review-impl -> [ship]
               ^^^^^^^
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How should the tasks be executed?"**
 
@@ -121,10 +121,10 @@ Options:
 3. **One task at a time** — Execute tasks manually, one at a time
 
 Based on choice:
-- **Sequential** → `Skill: arn-code:arn-code-execute-plan`
-- **Agent Teams** → `Skill: arn-code:arn-code-execute-plan-teams`
+- **Sequential** → Codex skill `arn-code-execute-plan`
+- **Agent Teams** → Codex skill `arn-code-execute-plan-teams`
   - If Agent Teams is not available (environment variable not set), inform the user and suggest sequential instead.
-- **One at a time** → `Skill: arn-code:arn-code-execute-task`
+- **One at a time** → Codex skill `arn-code-execute-task`
   - After each task, the user controls which task to run next. When the user is done or all tasks are complete, proceed to G3.
 
 ---
@@ -137,7 +137,7 @@ Implementing: execute -> SIMPLIFY -> review-impl -> [ship]
                          ^^^^^^^^
 ```
 
-**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
@@ -145,7 +145,7 @@ Implementing: execute -> SIMPLIFY -> review-impl -> [ship]
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to `Skill: arn-code:arn-code-simplify`. After simplification completes, proceed to G4.
+- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to Codex skill `arn-code-simplify`. After simplification completes, proceed to G4.
 
 - If `skip`: Show status line: "Preference: skipping simplification ([source])". Auto-proceed to G4.
 
@@ -155,7 +155,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Execution complete. Simplify the implementation before review?"**
 
@@ -163,12 +163,12 @@ Options:
 1. **Yes** (Recommended for 3+ phases) — Review for reuse opportunities, quality issues, and efficiency improvements
 2. **Skip** — Proceed without simplification
 
-If **Yes**: `Skill: arn-code:arn-code-simplify`
+If **Yes**: Codex skill `arn-code-simplify`
 If **Skip**: Proceed to G4.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -189,7 +189,7 @@ Implementing: execute -> simplify -> REVIEW-IMPL -> [ship]
                                      ^^^^^^^^^^^
 ```
 
-**Preference check:** Read `pipeline.implementation-review` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.implementation-review` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.implementation-review` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.implementation-review` is present, use that value and note source.
@@ -197,7 +197,7 @@ Implementing: execute -> simplify -> REVIEW-IMPL -> [ship]
 
 Branch on the resolved value:
 
-- If `review`: Show status line: "Preference: reviewing implementation ([source])". Auto-proceed to `Skill: arn-code:arn-code-review-implementation`. If the review verdict is **NEEDS FIXES**: the review skill handles fixes internally. After fixes, re-present this gate (the user may want to review again or proceed). After review completes successfully, proceed to G5.
+- If `review`: Show status line: "Preference: reviewing implementation ([source])". Auto-proceed to Codex skill `arn-code-review-implementation`. If the review verdict is **NEEDS FIXES**: the review skill handles fixes internally. After fixes, re-present this gate (the user may want to review again or proceed). After review completes successfully, proceed to G5.
 
 - If `skip`: **Complexity override check** — count the number of phases from the plan structure (phase plan files in `<plans-dir>/<project>/plans/`) and count files modified/created across all implementation and testing reports in `<plans-dir>/<project>/reports/`. If implementation reports cannot be parsed or are missing, default to showing the review recommendation (err on the side of review). If **3 or more phases** OR **15 or more files** touched: override the skip preference and present a recommendation:
 
@@ -213,7 +213,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, invalid, or `skip` with complexity override):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Review the implementation against plan and patterns?"**
 
@@ -221,7 +221,7 @@ Options:
 1. **Yes** (Recommended for 3+ phases) — Full implementation review
 2. **Skip** — Proceed without review
 
-If **Yes**: `Skill: arn-code:arn-code-review-implementation`
+If **Yes**: Codex skill `arn-code-review-implementation`
 
 If the review verdict is **NEEDS FIXES**: the review skill handles fixes internally. After fixes, re-present this gate (the user may want to review again or proceed).
 
@@ -229,7 +229,7 @@ If **Skip**: Proceed to G5.
 
 **Follow-up (only when preference was null — not shown for complexity override):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -277,17 +277,17 @@ Implementing: execute -> simplify -> review-impl -> [COMPLETE]
                                                      ^^^^^^^^
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Implementation complete. What next?"**
 
 Options:
 1. **Ship it** — Commit, push, and create a PR
 2. **Assess quality first** — Run a codebase assessment before shipping
-3. **Not yet** — Exit (run `/arn-shipping` or `/arn-assessing` when ready)
+3. **Not yet** — Exit (run `arn-shipping` or `arn-assessing` when ready)
 
-If **Ship it**: `Skill: arn-code:arn-shipping`
-If **Assess quality first**: `Skill: arn-code:arn-assessing`
+If **Ship it**: Codex skill `arn-shipping`
+If **Assess quality first**: Codex skill `arn-assessing`
 If **Not yet**: Exit.
 
 ---
@@ -304,11 +304,11 @@ Implementing: SWIFT (assess -> plan -> execute -> verify) -> [ship]
 
 Invoke the swift skill with the user's description:
 
-> `Skill: arn-code:arn-code-swift` [description]
+> Codex skill `arn-code-swift` [description]
 
 The swift skill handles everything internally: scope assessment, complexity routing (simple/moderate/complex redirect), planning, execution, testing, and review.
 
-**If swift redirects to full pipeline** (complexity too high): the swift skill will inform the user. After swift exits, suggest running `/arn-planning` for the full pipeline.
+**If swift redirects to full pipeline** (complexity too high): the swift skill will inform the user. After swift exits, suggest running `arn-planning` for the full pipeline.
 
 Wait for swift to complete.
 
@@ -332,11 +332,11 @@ Implementing: STANDARD (spec-lite -> plan -> execute -> review) -> [ship]
 
 Invoke the standard skill with the user's description:
 
-> `Skill: arn-code:arn-code-standard` [description]
+> Codex skill `arn-code-standard` [description]
 
 The standard skill handles everything internally: spec-lite generation, plan creation, execution, testing, and review -- all in a single session.
 
-**If standard redirects to full pipeline** (scope too large): the standard skill will inform the user. After standard exits, suggest running `/arn-planning` for the full pipeline.
+**If standard redirects to full pipeline** (scope too large): the standard skill will inform the user. After standard exits, suggest running `arn-planning` for the full pipeline.
 
 Wait for standard to complete.
 
@@ -352,7 +352,7 @@ After standard completes, skip directly to G5 (Completion Handoff). Simplify and
 
 If during execution the user asks to preview a UI component ("show me what this looks like", "sketch this", "preview the UI"), and `ui-patterns.md` in the code patterns directory has a `## Sketch Strategy` section:
 
-> `Skill: arn-code:arn-code-sketch`
+> Codex skill `arn-code-sketch`
 
 This is an ad-hoc interrupt, not a decision gate. After the sketch session completes, resume execution where it left off.
 
@@ -365,8 +365,8 @@ If `ui-patterns.md` does not exist or has no Sketch Strategy: inform the user th
 - **`## Arness` config missing:** Handled by Step 0 (ensure-config) — this should not occur if Step 0 completed successfully.
 - **No plan found and no swift intent:** Present G0 with options.
 - **Agent Teams unavailable at G2:** Inform the user that the environment variable `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` is not set. Suggest sequential execution instead.
-- **Swift redirect to full pipeline:** Inform the user. Suggest `/arn-planning`.
-- **Standard redirect to full pipeline:** Inform the user. Suggest `/arn-planning`.
+- **Swift redirect to full pipeline:** Inform the user. Suggest `arn-planning`.
+- **Standard redirect to full pipeline:** Inform the user. Suggest `arn-planning`.
 - **Multiple projects detected:** List projects with states, ask which to implement.
 - **Sub-skill fails:** Present the error. Ask: retry / skip / abort.
-- **User says "stop" or "pause":** Show what was completed. Inform: "Run `/arn-implementing` again to resume — artifact detection will pick up where you left off."
+- **User says "stop" or "pause":** Show what was completed. Inform: "Run `arn-implementing` again to resume — artifact detection will pick up where you left off."

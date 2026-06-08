@@ -19,7 +19,7 @@ This is a standalone skill. It operates outside the main pipeline and can be run
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ---
 
@@ -34,15 +34,15 @@ Read the `## Arness` section from CLAUDE.md. Extract the following fields:
 - **Template version** -- plugin version the templates were copied from (if present)
 - **Template updates** -- user preference: `ask`, `auto`, or `manual` (if present)
 
-**Template version check:** If `Template version` and `Template updates` fields are present, run the template version check procedure documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If `## Arness` does not contain these fields, treat as legacy and skip.
+**Template version check:** If `Template version` and `Template updates` fields are present, run the template version check procedure documented in `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If `## Arness` does not contain these fields, treat as legacy and skip.
 
-Validate that all paths exist. If the plans directory does not exist, inform the user: "Plans directory not found. Run `/arn-planning` to set up Arness." and exit.
+Validate that all paths exist. If the plans directory does not exist, inform the user: "Plans directory not found. Run `arn-planning` to set up Arness." and exit.
 
 ---
 
 ## Step 2: Determine Scan Range
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-catch-up/references/cross-reference-algorithm.md` for the scan range detection procedure.
+Read `<arn-code-plugin-root>/skills/arn-code-catch-up/references/cross-reference-algorithm.md` for the scan range detection procedure.
 
 Execute the three-tier fallback:
 
@@ -69,7 +69,7 @@ If the user provides a date or commit hash, adjust the scan start accordingly.
 
 ## Step 3: Cross-Reference and Identify Untracked Commits
 
-Follow the cross-reference algorithm from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-catch-up/references/cross-reference-algorithm.md`.
+Follow the cross-reference algorithm from `<arn-code-plugin-root>/skills/arn-code-catch-up/references/cross-reference-algorithm.md`.
 
 Execute these steps in order:
 
@@ -125,7 +125,7 @@ Display the proposed batching tier:
 
 If grouped (6-20), show the proposed theme groupings with commit lists per group.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Generate catch-up records for [N] untracked commits?"**
 
@@ -140,9 +140,9 @@ If the user chooses option 2 (Adjust groupings), present the groups and allow mo
 
 ## Step 5: Generate CATCHUP_ Records
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-catch-up/references/catchup-record-format.md` for the record format specification.
+Read `<arn-code-plugin-root>/skills/arn-code-catch-up/references/catchup-record-format.md` for the record format specification.
 
-Read `CATCHUP_REPORT_TEMPLATE.json` from the template path configured in `## Arness` (field: **Template path**). If the template is not found in the project template directory, fall back to the plugin default at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/CATCHUP_REPORT_TEMPLATE.json`.
+Read `CATCHUP_REPORT_TEMPLATE.json` from the template path configured in `## Arness` (field: **Template path**). If the template is not found in the project template directory, fall back to the plugin default at `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/CATCHUP_REPORT_TEMPLATE.json`.
 
 For each record (individual, grouped, or summary):
 
@@ -191,7 +191,7 @@ To check: extract the file paths from each untracked commit using `git diff-tree
 
 If pattern-relevant files were modified:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Untracked commits modified files referenced in your pattern documentation. Refresh pattern docs now?"**
 
@@ -201,7 +201,7 @@ Options:
 
 If **Yes:**
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
+Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
 
 If **No:** skip silently.
 
@@ -225,21 +225,21 @@ Commits now tracked: <N> (of <N> total untracked)
 Offer next steps:
 
 ```
-Run `/arn-code-ship` to commit the catch-up records.
+Run `arn-code-ship` to commit the catch-up records.
 ```
 
 Note:
 
 ```
-Run `/arn-code-catch-up` again after more out-of-pipeline commits -- it's idempotent and won't create duplicates.
+Run `arn-code-catch-up` again after more out-of-pipeline commits -- it's idempotent and won't create duplicates.
 ```
 
 ---
 
 ## Error Handling
 
-- **Git not available** -- inform user: "This project is not a git repository. `/arn-code-catch-up` requires Git." and exit.
-- **Plans directory missing** -- inform user: "Plans directory not found. Run `/arn-planning` to set up Arness." and exit.
+- **Git not available** -- inform user: "This project is not a git repository. `arn-code-catch-up` requires Git." and exit.
+- **Plans directory missing** -- inform user: "Plans directory not found. Run `arn-planning` to set up Arness." and exit.
 - **No commits in scan range** -- inform user: "No commits found in the scan range (<start> to HEAD)." and exit.
 - **All commits tracked** -- inform user: "All commits in the scan range are already tracked by Arness artifacts. Nothing to catch up on." and exit.
 - **Git log command fails** -- display the error, suggest checking git configuration.

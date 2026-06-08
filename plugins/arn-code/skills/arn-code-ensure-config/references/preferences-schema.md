@@ -91,14 +91,14 @@ After resolving a key's value through the lookup chain, the skill branches:
 
 The user has never been asked about this preference.
 
-1. **Show the gate** -- present the AskUserQuestion with the original options.
+1. **Show the gate** -- present the user prompt with the original options.
 2. **Show the follow-up** -- after the user answers, ask the memory question (see Write Protocol below).
 
 ### ask (Returning Decliner)
 
 The user was previously asked and chose not to store a preference.
 
-1. **Show the gate** -- present the AskUserQuestion with the original options.
+1. **Show the gate** -- present the user prompt with the original options.
 2. **Do NOT show the follow-up** -- the user already declined memory. Respect that decision.
 
 ### Valid Value (Stored Preference)
@@ -116,7 +116,7 @@ The user has a stored preference that matches one of the valid values for this k
 
 After a gate question is answered and the preference value is **null** (first encounter), ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 > **Should Arness remember this choice for future sessions?**
 > 1. Yes, always [action description] (saves to preferences)
 > 2. No, ask me each time
@@ -186,7 +186,7 @@ The gate fires when the profile is `balanced`, `custom`, or undetectable (treat 
 
 ### Gate granularity: all-or-none per plan
 
-When at least one phase in the plan is rated `complex`, the gate prompt is **all-or-none**: "N phases are rated complex (rationale: ...) — upgrade ALL of them to Opus for execution? Yes / No". This gives the user one decision per plan. Per-task or per-phase Y/N would create excessive friction; users can still do per-task overrides via `/arn-code-execute-task` with manual model override.
+When at least one phase in the plan is rated `complex`, the gate prompt is **all-or-none**: "N phases are rated complex (rationale: ...) — upgrade ALL of them to Opus for execution? Yes / No". This gives the user one decision per plan. Per-task or per-phase Y/N would create excessive friction; users can still do per-task overrides via `arn-code-execute-task` with manual model override.
 
 If the user accepts, every `complex` phase in the plan gets `implementation.modelOverride: "opus"` written to PROGRESS_TRACKER.json by `arn-code-save-plan`. Phases rated `simple` or `moderate` are NOT upgraded.
 

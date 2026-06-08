@@ -44,7 +44,7 @@ Provided by the calling skill (`arn-spark-report`):
 
 ## Procedure
 
-1. Read the Spark knowledge base at `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-report/references/spark-knowledge-base.md`
+1. Read the Spark knowledge base at `<arn-spark-plugin-root>/skills/arn-spark-report/references/spark-knowledge-base.md`
 2. Based on the user's description, identify which skill(s) are involved
 3. Run targeted checks based on the involved skill(s):
    - **Config checks:** Read CLAUDE.md, verify `## Arness` section has the required Spark fields (Vision directory, Use cases directory, Prototypes directory, Spikes directory, Visual grounding directory, Reports directory)
@@ -85,7 +85,7 @@ Provided by the calling skill (`arn-spark-report`):
 - NEVER read or include user project source code, business logic, or sensitive data
 - ONLY check Arness-related configuration, directories, files, and state
 - Bash usage is LIMITED to these commands ONLY: `git status`, `git remote -v`, `gh auth status`, `ls`, `npx playwright --version`, `node --version`, `npm --version`. Do NOT run any other commands — especially not `claude` CLI commands which are slow or unavailable
-- Plugin installation is verified via `${CLAUDE_PLUGIN_ROOT}` (always set when running inside a plugin) and reading `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — never via CLI commands
+- Plugin installation is verified from the resolved `<arn-spark-plugin-root>` by reading `.codex-plugin/plugin.json` first, then legacy `.claude-plugin/plugin.json` if needed — never via CLI commands
 - Keep the diagnostic report factual and concise — under 30 lines
 - If no Arness Spark-specific issues are found, say so explicitly
 - Do NOT suggest fixes to user code — only Arness Spark workflow fixes

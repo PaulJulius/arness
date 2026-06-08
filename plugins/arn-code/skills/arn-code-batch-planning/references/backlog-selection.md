@@ -4,7 +4,7 @@ Reference procedure for scanning the greenfield Feature Tracker and identifying 
 
 ## Canonical Source
 
-The core backlog scanning algorithm is defined in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-pick-issue/references/greenfield-backlog-resolution.md`. That file contains the canonical procedure for: reading configuration, locating the feature backlog, parsing the Feature Tracker table, resolving dependencies, and identifying unblocked features.
+The core backlog scanning algorithm is defined in `<arn-code-plugin-root>/skills/arn-code-pick-issue/references/greenfield-backlog-resolution.md`. That file contains the canonical procedure for: reading configuration, locating the feature backlog, parsing the Feature Tracker table, resolving dependencies, and identifying unblocked features.
 
 **Read that file and follow its Detection Chain and Resolution Procedure.** The steps below describe only the batch-planning-specific adaptations applied on top of the canonical algorithm.
 

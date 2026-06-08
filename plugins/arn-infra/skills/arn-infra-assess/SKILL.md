@@ -22,9 +22,9 @@ This skill serves two primary use cases:
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Infra fields before proceeding.
+Read `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Infra fields before proceeding.
 
-After Step 0 completes, read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md` and derive the user's infrastructure experience level from their profile.
+After Step 0 completes, read `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md` and derive the user's infrastructure experience level from their profile.
 
 Check for at least one Arness Infra-specific field (`Infra plans directory` or `Infra specs directory`) within `## Arness`. If neither is present, Arness Infra has not been fully configured (the `## Arness` section may exist from ensure-config defaults or another plugin). This is acceptable -- assess can still run with defaults.
 
@@ -76,7 +76,7 @@ Resolve the application project based on topology:
 
 Invoke the `arn-infra-request-analyzer` agent via the Task tool in Mode B (full application analysis), passing the model from `.arness/agent-models/infra.md` as the `model` parameter (see `plugins/arn-infra/skills/arn-infra-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Pass the loaded codebase patterns, architecture content, deferred backlog (if any), and infrastructure config fields as structured context.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-assess/references/agent-invocation-guide.md` for the exact prompt template and expected return format.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-assess/references/agent-invocation-guide.md` for the exact prompt template and expected return format.
 
 The agent returns a comprehensive analysis covering application components, data layer, external integrations, networking, security, and performance indicators.
 
@@ -86,7 +86,7 @@ The agent returns a comprehensive analysis covering application components, data
 
 Ask the user structured questions to refine the infrastructure requirements. Adapt question depth based on experience level.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-assess/references/assessment-questionnaire.md` for the full question set with options, beginner versions, and selection logic.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-assess/references/assessment-questionnaire.md` for the full question set with options, beginner versions, and selection logic.
 
 Select questions using the **Question Selection Logic** from the questionnaire reference:
 - **Always ask:** Availability (Q1), Traffic (Q2), Budget (Q4)
@@ -104,7 +104,7 @@ Categorize each item into one of three priority levels: **Foundation** (must-do-
 
 For each backlog item, produce structured content following the backlog item template.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-assess/references/backlog-item-template.md` for the item format and priority guidelines.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-assess/references/backlog-item-template.md` for the item format and priority guidelines.
 
 ---
 
@@ -148,7 +148,7 @@ If the assessment was triggered from deferred mode:
 1. Update `## Arness` in CLAUDE.md: set `Deferred: no`
 2. If provider configuration is still minimal (from deferred init), offer to run the full provider setup:
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"Your provider configuration was minimal from the deferred init. Would you like to configure providers now?"**
 
@@ -176,24 +176,24 @@ Present the assessment results:
 
 "Infrastructure backlog is ready. Here is the recommended path:
 
-1. **Discover tools:** Run `/arn-infra-discover` to ensure you have the right tools installed (if not done already)
+1. **Discover tools:** Run `arn-infra-discover` to ensure you have the right tools installed (if not done already)
 2. **Work through the backlog:** Start with Foundation items:
-   - Pick a backlog issue and run `/arn-infra-triage` to analyze it in detail
-   - Then run `/arn-infra-define` to generate infrastructure code
-   - Or run `/arn-infra-wizard` for the full guided pipeline
+   - Pick a backlog issue and run `arn-infra-triage` to analyze it in detail
+   - Then run `arn-infra-define` to generate infrastructure code
+   - Or run `arn-infra-wizard` for the full guided pipeline
 
 Each backlog issue can be individually triaged -- the implications brief is embedded in the issue content.
 
 Alternatively, for complex changes that need review gates and audit trails:
-- Run `/arn-infra-change-spec` to create a structured change specification from a backlog item
+- Run `arn-infra-change-spec` to create a structured change specification from a backlog item
 - Then follow the full change pipeline: change-plan, save-plan, execute-change, review-change, document-change
-- Or run `/arn-infra-wizard` and select Full Pipeline mode"
+- Or run `arn-infra-wizard` and select Full Pipeline mode"
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Step 0 (ensure-config) handles this automatically. If ensure-config itself fails, suggest running `/arn-infra-assess` again.
+- **`## Arness` config missing:** Step 0 (ensure-config) handles this automatically. If ensure-config itself fails, suggest running `arn-infra-assess` again.
 - **Application path unreachable:** Ask the user to describe the application stack manually. Continue with user-provided context.
 - **Request analyzer agent fails:** Fall back to a manual assessment flow: present the assessment questions, gather answers, and produce a simplified backlog based on user input alone (without automated codebase analysis).
 - **Request analyzer returns empty output:** Inform: "The analyzer could not determine infrastructure needs from the codebase. This may indicate a very simple application or incomplete codebase patterns." Proceed with the questionnaire-based approach.

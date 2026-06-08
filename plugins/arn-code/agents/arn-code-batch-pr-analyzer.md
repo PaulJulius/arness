@@ -59,7 +59,7 @@ PR #43: F-005 API Layer
 --- ANALYSIS CONTEXT ---
 Platform: {platform} (github or bitbucket)
 Code patterns path: {code_patterns_path}
-Conflict classification reference: ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-merge/references/conflict-classification.md
+Conflict classification reference: `<arn-code-plugin-root>/skills/arn-code-batch-merge/references/conflict-classification.md`
 --- END ANALYSIS CONTEXT ---
 ```
 
@@ -112,7 +112,7 @@ If a CLI command fails for a specific PR (network error, auth error, PR not foun
 Read the conflict classification reference:
 
 ```
-Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-merge/references/conflict-classification.md
+Read `<arn-code-plugin-root>/skills/arn-code-batch-merge/references/conflict-classification.md`
 ```
 
 For each unique pair of PRs (N choose 2), compare their file lists (union of PR diff files and CHANGE_RECORD files). For each shared file, classify the overlap using the taxonomy from the reference:

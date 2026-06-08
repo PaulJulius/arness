@@ -288,7 +288,7 @@ If the user agrees, delete the sketch directory. If the paradigm required tempor
 
 ## Ship-Time Cleanup Protocol
 
-When `/arn-code-ship` is preparing to commit and ship a feature, it should check for `arness-sketches/` directories and handle them:
+When `arn-code-ship` is preparing to commit and ship a feature, it should check for `arness-sketches/` directories and handle them:
 
 ### Detection
 
@@ -343,7 +343,7 @@ After a feature spec is written (Step 6 of feature-spec workflow), the feature-s
 
 If interface terms are found AND a sketch strategy exists in `ui-patterns.md`:
 
-"This feature has interface components. Would you like to sketch a preview before planning? Run `/arn-code-sketch` to visualize the design."
+"This feature has interface components. Would you like to sketch a preview before planning? Run `arn-code-sketch` to visualize the design."
 
 The user can accept (which invokes arn-code-sketch with the spec as context) or decline (which proceeds to the plan step).
 

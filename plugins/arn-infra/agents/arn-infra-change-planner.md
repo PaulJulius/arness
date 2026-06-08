@@ -186,6 +186,6 @@ Write the plan as a structured markdown file following this format:
 - Production phases always require a promotion gate with manual approval.
 - Cost estimates are best-effort. When exact costs cannot be determined, provide a range and note the uncertainty.
 - When revising a plan based on user feedback, preserve the overall structure and only modify what the feedback specifically requests. Summarize what changed after applying the feedback.
-- Use `${CLAUDE_PLUGIN_ROOT}` for any path references to plugin files.
+- Use `<arn-infra-plugin-root>` for any path references to plugin files.
 - Do not hardcode absolute paths. Use relative paths for project files.
 - If the spec is incomplete (missing sections or insufficient detail), note the gaps in the plan and mark affected phases as "[Requires spec clarification]" rather than guessing.

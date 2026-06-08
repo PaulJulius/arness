@@ -37,7 +37,7 @@ If pending issues found, inform the user: "I found [N] pending infrastructure re
 
 Pipeline: triage --> define --> deploy --> verify --> pipeline --> env --> secrets --> monitor
 
-> `Skill: arn-infra:arn-infra-triage`
+> Codex skill `arn-infra-triage`
 
 When triage completes, proceed to Step 4 (Define).
 
@@ -49,7 +49,7 @@ Inform the user: "Infrastructure was deferred. Starting with a full assessment t
 
 Pipeline: assess --> (process backlog items) --> define --> deploy --> verify --> pipeline --> env --> secrets --> monitor
 
-> `Skill: arn-infra:arn-infra-assess`
+> Codex skill `arn-infra-assess`
 
 When assess completes and the user has selected backlog items to implement, proceed to Step 4 (Define).
 
@@ -59,7 +59,7 @@ Detected when the user explicitly mentions migration.
 
 Inform the user: "Starting infrastructure migration wizard. The migrate skill has its own lifecycle tracking."
 
-> `Skill: arn-infra:arn-infra-migrate`
+> Codex skill `arn-infra-migrate`
 
 After migration completes, ask: "Migration complete. Would you like to continue with verification and the rest of the pipeline (verify, pipeline, env, secrets, monitor)?"
 
@@ -82,7 +82,7 @@ Detected when the user selected Full Pipeline mode and either:
 
 Scan for existing pipeline artifacts to determine current pipeline position.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-wizard/references/artifact-detection.md` (Full Pipeline Artifact Detection section) for the complete detection table.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-wizard/references/artifact-detection.md` (Full Pipeline Artifact Detection section) for the complete detection table.
 
 If artifacts are detected, inform the user: "I found an in-progress change pipeline at [detected stage]. Resuming from [next stage]."
 

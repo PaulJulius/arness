@@ -21,7 +21,7 @@ This skill is a **medium orchestration wrapper**. It MUST NOT duplicate `arn-cod
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 After Step 0 completes, extract the following from `## Arness`:
 - **Code patterns** — path to the directory containing stored pattern documentation
@@ -35,7 +35,7 @@ Verify that pattern documentation exists at the configured Code patterns path:
 - `<code-patterns-dir>/testing-patterns.md`
 - `<code-patterns-dir>/architecture.md`
 
-**If any are missing:** inform the user: "Pattern documentation is incomplete. The assessment needs stored patterns to compare against. Run `/arn-planning` first — it will generate pattern docs on first use." Do not proceed.
+**If any are missing:** inform the user: "Pattern documentation is incomplete. The assessment needs stored patterns to compare against. Run `arn-planning` first — it will generate pattern docs on first use." Do not proceed.
 
 **If all exist:** inform the user briefly: "Pattern documentation found. Starting assessment..."
 
@@ -51,7 +51,7 @@ Assessing: PRE-FLIGHT -> ASSESSMENT (scope -> analyze -> prioritize -> spec -> p
 
 Invoke the assess skill:
 
-> `Skill: arn-code:arn-code-assess`
+> Codex skill `arn-code-assess`
 
 The assess skill has its own 7 internal decision gates (scope selection, improvement selection, spec review, execution mode, etc.) and manages its own complete pipeline internally. Wait for it to complete.
 
@@ -61,7 +61,7 @@ The assess skill has its own 7 internal decision gates (scope selection, improve
 
 After `arn-code-assess` completes, offer the chain exit:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Assessment complete. What next?"**
 
@@ -69,7 +69,7 @@ Options:
 1. **Implement improvements** — Start implementing the identified fixes and improvements
 2. **Done** — Exit
 
-If **Implement improvements**: `Skill: arn-code:arn-implementing`
+If **Implement improvements**: Codex skill `arn-implementing`
 If **Done**: Exit.
 
 ---
@@ -77,6 +77,6 @@ If **Done**: Exit.
 ## Error Handling
 
 - **`## Arness` config missing:** Handled by Step 0 (ensure-config) — this should not occur if Step 0 completed successfully.
-- **Pattern docs missing:** Block with pre-flight message. Suggest running `/arn-planning` which will generate pattern docs on first use.
+- **Pattern docs missing:** Block with pre-flight message. Suggest running `arn-planning` which will generate pattern docs on first use.
 - **`arn-code-assess` fails:** Present the error. Ask: retry or abort.
 - **Assessment finds no improvements:** Exit with "Codebase is healthy — no improvements needed." Do not offer implementing chain.

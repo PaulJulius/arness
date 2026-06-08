@@ -45,7 +45,7 @@ The skill simulates the debate through sequential expert invocations, manually p
 
 **When:** `arn-spark-ux-specialist` is unavailable.
 
-No debate occurs. The product strategist reviews independently. Strategist scores become the combined scores directly. The debate report notes "Single-Reviewer Mode" throughout. The skill suggests using `/arn-spark-clickable-prototype` instead, which handles single-reviewer identically.
+No debate occurs. The product strategist reviews independently. Strategist scores become the combined scores directly. The debate report notes "Single-Reviewer Mode" throughout. The skill suggests using `arn-spark-clickable-prototype` instead, which handles single-reviewer identically.
 
 ## Debate Phases
 
@@ -78,7 +78,7 @@ Both experts independently score ALL criteria against the journey screenshots an
 - Does responsive behavior work correctly (if applicable)?
 - Are there JavaScript errors or broken assets during normal interaction?
 
-**Phase 1 file output:** Each expert writes their review to a file using the expert interaction review template (`${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype-teams/references/expert-interaction-review-template.md`). The skill tells each agent the exact file path to write to:
+**Phase 1 file output:** Each expert writes their review to a file using the expert interaction review template (`<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype-teams/references/expert-interaction-review-template.md`). The skill tells each agent the exact file path to write to:
 - Product strategist -> `prototypes/clickable/reviews/round-N-strategist-review.md`
 - UX specialist -> `prototypes/clickable/reviews/round-N-ux-review.md`
 
@@ -165,7 +165,7 @@ Invoke the `arn-spark-product-strategist` agent via the Task tool, passing the m
 - Interaction report from `arn-spark-ui-interactor`
 - All criteria with descriptions, scoring scale, and threshold
 - Style brief, product concept, visual grounding assets (with category context)
-- Expert interaction review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-clickable-prototype-teams/references/expert-interaction-review-template.md`
+- Expert interaction review template path: `<arn-spark-plugin-root>/skills/arn-spark-clickable-prototype-teams/references/expert-interaction-review-template.md`
 - File path to write to: `prototypes/clickable/reviews/round-N-strategist-review.md`
 - Instruction: "Score every criterion independently against the journey screenshots and interaction report. Assess every journey for completability. Write your complete review to the specified file path using the expert interaction review template. Return a brief summary in conversation."
 

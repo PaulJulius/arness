@@ -11,7 +11,7 @@ description: >-
   local-first dependency resolution from a greenfield feature backlog when
   available. Requires an issue tracker (GitHub or Jira) to be configured
   for remote issue browsing. Do NOT use this for creating new issues — use
-  /arn-code-create-issue for that.
+  arn-code-create-issue for that.
 version: 1.3.0
 ---
 
@@ -23,7 +23,7 @@ Browse issues filtered by Arness labels, select one for assessment, and route it
 
 ## Step 1: Check Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
 
 Read the **Issue tracker** field from `## Arness` config in the project's `CLAUDE.md` (values: `github`, `jira`, or `none`). If the `Issue tracker` field is not present, fall back to legacy detection: check for `GitHub: yes` and treat as `github`; otherwise treat as `none`.
 
@@ -33,13 +33,13 @@ Read the **Issue tracker** field from `## Arness` config in the project's `CLAUD
 2. `git remote -v` — confirm a GitHub remote exists (the origin URL must contain `github.com`).
 3. `gh auth status` — confirm the GitHub CLI is authenticated.
 
-If any check fails, inform the user what is missing and suggest running `/arn-planning` to get started. Do not proceed until all prerequisites are satisfied.
+If any check fails, inform the user what is missing and suggest running `arn-planning` to get started. Do not proceed until all prerequisites are satisfied.
 
 ### If Issue tracker is jira
 
 1. Read **Jira project** and **Jira site** from `## Arness` config
 2. Verify the Atlassian MCP server is available (attempt a lightweight MCP call, e.g., list projects)
-3. If the MCP server is not available: "The Atlassian MCP server is not available. Run `/mcp` to check status, or run `/arn-planning` to reconfigure."
+3. If the MCP server is not available: "The Atlassian MCP server is not available. Run `/mcp` to check status, or run `arn-planning` to reconfigure."
 
 ### If Issue tracker is none
 
@@ -51,7 +51,7 @@ Check for a greenfield feature backlog before stopping:
 
 **If all three pass:** Proceed to Step 1b (Local Backlog Check). The greenfield feature backlog provides a local-only alternative to remote issue browsing. Inform the user: "No remote issue tracker is configured, but a local greenfield feature backlog was found. Showing local features."
 
-**If any condition fails:** Inform the user: "Issue management is not configured for this project. Run `/arn-planning` to get started, or configure the issue tracker manually." STOP — do not proceed.
+**If any condition fails:** Inform the user: "Issue management is not configured for this project. Run `arn-planning` to get started, or configure the issue tracker manually." STOP — do not proceed.
 
 ---
 
@@ -59,7 +59,7 @@ Check for a greenfield feature backlog before stopping:
 
 This step is entirely optional — it activates only when a greenfield feature backlog exists. Projects without greenfield skip this step silently and proceed to Step 2. It resolves dependencies in the local Feature Tracker, presents unblocked features, validates against the remote issue tracker, and updates the tracker status.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-pick-issue/references/greenfield-backlog-resolution.md` for the full detection chain, resolution workflow, and sub-feature handling.
+> Read `<arn-code-plugin-root>/skills/arn-code-pick-issue/references/greenfield-backlog-resolution.md` for the full detection chain, resolution workflow, and sub-feature handling.
 
 If the user picks a feature from the local backlog, skip Steps 2-4 and proceed to Step 5 (Assess Issue).
 
@@ -69,11 +69,11 @@ If the user picks a feature from the local backlog, skip Steps 2-4 and proceed t
 
 **Deferred Label Check:**
 
-If Platform is `github`: check if Arness labels exist by running `gh label list --search "arness-"`. If fewer than 7 Arness labels are found, create the missing ones using `gh label create --force` for each label per `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md`. This is idempotent and safe to run on every invocation.
+If Platform is `github`: check if Arness labels exist by running `gh label list --search "arness-"`. If fewer than 7 Arness labels are found, create the missing ones using `gh label create --force` for each label per `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md`. This is idempotent and safe to run on every invocation.
 
 If Platform is `bitbucket` or Issue tracker is `jira`: no label creation needed (Jira labels are implicit, Bitbucket uses different mechanisms).
 
-Ask the user how they want to filter issues, or infer filters from hints in the trigger message. Use `AskUserQuestion` to gather preferences.
+Ask the user how they want to filter issues, or infer filters from hints in the trigger message. Use `user prompt` to gather preferences.
 
 **By type:**
 - `arness-feature-issue` — Feature requests only
@@ -122,7 +122,7 @@ Display results as a numbered list with issue number, title, labels, and age:
 
 If more than 10 results exist, offer "Show more" to fetch the next page.
 
-If no results match the filters, inform the user and suggest either adjusting the filters or creating a new issue via `/arn-code-create-issue`.
+If no results match the filters, inform the user and suggest either adjusting the filters or creating a new issue via `arn-code-create-issue`.
 
 ### If Issue tracker is jira
 
@@ -148,7 +148,7 @@ Display results as a numbered list:
 
 Paginate: show 10 results at a time, offer "Show more" option.
 
-If no results match the filters, inform the user and suggest either adjusting the filters or creating a new issue via `/arn-code-create-issue`.
+If no results match the filters, inform the user and suggest either adjusting the filters or creating a new issue via `arn-code-create-issue`.
 
 ---
 
@@ -198,11 +198,11 @@ Present the assessment to the user alongside the issue details.
 
 ## Step 6: User Decision
 
-After the user has reviewed the issue details and agent assessment, offer options using `AskUserQuestion`:
+After the user has reviewed the issue details and agent assessment, offer options using `user prompt`:
 
 1. **Route to spec** — start the Arness pipeline for this issue:
-   - `arness-feature-issue` / Story — suggest `/arn-code-feature-spec`
-   - `arness-bug-issue` / Bug — suggest `/arn-code-bug-spec`
+   - `arness-feature-issue` / Story — suggest `arn-code-feature-spec`
+   - `arness-bug-issue` / Bug — suggest `arn-code-bug-spec`
    - `arness-backlog` / Task — suggest based on the assessment (feature or bug spec)
    - Let the user override the suggestion if they prefer a different skill.
 
@@ -251,7 +251,7 @@ Return a structured drift report with severity classified as none, minor, modera
 Branch on the returned severity:
 
 - **`none`** or **`minor`** — proceed silently to Step 7. If `minor`, attach the drift report alongside the issue context in the Step 7 hand-off so the spec skill can adapt while refining.
-- **`moderate`** or **`major`** — display the full drift report, then ask the user how to proceed using `AskUserQuestion`:
+- **`moderate`** or **`major`** — display the full drift report, then ask the user how to proceed using `user prompt`:
 
   **The existing feature file / spec has drifted from the current codebase. How would you like to proceed?**
   1. **Refresh first** — route to the spec skill with instructions to update the feature file / spec against current reality before any planning.
@@ -277,28 +277,28 @@ If the user chose to route to a spec skill:
      - Note: "The feature file carries all context needed for spec writing. Upstream greenfield artifacts do not need to be re-read."
      - **If handing off a sub-feature (F-NNN.M):** Include the sub-feature ID, the parent feature ID (F-NNN), the parent feature name, the parent issue reference, and the sub-feature's decomposition hint (journey segment, key components). If a sub-feature spec already exists, note: "A sub-feature spec already exists at `<specs-dir>/FEATURE_F-NNN.M_<name>.md`. `arn-code-feature-spec` should load and refine it rather than creating a new spec."
 
-2. Inform the user: "Routing issue #<number> (or <ISSUE-KEY>) to `/arn-code-feature-spec` (or `/arn-code-bug-spec`). The issue content will be used as the starting point for the specification."
+2. Inform the user: "Routing issue #<number> (or <ISSUE-KEY>) to `arn-code-feature-spec` (or `arn-code-bug-spec`). The issue content will be used as the starting point for the specification."
 
-   If coming from the local Feature Tracker path: "Routing feature **F-NNN: [Name]** to `/arn-code-feature-spec`. The feature file includes inline journey steps, validated components, use case context, and UI behavior -- the spec conversation will start with full context."
+   If coming from the local Feature Tracker path: "Routing feature **F-NNN: [Name]** to `arn-code-feature-spec`. The feature file includes inline journey steps, validated components, use case context, and UI behavior -- the spec conversation will start with full context."
 
 ---
 
 ## Error Handling
 
-- **Issue tracker is `none`** — inform the user that issue management is not configured. Suggest running `/arn-planning` to get started.
-- **GitHub not available** — inform the user and suggest running `/arn-planning` to get started.
-- **Atlassian MCP server not available** — inform the user. Suggest running `/mcp` to check status or `/arn-planning` to reconfigure.
-- **Jira project not found** — verify the Jira project key in `## Arness` config is correct. Suggest running `/arn-planning` to reconfigure.
-- **No issues match filters** — suggest adjusting filters or creating a new issue via `/arn-code-create-issue`.
+- **Issue tracker is `none`** — inform the user that issue management is not configured. Suggest running `arn-planning` to get started.
+- **GitHub not available** — inform the user and suggest running `arn-planning` to get started.
+- **Atlassian MCP server not available** — inform the user. Suggest running `/mcp` to check status or `arn-planning` to reconfigure.
+- **Jira project not found** — verify the Jira project key in `## Arness` config is correct. Suggest running `arn-planning` to reconfigure.
+- **No issues match filters** — suggest adjusting filters or creating a new issue via `arn-code-create-issue`.
 - **`gh` CLI not authenticated** — suggest running `gh auth login`.
 - **Agent invocation fails** — skip the assessment, present issue details only, and let the user decide.
 - **Issue already assigned** — warn the user and let them decide whether to proceed.
-- **Label missing from repository (GitHub)** — create it on demand using `gh label create --force`. Reference `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md` for the full label definitions (name, color, description).
+- **Label missing from repository (GitHub)** — create it on demand using `gh label create --force`. Reference `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md` for the full label definitions (name, color, description).
 - **Jira transition unavailable** — if the "Won't Do" transition is not available, add the `arness-rejected` label and comment only. Inform the user that the status could not be changed.
-- **Feature backlog exists but has no Feature Tracker table** — fall back to the remote-only flow (Step 2). Inform: "Feature backlog found but no Feature Tracker table. Using remote issue browsing. Consider re-running `/arn-spark-feature-extract` to generate a Feature Tracker."
+- **Feature backlog exists but has no Feature Tracker table** — fall back to the remote-only flow (Step 2). Inform: "Feature backlog found but no Feature Tracker table. Using remote issue browsing. Consider re-running `arn-spark-feature-extract` to generate a Feature Tracker."
 - **Feature Tracker parse error** — warn the user about the parse issue and fall back to the remote-only flow (Step 2).
-- **All features are blocked** — inform: "All pending features have unmet dependencies. The following features are in-progress: [list]. Complete those first, then re-run `/arn-code-pick-issue`. Or type 'remote' to browse all remote issues."
-- **No pending features in Feature Tracker** — inform: "All features in the Feature Tracker are done or in-progress. No pending features to pick. Type 'remote' to browse all remote issues, or run `/arn-spark-feature-extract` to add more features."
+- **All features are blocked** — inform: "All pending features have unmet dependencies. The following features are in-progress: [list]. Complete those first, then re-run `arn-code-pick-issue`. Or type 'remote' to browse all remote issues."
+- **No pending features in Feature Tracker** — inform: "All features in the Feature Tracker are done or in-progress. No pending features to pick. Type 'remote' to browse all remote issues, or run `arn-spark-feature-extract` to add more features."
 - **Feature Tracker write fails** — warn the user but do not block the flow. The feature can still be routed to spec.
 - **All sub-features of a parent are blocked** — inform: "All sub-features of F-NNN are blocked by incomplete dependencies. Check sub-feature dependencies."
 - **Decomposed feature selected directly** — if user selects a row with status `decomposed`, inform: "F-NNN has been decomposed into sub-features. Pick a sub-feature (F-NNN.1, F-NNN.2, ...) instead." Re-present the list.

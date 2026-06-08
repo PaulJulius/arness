@@ -14,7 +14,7 @@ version: 1.0.0
 
 Explore visual style direction for the project through iterative conversation, aided by the `arn-spark-ux-specialist` agent (a greenfield agent in this plugin) for design guidance, optionally the `arn-spark-style-capture` agent for capturing reference website screenshots, and optionally the `arn-spark-prototype-builder` agent for sample screens. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is a **style brief document** with implementable toolkit configuration.
 
-This skill covers the visual identity of the product: colors, typography, spacing, component customization, and animation approach. It translates these into concrete configuration for the project's CSS framework and component library. It does not create full application screens -- that is `/arn-spark-static-prototype` and `/arn-spark-clickable-prototype`'s job.
+This skill covers the visual identity of the product: colors, typography, spacing, component customization, and animation approach. It translates these into concrete configuration for the project's CSS framework and component library. It does not create full application screens -- that is `arn-spark-static-prototype` and `arn-spark-clickable-prototype`'s job.
 
 ## Prerequisites
 
@@ -31,23 +31,23 @@ A product concept document should exist for context on target users and product 
 1. Check the configured Vision directory for `visual-direction.md`
 2. If no `## Arness` section found, check `.arness/vision/visual-direction.md` at the project root
 
-**If a visual direction is found:** Read it. The visual direction provides primary visual grounding from `/arn-spark-visual-sketch`: selected direction characteristics (color mood, typography feel, component style, layout density), approximate color palette with hex values, CSS variables used in the sketch, screenshot paths in the visual grounding `designs/` directory, **creative anchors** — tone commitment, differentiation anchor, and Design Thinking answers that capture the creative intent behind the direction, and **animation and motion context** — motion philosophy, key patterns, animation approach used, and whether animation is integral to the direction's identity. Use this as the starting point for style exploration rather than asking the user to describe a direction from scratch. The creative anchors are the direction's DNA — preserve them through token refinement rather than diluting them into generic defaults.
+**If a visual direction is found:** Read it. The visual direction provides primary visual grounding from `arn-spark-visual-sketch`: selected direction characteristics (color mood, typography feel, component style, layout density), approximate color palette with hex values, CSS variables used in the sketch, screenshot paths in the visual grounding `designs/` directory, **creative anchors** — tone commitment, differentiation anchor, and Design Thinking answers that capture the creative intent behind the direction, and **animation and motion context** — motion philosophy, key patterns, animation approach used, and whether animation is integral to the direction's identity. Use this as the starting point for style exploration rather than asking the user to describe a direction from scratch. The creative anchors are the direction's DNA — preserve them through token refinement rather than diluting them into generic defaults.
 
 **If no visual direction is found:** Proceed normally with the user's verbal description. Visual direction is optional -- style exploration works without it.
 
-The project should be scaffolded with a UI toolkit already configured (CSS framework and component library installed via `/arn-spark-scaffold`). Check:
+The project should be scaffolded with a UI toolkit already configured (CSS framework and component library installed via `arn-spark-scaffold`). Check:
 
 1. Read the project's `package.json` to identify installed CSS framework and component library
 2. Read the architecture vision for UI framework and toolkit choices
 
 **If the project is scaffolded:** Use the installed toolkit for style configuration.
 
-**If the project is NOT scaffolded:** Inform the user: "The project does not appear to be scaffolded yet. I can explore style direction conceptually, but the toolkit configuration section will be more useful after running `/arn-spark-scaffold`." Proceed with the exploration -- the style brief can be written without toolkit config and updated later.
+**If the project is NOT scaffolded:** Inform the user: "The project does not appear to be scaffolded yet. I can explore style direction conceptually, but the toolkit configuration section will be more useful after running `arn-spark-scaffold`." Proceed with the exploration -- the style brief can be written without toolkit config and updated later.
 
 Determine the output directory:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Vision directory path — this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the output directory does not exist, create it
 
 Determine the visual grounding directory:
@@ -78,13 +78,13 @@ Present the context to the user:
 
 "Your project uses **[UI framework]** with **[CSS framework]** and **[component library]**. The product is [brief description from product concept, targeting audience].
 
-A visual direction was established via `/arn-spark-visual-sketch`. The selected direction is: [summary from visual-direction.md — overall feel, color mood, typography, layout approach]. The creative anchors are: **Tone:** [tone commitment], **Differentiation:** [differentiation anchor].
+A visual direction was established via `arn-spark-visual-sketch`. The selected direction is: [summary from visual-direction.md — overall feel, color mood, typography, layout approach]. The creative anchors are: **Tone:** [tone commitment], **Differentiation:** [differentiation anchor].
 
 [If screenshots exist:] Screenshots of the sketched screens are available at [paths].
 
 I will use this as the starting point for the style brief."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **How would you like to proceed with this visual direction?**
 > 1. **Proceed** — Build a style proposal based on this direction
@@ -113,7 +113,7 @@ Or describe your own direction."
 
 After the user describes their initial direction, ask about visual assets:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Do you have any visual assets to guide the style direction?"**
 
@@ -130,7 +130,7 @@ Options:
 | Reference URLs | Invoke `arn-spark-style-capture` → save to `[visual-grounding]/references/` |
 | Reference image files | User provides paths → copy to `[visual-grounding]/references/` |
 | Figma designs (Figma enabled in config) | Use Figma MCP to read selected designs, export screenshots → save to `[visual-grounding]/designs/` |
-| Figma designs (Figma not enabled) | Do not offer Figma integration. If user mentions Figma, suggest re-running `/arn-spark-init` to enable it. User can export as PNG/PDF manually → save to `[visual-grounding]/designs/` |
+| Figma designs (Figma not enabled) | Do not offer Figma integration. If user mentions Figma, suggest re-running `arn-spark-init` to enable it. User can export as PNG/PDF manually → save to `[visual-grounding]/designs/` |
 | Canva designs (Canva enabled in config) | Use Canva MCP to export designs → save to `[visual-grounding]/designs/` |
 | Canva designs (Canva not enabled) | Same as Figma — suggest re-running init or manual export → save to `[visual-grounding]/designs/` |
 | Hand-drawn wireframes | User provides photos → save to `[visual-grounding]/designs/` |
@@ -153,7 +153,7 @@ Invoke the `arn-spark-ux-specialist` agent (greenfield agent) via the Task tool,
 - Product concept context (target users, product personality)
 - UI toolkit context (CSS framework, component library)
 - Platform context (desktop app, web app, mobile)
-- **Visual direction context (if found):** Include the visual direction's characteristics, approximate color palette, CSS variables, screenshot paths, and creative anchors (tone commitment, differentiation anchor, Design Thinking answers). Instruct the specialist: "A visual direction has been established via /arn-spark-visual-sketch. Use it as the primary input for the style proposal. The screenshots show the selected visual approach applied to real product screens. The tone commitment is '[tone]' and the differentiation anchor is '[differentiation]' — these are the creative DNA of the direction. Translate the direction into precise design tokens while preserving its character. Every token decision should support the tone commitment and keep the differentiation anchor intact. Do not flatten distinctive choices into generic defaults during refinement."
+- **Visual direction context (if found):** Include the visual direction's characteristics, approximate color palette, CSS variables, screenshot paths, and creative anchors (tone commitment, differentiation anchor, Design Thinking answers). Instruct the specialist: "A visual direction has been established via arn-spark-visual-sketch. Use it as the primary input for the style proposal. The screenshots show the selected visual approach applied to real product screens. The tone commitment is '[tone]' and the differentiation anchor is '[differentiation]' — these are the creative DNA of the direction. Translate the direction into precise design tokens while preserving its character. Every token decision should support the tone commitment and keep the differentiation anchor intact. Do not flatten distinctive choices into generic defaults during refinement."
 - **Visual direction animation context (if found):** If the visual direction includes an Animation & Motion section, pass it to the specialist: "The visual direction includes animation context: [motion philosophy], with key patterns [patterns], using [animation approach]. Animation is [integral/decorative/none] to the direction. Build the style brief's Animation and Motion section grounded in these choices — do not reinvent the motion approach from scratch. Describe animation in platform-agnostic intent language."
 - **All available visual grounding assets.** Provide images from all three subfolders with category context so the specialist knows the intent:
   - **References** (`[visual-grounding]/references/`): "These reference images are inspirational direction — they inform the overall feel but are not pixel-level targets."
@@ -210,7 +210,7 @@ Enter a conversation loop. The user may want to:
 **Primary:** [color] | **Background:** [color] | **Accent:** [color]
 **Font:** [family] | **Corners:** [radius] | **Animation:** [approach]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Ready to write the style brief?**
 > 1. **Yes, write it** — Generate the style brief document
@@ -221,7 +221,7 @@ Ask (using `AskUserQuestion`):
 When the user is ready:
 
 1. Read the template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-style-explore/references/style-brief-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-style-explore/references/style-brief-template.md`
 
 2. Populate the template with all decisions from the conversation:
    - Specific color values (hex/HSL) for all palette roles
@@ -244,7 +244,7 @@ When the user is ready:
 "Style brief saved to `[path]/style-brief.md`.
 
 Recommended next steps:
-1. **Build static prototype:** Run `/arn-spark-static-prototype` to validate visual fidelity with component showcases
+1. **Build static prototype:** Run `arn-spark-static-prototype` to validate visual fidelity with component showcases
 2. **Apply toolkit config:** The style brief includes [CSS framework] and [component library] configuration that will be applied during prototyping
 
 The prototype will use the style brief to ensure all screens share a consistent visual language."
@@ -258,7 +258,7 @@ The prototype will use the style brief to ensure all screens share a consistent 
 | Initial style proposal (Step 2) | Invoke `arn-spark-ux-specialist` with user's direction + product context + toolkit context + ALL visual grounding assets (with category context: references=inspirational, designs=specification, brand=constraints) |
 | User wants style adjustments | Invoke `arn-spark-ux-specialist` with updated direction + all visual grounding assets. Always provide images alongside text when they exist — visual nuances matter. |
 | User wants to see sample screens | Invoke `arn-spark-prototype-builder` with: screen list (1-2 screens), navigation flow (minimal), style brief (current direction), UI framework + component library, project root path, and visual grounding assets (especially design mockups and brand assets) |
-| User asks which CSS framework to use | Defer: "CSS framework is chosen during `/arn-spark-scaffold`. If you want to change it, re-run scaffold." |
+| User asks which CSS framework to use | Defer: "CSS framework is chosen during `arn-spark-scaffold`. If you want to change it, re-run scaffold." |
 | User asks about specific component APIs | Defer: "Component implementation details come during feature development. The style brief defines how components should look." |
 | User asks about features or architecture | Defer to the appropriate skill |
 
@@ -271,7 +271,7 @@ The prototype will use the style brief to ensure all screens share a consistent 
 - **Writing the document fails:** Print the full content in the conversation so the user can copy it.
 - **Style brief already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **A style brief already exists at `[path]`. How would you like to proceed?**
   > 1. **Replace** — Start fresh with a new style brief

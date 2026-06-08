@@ -25,7 +25,7 @@ Read the project's CLAUDE.md and look for a `## Arness` section. Extract:
 - **Code patterns** — path to the directory containing stored pattern documentation
 - **Template path** — path to the report template set (JSON templates)
 
-**If `## Arness` is not found:** inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed.
+**If `## Arness` is not found:** inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed.
 
 Ask the user for `PROJECT_NAME` if not provided in the conversation.
 
@@ -46,7 +46,7 @@ If any critical files are missing (`SOURCE_PLAN.md`, `INTRODUCTION.md`, `TASKS.m
 
 ### Step 2: Run Structural and Document Checks
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-review-plan/references/validation-checks.md` and execute all generic checks (sections 1-4, 6-8) against the project files.
+Read `<arn-code-plugin-root>/skills/arn-code-review-plan/references/validation-checks.md` and execute all generic checks (sections 1-4, 6-8) against the project files.
 
 Classify each finding by severity:
 - **ERROR** — Must fix before execution (missing files, broken dependencies, placeholder content)
@@ -158,7 +158,7 @@ Present the user with options based on what was found:
 
 **If ERRORS exist:**
 
-Ask the user (using AskUserQuestion):
+Ask the user (using user prompt):
 
 1. **"Fix all errors automatically"** — attempt to fix every error using the suggested fixes. Edit the relevant plan files (INTRODUCTION.md, TASKS.md, PHASE_N_PLAN.md, PROGRESS_TRACKER.json).
 2. **"Let me choose which to fix"** — show each error one at a time. For each, ask the user: fix or skip?
@@ -166,7 +166,7 @@ Ask the user (using AskUserQuestion):
 
 **If only WARNINGS exist (no errors):**
 
-Ask the user (using AskUserQuestion):
+Ask the user (using user prompt):
 
 1. **"Fix all warnings"** — attempt to fix every warning
 2. **"Let me choose which to fix"** — show each warning one at a time, ask fix/skip
@@ -205,12 +205,12 @@ Present the final status to the user:
 - **If errors remain**: "Plan still has N errors — fix before proceeding."
 
 Offer the next step:
-- "Would you like to proceed to `/arn-code-taskify` to create the Claude Code task list?"
-- If yes — run `/arn-code-taskify` with the same `PROJECT_NAME`
+- "Would you like to proceed to `arn-code-taskify` to create the Claude Code task list?"
+- If yes — run `arn-code-taskify` with the same `PROJECT_NAME`
 
 ## Error Handling
 
-- If `## Arness` config is missing, do not proceed — suggest running `/arn-planning` to get started.
-- If the project directory does not exist, report the error and suggest running `/arn-code-save-plan` first.
-- If pattern documentation files are missing (for Step 4), skip pattern compliance checks and add an INFO finding: "Pattern docs not found — skipping pattern compliance. Run `/arn-planning` to generate pattern docs on first use."
+- If `## Arness` config is missing, do not proceed — suggest running `arn-planning` to get started.
+- If the project directory does not exist, report the error and suggest running `arn-code-save-plan` first.
+- If pattern documentation files are missing (for Step 4), skip pattern compliance checks and add an INFO finding: "Pattern docs not found — skipping pattern compliance. Run `arn-planning` to generate pattern docs on first use."
 - If the report cannot be written (permissions), print the JSON report to the conversation so the user can save it manually.

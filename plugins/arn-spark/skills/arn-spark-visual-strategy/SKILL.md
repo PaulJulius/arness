@@ -24,13 +24,13 @@ The primary artifacts are:
 - **Capture script** — takes screenshots of the development build (NOT the prototype)
 - **Comparison script** — diffs development screenshots against prototype baselines
 - **Baseline images** — copied from prototype screenshots, used as the reference standard
-- **CLAUDE.md configuration** — integrates visual testing into the Arness execution pipeline so that `/arn-code-execute-plan` and `/arn-code-execute-task` automatically validate UI changes
+- **CLAUDE.md configuration** — integrates visual testing into the Arness execution pipeline so that `arn-code-execute-plan` and `arn-code-execute-task` automatically validate UI changes
 
 **The core problem this solves:** during feature development, visual regressions (button on the wrong side, layout breaks, color mismatches) go undetected until the user manually inspects the application. This skill sets up the tooling so that every UI task automatically compares the development build against the prototype.
 
 ## Prerequisites
 
-Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
 - **Vision directory** (default: `.arness/vision`)
@@ -41,7 +41,7 @@ Extract:
 Check for prototype lock (strongly recommended):
 1. Check for `### Prototype Lock` in the `## Arness` section
 2. If found: read the locked directory path and the `LOCKED.md` manifest
-3. If NOT found: warn the user -- "No prototype lock detected. Visual testing compares against the prototype, but the prototype is not currently protected from modification. Consider running `/arn-spark-prototype-lock` first."
+3. If NOT found: warn the user -- "No prototype lock detected. Visual testing compares against the prototype, but the prototype is not currently protected from modification. Consider running `arn-spark-prototype-lock` first."
 
 Check for prototype validation evidence:
 - `[prototypes-dir]/clickable/final-report.md`
@@ -85,7 +85,7 @@ Wait for user confirmation.
 ### Step 2: Propose Layered Testing Strategy
 
 Based on the constraints profile, propose a multi-layer strategy. Read the strategy layers guide:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/strategy-layers-guide.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/strategy-layers-guide.md`
 
 Match the project's application type against the Layer Decision Matrix to determine the recommended layers. Present the layered approach:
 
@@ -109,7 +109,7 @@ Match the project's application type against the Layer Decision Matrix to determ
 
 **My recommendation:** Start with Layer 1. It catches 80-90% of visual regressions (layout, component rendering, color, typography) with minimal infrastructure. Add Layer 2 when you need to validate native integration or transparency.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which layers do you want to set up?"**
 
@@ -128,7 +128,7 @@ If any of these conditions apply, ask the user:
 
 Inform the user: "Layer 2 can capture static screenshots (current behavior) or walk through the app like a user using journey-based interaction testing (via UI automation APIs). Journey mode captures screenshots at each step of a user flow — login, navigation, form submission, etc."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Do you want to enable journey interaction for Layer 2?"**
 
@@ -186,7 +186,7 @@ Present the baseline sources:
 | [Name] | [variants] | [path] | Component reference |
 | ... | ... | ... | ... |
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How should I organize the baselines?"**
 
@@ -217,10 +217,10 @@ Ready to proceed?"
 For each layer:
 
 1. Read the spike checklist:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/spike-checklist.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/spike-checklist.md`
 
 2. Read the capture script template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/baseline-capture-script-template.js`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/baseline-capture-script-template.js`
 
 3. Determine the spike workspace: `[spikes-dir]/visual-strategy-spike-layer-[N]/`
 
@@ -237,7 +237,7 @@ For each layer:
 **Additional context for journey interaction spikes:**
 
 If the layer has `Interaction: journey`, provide additional context to the `arn-spark-visual-test-engineer` agent:
-- Include the journey schema reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/journey-schema.md`
+- Include the journey schema reference: `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/journey-schema.md`
 - Request accessibility tree inspection: agent should verify that the target application exposes automation IDs on key interactive elements
 - Request minimal journey execution test: agent should generate at least one journey and execute it in dry-run mode (or full execution if app is running)
 - For macOS targets: agent should check Accessibility permissions and prompt the user to grant them if not already granted
@@ -317,7 +317,7 @@ Want to proceed with these recommendations, or adjust?"
 
 Present integration options:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How should visual tests integrate with your workflow?"**
 
@@ -325,17 +325,17 @@ Options:
 1. **Manual** — Run `node scripts/visual-test-capture.mjs && node scripts/visual-test-compare.mjs` when you want to check
 2. **npm script** — Add `visual-test` to package.json scripts (Recommended)
 3. **CI integration** — Add a visual test step to the CI workflow
-4. **Arness pipeline hook** — Run visual tests as part of `/arn-code-execute-task` completion verification
+4. **Arness pipeline hook** — Run visual tests as part of `arn-code-execute-task` completion verification
 
 Based on user choice, configure the integration:
 - **npm script:** Add `"visual-test:capture"`, `"visual-test:compare"`, and `"visual-test"` (runs both) to package.json scripts
-- **CI:** Add a visual test job to the CI workflow file (if one exists from arn-spark-dev-setup). If no CI exists, create the workflow file or suggest running `/arn-spark-dev-setup` first.
+- **CI:** Add a visual test job to the CI workflow file (if one exists from arn-spark-dev-setup). If no CI exists, create the workflow file or suggest running `arn-spark-dev-setup` first.
 - **Arness pipeline:** Add configuration to CLAUDE.md (see Step 9)
 
 ### Step 9: Write Strategy Document
 
 Read the template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/visual-strategy-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/visual-strategy-template.md`
 
 Populate the template with all collected information:
 - Stack and environment analysis (from Step 1)
@@ -411,13 +411,13 @@ Top-level fields (no `####` subsection) are implicitly Layer 1 and are always ac
 **CLAUDE.md updated** with `### Visual Testing` configuration.
 
 Recommended next steps:
-1. **Extract features:** Run `/arn-spark-feature-extract` to build the backlog
-2. **Start developing:** If you have the Arness Code plugin installed, run `/arn-planning` to begin the development pipeline. Arness auto-configures on first use.
+1. **Extract features:** Run `arn-spark-feature-extract` to build the backlog
+2. **Start developing:** If you have the Arness Code plugin installed, run `arn-planning` to begin the development pipeline. Arness auto-configures on first use.
 3. **Start building:** Features will be compared against prototype baselines during implementation
 
 [If any layers were deferred:]
 
-**Deferred layers:** [layer names]. These layers were configured but could not be validated in the current environment. After the first feature is implemented and the application builds on the target platform, run `/arn-spark-visual-readiness` to activate them."
+**Deferred layers:** [layer names]. These layers were configured but could not be validated in the current environment. After the first feature is implemented and the application builds on the target platform, run `arn-spark-visual-readiness` to activate them."
 
 ## Agent Invocation Guide
 
@@ -429,8 +429,8 @@ Recommended next steps:
 | Agent permission denied | Same as arn-spark-spike: re-run in foreground. If still denied, execute directly in conversation (write POC files and run capture commands yourself). |
 | User asks about prototype quality | Reference the prototype lock manifest and judge reports. Do not re-run validation. |
 | User asks about specific framework capture methods | Discuss and invoke `arn-spark-tech-evaluator` if deep comparison needed. |
-| User asks about CI setup | Discuss briefly. If CI workflow exists, offer to add visual test step. If not, suggest running `/arn-spark-dev-setup` first. |
-| User asks about feature implementation | Defer: "Feature implementation is handled by `/arn-code-feature-spec` and the Arness development pipeline." |
+| User asks about CI setup | Discuss briefly. If CI workflow exists, offer to add visual test step. If not, suggest running `arn-spark-dev-setup` first. |
+| User asks about feature implementation | Defer: "Feature implementation is handled by `arn-code-feature-spec` and the Arness development pipeline." |
 | Cross-environment spike deferred | Record the deferral with instructions. Create the scripts anyway. The user can run them manually on the target OS later. |
 
 ## Error Handling

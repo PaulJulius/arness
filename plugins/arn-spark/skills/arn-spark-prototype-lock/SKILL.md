@@ -20,7 +20,7 @@ This skill addresses the problem: once development starts, production code overw
 
 ## Prerequisites
 
-Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
 - **Prototypes directory** (default: `.arness/prototypes`)
@@ -33,7 +33,7 @@ Check for prototype validation evidence:
 2. Check for `[prototypes-dir]/static/final-report.md` -- same.
 3. Check for `[prototypes-dir]/criteria.md`
 
-**If no prototype validation evidence found:** Inform the user: "No prototype validation results found. This skill works best after `/arn-spark-clickable-prototype` or `/arn-spark-static-prototype` has validated a prototype. You can still lock any existing prototype files. What prototype source should I preserve?"
+**If no prototype validation evidence found:** Inform the user: "No prototype validation results found. This skill works best after `arn-spark-clickable-prototype` or `arn-spark-static-prototype` has validated a prototype. You can still lock any existing prototype files. What prototype source should I preserve?"
 
 **If validation found but judge verdict was FAIL:** Warn the user: "The latest prototype version (v[N]) received a FAIL verdict from the judge. Are you sure you want to lock this version, or would you prefer to run more validation cycles first?"
 
@@ -117,7 +117,7 @@ Wait for user confirmation.
    - The `final-report.md` for each prototype type
 4. Copy `criteria.md`
 5. Read the lock report template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-prototype-lock/references/lock-report-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-prototype-lock/references/lock-report-template.md`
 6. Write a `LOCKED.md` manifest file at `[prototypes-dir]/locked/LOCKED.md` using the template. Populate all fields with the actual values from the copy operation.
 
 If a static prototype exists and is validated, repeat the copy for the static prototype to `[prototypes-dir]/locked/static-v[M]/`.
@@ -173,7 +173,7 @@ If Git is not configured: skip, note that no tag was created.
 ### Step 7: Write CLAUDE.md Guardrail Rules
 
 Read the guardrail rules template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-prototype-lock/references/prototype-guardrail-rules.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-prototype-lock/references/prototype-guardrail-rules.md`
 
 Substitute the placeholders with project-specific paths:
 - `__LOCK_DATE__` -- today's date
@@ -189,7 +189,7 @@ Add the populated `### Prototype Lock` subsection to the `## Arness` section in 
 
 Ask the user:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"The CLAUDE.md rules instruct agents not to modify prototype files. Do you want additional enforcement?"**
 
@@ -200,7 +200,7 @@ Options:
 **If the user chooses hook:**
 
 Read the hook template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-prototype-lock/references/pretooluse-hook-template.json`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-prototype-lock/references/pretooluse-hook-template.json`
 
 The hook is installed in the **target project** (not in the arn-spark plugin):
 
@@ -229,10 +229,10 @@ The hook is installed in the **target project** (not in the arn-spark plugin):
 **CLAUDE.md updated** with `### Prototype Lock` configuration.
 
 Recommended next steps:
-1. **Set up dev environment:** Run `/arn-spark-dev-setup` to configure the development environment
-2. **Define visual testing:** Run `/arn-spark-visual-strategy` to set up visual regression testing against the prototype
-3. **Extract features:** Run `/arn-spark-feature-extract` to build the backlog
-4. **Start developing:** If you have the Arness Code plugin installed, run `/arn-planning` to begin the development pipeline. Arness auto-configures on first use."
+1. **Set up dev environment:** Run `arn-spark-dev-setup` to configure the development environment
+2. **Define visual testing:** Run `arn-spark-visual-strategy` to set up visual regression testing against the prototype
+3. **Extract features:** Run `arn-spark-feature-extract` to build the backlog
+4. **Start developing:** If you have the Arness Code plugin installed, run `arn-planning` to begin the development pipeline. Arness auto-configures on first use."
 
 ## Agent Invocation Guide
 
@@ -242,8 +242,8 @@ Recommended next steps:
 | Build validation fails with path issues | Diagnose directly. If the issue requires framework-specific knowledge, invoke `arn-spark-dev-env-builder` (foreground) for diagnosis assistance. |
 | User asks about prototype quality | Reference the judge report and review reports. Do not re-run validation. |
 | User wants to re-lock after more cycles | Re-run the skill. It detects the existing lock in Step 1 and offers to replace it. |
-| User asks about visual testing | Defer: "Visual regression testing against the prototype is set up by `/arn-spark-visual-strategy`." |
-| User asks about features | Defer: "Feature extraction is done by `/arn-spark-feature-extract`." |
+| User asks about visual testing | Defer: "Visual regression testing against the prototype is set up by `arn-spark-visual-strategy`." |
+| User asks about features | Defer: "Feature extraction is done by `arn-spark-feature-extract`." |
 
 ## Error Handling
 

@@ -13,7 +13,7 @@ This procedure checks whether a project's report templates are up to date with t
 
 2. Read `Template version` from `## Arness` (e.g., `0.1.0`).
 
-3. Read `version` from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`.
+3. Read `version` from `<arn-code-plugin-root>/.codex-plugin/plugin.json`.
 
 4. If versions match -- templates are up to date. Skip to main workflow.
 
@@ -25,7 +25,7 @@ This procedure checks whether a project's report templates are up to date with t
    b. Read `<template-path>/.checksums.json` for original checksums.
    c. List plugin templates via Bash:
       ```
-      ls ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/*.json
+      ls <arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/*.json
       ```
    d. Compare and classify each file into 4 categories:
       - **Unmodified**: exists in both user project and plugin, user hash matches `.checksums.json`
@@ -37,7 +37,7 @@ This procedure checks whether a project's report templates are up to date with t
    g. Based on preference (for existing files only — new files already handled in 5e):
 
       **`auto` + all files unmodified:**
-      - Copy new templates from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/`
+      - Copy new templates from `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/`
       - Regenerate `.checksums.json`
       - Update `Template version` in `## Arness`
       - Inform user: "Templates updated from [old] to [new]."

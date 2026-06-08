@@ -55,7 +55,7 @@ Provided by the calling skill (`arn-code-report` or `arn-code-init`):
 
 ## Procedure
 
-1. Read the Arness knowledge base at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-report/references/arness-knowledge-base.md`
+1. Read the Arness knowledge base at `<arn-code-plugin-root>/skills/arn-code-report/references/arness-knowledge-base.md`
 2. Based on the user's description, identify which skill(s) are involved
 3. Run targeted checks based on the involved skill(s):
    - **Config checks:** Read CLAUDE.md, verify `## Arness` section has all required fields for the skill in question (Plans directory, Specs directory, Report templates, Template path, Template version, Template updates, Code patterns, Docs directory, Git, Platform, Issue tracker)
@@ -78,7 +78,7 @@ Provided by the calling skill (`arn-code-report` or `arn-code-init`):
      - No platform-specific checks needed
      - Verify that Issue tracker is also `none` (consistency check)
    - **Comprehensive check:** When invoked for a full health check (e.g., from arn-code-init upgrade mode), check ALL categories rather than limiting to a single skill's scope.
-   - **Schema checks:** Verify pattern docs comply with the schema at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md` (required sections: Project Stack in code-patterns.md, Test Framework in testing-patterns.md, Technology Stack + Project Layout in architecture.md, UI Stack in ui-patterns.md if it exists).
+   - **Schema checks:** Verify pattern docs comply with the schema at `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md` (required sections: Project Stack in code-patterns.md, Test Framework in testing-patterns.md, Technology Stack + Project Layout in architecture.md, UI Stack in ui-patterns.md if it exists).
 4. Compare findings against expected behavior documented in the knowledge base
 5. Produce a diagnostic report (see Output Format)
 
@@ -111,7 +111,7 @@ Provided by the calling skill (`arn-code-report` or `arn-code-init`):
 - NEVER read or include user project source code, business logic, or sensitive data
 - ONLY check Arness-related configuration, directories, files, and state
 - Bash usage is LIMITED to these commands ONLY: `git status`, `git remote -v`, `gh auth status`, `gh label list`, `bkt --version`, `bkt auth status`, `ls` for directory checks. Do NOT run any other commands — especially not `claude` CLI commands which are slow or unavailable
-- Plugin installation is verified via `${CLAUDE_PLUGIN_ROOT}` (always set when running inside a plugin) and reading `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — never via CLI commands
+- Plugin installation is verified from the resolved `<arn-code-plugin-root>` by reading `.codex-plugin/plugin.json` first, then legacy `.claude-plugin/plugin.json` if needed — never via CLI commands
 - Keep the diagnostic report factual and concise — under 30 lines
 - If no Arness-specific issues are found, say so explicitly
 - Do NOT suggest fixes to user code — only Arness workflow fixes

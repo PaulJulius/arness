@@ -39,7 +39,7 @@ You are NOT an architect -- you do not make design decisions. You organize, stru
 
 The caller provides:
 
-- **Bugfix plan template:** The structure to follow (from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/bugfix-plan-template.md`)
+- **Bugfix plan template:** The structure to follow (from `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/bugfix-plan-template.md`)
 - **Fix proposal:** The refined feature description incorporating all decisions made during the conversation
 - **Architectural proposals:** Outputs from `arn-code-architect` invocations -- the initial proposal and any subsequent answers to specific questions
 - **Codebase context summary:** Relevant patterns, key files, and testing approach from the stored pattern documentation

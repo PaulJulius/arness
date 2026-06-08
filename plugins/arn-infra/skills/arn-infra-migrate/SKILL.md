@@ -21,12 +21,12 @@ This skill manages the full migration lifecycle: planning, IaC generation for th
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Migration is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Migration is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- current cloud providers
 - **Providers config** -- path to `providers.md`
 - **Default IaC tool** -- the target IaC tool for graduation migrations
@@ -43,7 +43,7 @@ Extract:
 
 ### Step 1: Detect Migration Scenario
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What kind of migration are you planning?"**
 
@@ -70,7 +70,7 @@ Check if any providers have `Migration: <id> (in progress)`:
 **If active migration detected:**
 Warn: "There is an active migration in progress: [migration-id] affecting [providers/services]. Starting a new migration that overlaps with these services could cause conflicts."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to handle the active migration conflict?"**
 
@@ -180,7 +180,7 @@ Present the migration plan to the user:
 **Risks:**
 [identified risks with mitigation]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to proceed with the migration plan?"**
 
@@ -354,7 +354,7 @@ At any point during the migration, if something goes wrong:
 
 Present: "Migration step [N] has been rolled back. Source infrastructure is still active and serving traffic. Diagnostics have been preserved in the task issue."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to do next?"**
 
@@ -383,8 +383,8 @@ Options:
 
 [If completed:]
 1. **Complete cleanup:** Address the cleanup issues to decommission source resources
-2. **Verify monitoring:** Run `/arn-infra-monitor` to verify monitoring on the new provider
-3. **Update CI/CD:** Run `/arn-infra-pipeline` to update pipelines for the new provider
+2. **Verify monitoring:** Run `arn-infra-monitor` to verify monitoring on the new provider
+3. **Update CI/CD:** Run `arn-infra-pipeline` to update pipelines for the new provider
 
 [If in-progress:]
 1. **Continue migration:** Execute the remaining [N] migration tasks
@@ -392,14 +392,14 @@ Options:
 
 [If rolled-back:]
 1. **Investigate:** Review the diagnostics in the task issues
-2. **Retry:** Fix the identified issues and re-run `/arn-infra-migrate`"
+2. **Retry:** Fix the identified issues and re-run `arn-infra-migrate`"
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No issue tracker configured:** Warn: "Migration projects require an issue tracker (GitHub or Jira) for tracking. The migration plan can be generated without one, but tracked execution requires issues." Offer to proceed without issue tracking (plan-only mode) or suggest configuring an issue tracker via `/arn-infra-init`.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No issue tracker configured:** Warn: "Migration projects require an issue tracker (GitHub or Jira) for tracking. The migration plan can be generated without one, but tracked execution requires issues." Offer to proceed without issue tracking (plan-only mode) or suggest configuring an issue tracker via `arn-infra-init`.
 - **Specialist agent fails:** Report the error. Fall back to presenting the migration scenario guidance from the reference file and ask the user to provide the target architecture manually.
 - **Specialist agent returns empty output:** Inform the user and retry with additional context. If retry fails, generate a migration plan skeleton with placeholder values.
 - **Cost analyst agent fails:** Present the migration plan without cost comparison. Warn: "Cost comparison could not be generated. Review provider pricing manually before committing to the migration."

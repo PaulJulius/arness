@@ -61,7 +61,7 @@ Both experts review all use cases independently from their lens. Neither sees th
 - Are related use cases properly connected (bidirectional references)?
 - Is step granularity consistent across use cases?
 
-**Phase 1 file output:** Each expert writes their independent review to a file using the expert review template (`${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`). The skill tells each agent the exact file path to write to:
+**Phase 1 file output:** Each expert writes their independent review to a file using the expert review template (`<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`). The skill tells each agent the exact file path to write to:
 - Business reviewer → `[use-cases-dir]/reviews/round-N-business-review.md`
 - Flow reviewer → `[use-cases-dir]/reviews/round-N-flow-review.md`
 
@@ -169,7 +169,7 @@ Invoke the `arn-spark-product-strategist` agent via the Task tool, passing the m
 - Product concept for context
 - Actor catalog
 - Business review focus instructions (Phase 1 focus areas listed above)
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: `[use-cases-dir]/reviews/round-N-business-review.md`
 - Instruction: "Write your complete review to the specified file path using the expert review template. Return a brief summary in conversation."
 
@@ -183,7 +183,7 @@ Invoke the `arn-spark-ux-specialist` agent via the Task tool, passing the model 
 - Existing prototype screens (if available)
 - Flow review focus instructions (Phase 1 focus areas listed above)
 - The business reviewer's file path to read: `[use-cases-dir]/reviews/round-N-business-review.md`
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: `[use-cases-dir]/reviews/round-N-flow-review.md`
 - Instruction: "First, review these use cases independently from the flow/UX perspective using the Phase 1 format. Then, read the business reviewer's review at the specified file path and respond to each finding using the Phase 2 cross-review format: agree, disagree (with reasoning), or note new concerns their findings prompted. Write your complete review (Phase 1 + Phase 2 combined) to the specified file path using the expert review template. Return a brief summary in conversation."
 
@@ -193,7 +193,7 @@ The UX specialist reads the business review file and writes its combined review 
 
 Invoke the `arn-spark-product-strategist` agent via the Task tool, passing the model from `.arness/agent-models/spark.md` as the `model` parameter (see `plugins/arn-spark/skills/arn-spark-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context:
 - The flow reviewer's file path to read: `[use-cases-dir]/reviews/round-N-flow-review.md`
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: `[use-cases-dir]/reviews/round-N-business-cross-review.md`
 - Instruction: "Read the flow reviewer's review at the specified file path. The flow reviewer has reviewed the use cases and also responded to your review. Review their findings and respond using the Phase 2 cross-review format: agree, disagree (with reasoning), or note new concerns their review prompted. Write your cross-review to the specified file path using the expert review template. Return a brief summary in conversation."
 
@@ -209,7 +209,7 @@ The skill synthesizes by reading all three review files (not from conversation c
 - All use case content
 - Product concept
 - Their respective focus instructions
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: business reviewer → `[use-cases-dir]/reviews/round-N-business-review.md`, flow reviewer → `[use-cases-dir]/reviews/round-N-flow-review.md`
 - Instruction: "Produce your independent review. Write the complete review to the specified file path using the expert review template. Do not communicate with other teammates during this phase."
 

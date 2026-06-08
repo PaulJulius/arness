@@ -29,7 +29,7 @@ arn-code-batch-implement -> **arn-code-batch-merge** -> arn-code-batch-simplify
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 After configuration is ensured, extract the following from `## Arness`:
 - **Plans directory** -- base path where project plans and CHANGE_RECORD.json files are stored
@@ -72,7 +72,7 @@ For each discovered PR, verify it is still open:
 - If the PR is `OPEN`: include it in the batch
 - If the PR is `CLOSED` or `MERGED`: skip it silently
 
-**If zero open batch PRs found:** "No open batch PRs found. Run `/arn-code-batch-implement` first to create implementation PRs." STOP.
+**If zero open batch PRs found:** "No open batch PRs found. Run `arn-code-batch-implement` first to create implementation PRs." STOP.
 
 Collect the final list: PR number, URL, feature name, CHANGE_RECORD path, platform. This is a small data set -- it stays in context.
 
@@ -86,7 +86,7 @@ Pass to the agent:
 - PR list (number, URL, feature name, CHANGE_RECORD path)
 - Code patterns path (from `## Arness`)
 - Platform (`github` or `bitbucket`)
-- Conflict-classification reference path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-merge/references/conflict-classification.md`
+- Conflict-classification reference path: `<arn-code-plugin-root>/skills/arn-code-batch-merge/references/conflict-classification.md`
 
 The agent returns a concise summary containing:
 - **Status table** -- each PR with CI status, review status, merge readiness
@@ -102,7 +102,7 @@ Present the agent's summary to the user.
 
 ## Step 3: Guided Per-PR Review Loop
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Ready to start reviewing PRs?"**
 
@@ -112,9 +112,9 @@ Options:
 3. **Run batch-simplify first** -- cross-feature quality pass before reviewing
 4. **Done for now** -- exit
 
-If **Run batch-simplify first**: Invoke `Skill: arn-code:arn-code-batch-simplify`. After it completes, return to this menu.
+If **Run batch-simplify first**: Invoke Codex skill `arn-code-batch-simplify`. After it completes, return to this menu.
 
-If **Done for now**: "Run `/arn-code-batch-merge` when ready to resume." STOP.
+If **Done for now**: "Run `arn-code-batch-merge` when ready to resume." STOP.
 
 ### Selecting a PR
 
@@ -124,13 +124,13 @@ If **Choose a PR**: present open PRs as numbered options. If more than 4 PRs, us
 
 ### Review
 
-Invoke `Skill: arn-code:arn-code-review-pr` with the selected PR number. The review-pr skill handles the full flow: fetch comments, validate, categorize, fix, local testing.
+Invoke Codex skill `arn-code-review-pr` with the selected PR number. The review-pr skill handles the full flow: fetch comments, validate, categorize, fix, local testing.
 
 ### Post-Review Action
 
 After review-pr completes:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"PR #N reviewed. What next?"**
 
@@ -235,19 +235,19 @@ Write the updated `feature-backlog.md` back to disk.
 
 If all PRs are merged:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"All batch PRs merged. Run cross-feature simplification?"**
 
 Options:
-1. **Yes** -- Invoke `Skill: arn-code:arn-code-batch-simplify`
+1. **Yes** -- Invoke Codex skill `arn-code-batch-simplify`
 2. **Not yet** -- Exit
 
-If **Yes**: Invoke `Skill: arn-code:arn-code-batch-simplify`.
+If **Yes**: Invoke Codex skill `arn-code-batch-simplify`.
 
-If **Not yet**: "Run `/arn-code-batch-simplify` when ready to clean up cross-feature duplication." Exit.
+If **Not yet**: "Run `arn-code-batch-simplify` when ready to clean up cross-feature duplication." Exit.
 
-If some PRs are still open: list remaining PRs with their current status. "Run `/arn-code-batch-merge` to resume." Exit.
+If some PRs are still open: list remaining PRs with their current status. "Run `arn-code-batch-merge` to resume." Exit.
 
 ---
 

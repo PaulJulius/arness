@@ -24,9 +24,9 @@ arn-infra-init -> arn-infra-change-spec -> arn-infra-change-plan -> arn-infra-sa
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change execution is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change execution is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra plans directory** -- where structured plan projects live (default: `.arness/infra-plans`)
@@ -34,7 +34,7 @@ Extract:
 - **Providers config** -- path to `providers.md`
 - **Environments** -- environment names in promotion order
 - **Environments config** -- path to `environments.md`
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Cost threshold** -- monthly budget limit for cost gate warnings (default: `100`)
 - **Default IaC tool** -- default IaC tool
 - **Tooling manifest** -- path to `tooling-manifest.json`
@@ -50,7 +50,7 @@ Glob <infra-plans-dir>/*/PROGRESS_TRACKER.json
 
 **If one project found:** Auto-select it.
 **If multiple projects found:** Present the list with project names and overall status from each PROGRESS_TRACKER.json. Ask the user to select.
-**If no project found:** Inform the user: "No structured plan project found. Run `/arn-infra-save-plan` to create one from a plan preview."
+**If no project found:** Inform the user: "No structured plan project found. Run `arn-infra-save-plan` to create one from a plan preview."
 
 Read `PROGRESS_TRACKER.json` to determine current phase and execution state. If a phase is `in_progress`, offer to resume from the last completed step.
 
@@ -77,7 +77,7 @@ Proceed with Phase [N]?"
 
 ### Step 2: Per-Phase Dispatch Loop
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-execute-change/references/dispatch-loop.md` for the detailed dispatch loop logic.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-execute-change/references/dispatch-loop.md` for the detailed dispatch loop logic.
 
 For the current phase, execute the 7-step dispatch loop:
 
@@ -120,7 +120,7 @@ Generate environment-specific variable files. Include resource tagging.
 
 #### Step 2.3: Security Gate (arn-infra-security-auditor)
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-execute-change/references/gate-policies.md` for security gate enforcement rules.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-execute-change/references/gate-policies.md` for security gate enforcement rules.
 
 Invoke the `arn-infra-security-auditor` agent via the Task tool to scan the generated IaC, passing the model from `.arness/agent-models/infra.md` as the `model` parameter (see `plugins/arn-infra/skills/arn-infra-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context:
 
@@ -179,7 +179,7 @@ Update PROGRESS_TRACKER.json: set `costGate.status`.
 
 #### Step 2.5: Execute Deployment
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-execute-change/references/deploy-procedures.md` for per-tool deployment commands.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-execute-change/references/deploy-procedures.md` for per-tool deployment commands.
 
 Execute the deployment using the procedures from `deploy-procedures.md`. Follow the same deployment flow as `arn-infra-deploy`:
 - Run plan/preview command
@@ -240,7 +240,7 @@ Update PROGRESS_TRACKER.json: set `review.verdict`.
 
 After the dispatch loop completes:
 
-> Read the report template: `Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/report-templates/default/INFRA_CHANGE_REPORT_TEMPLATE.json`
+> Read the report template: `Read <arn-infra-plugin-root>/skills/arn-infra-save-plan/report-templates/default/INFRA_CHANGE_REPORT_TEMPLATE.json`
 
 Write `INFRA_CHANGE_REPORT_PHASE_N.json` to the project's `reports/` directory using the loaded template schema.
 
@@ -265,7 +265,7 @@ Phase [N] ([current-env]) is complete. Phase [N+1] targets [next-env].
 - Verification: [status]
 - Review verdict: [verdict]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Promote to [next-env]? This requires explicit approval."**
 
@@ -291,9 +291,9 @@ Options:
 - **Overall review verdict:** [pass/warn/needs-fixes]
 
 **Next steps:**
-1. **Full review** -- Run `/arn-infra-review-change` for a comprehensive cross-phase review
-2. **Documentation** -- Run `/arn-infra-document-change` to generate runbooks and changelog
-3. **Monitor** -- Run `/arn-infra-monitor` to set up observability"
+1. **Full review** -- Run `arn-infra-review-change` for a comprehensive cross-phase review
+2. **Documentation** -- Run `arn-infra-document-change` to generate runbooks and changelog
+3. **Monitor** -- Run `arn-infra-monitor` to set up observability"
 
 ---
 
@@ -305,8 +305,8 @@ For parallel execution of independent resources within the same environment, see
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Plan project not found:** Suggest running `/arn-infra-save-plan` to create a structured project. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Plan project not found:** Suggest running `arn-infra-save-plan` to create a structured project. Stop.
 - **PROGRESS_TRACKER.json missing or corrupt:** Offer to regenerate from the phase plans. If the user agrees, scan the `plans/` directory and rebuild the tracker.
 - **Agent invocation fails:** Report the error. Offer to retry the agent, skip the step (with warning), or abort execution. If aborting, trigger rollback for the current phase.
 - **Security gate blocks:** Present the CRITICAL findings. Options: (1) Fix the IaC and retry, (2) Abort and rollback, (3) Do not offer "acknowledge and proceed" for CRITICAL findings.

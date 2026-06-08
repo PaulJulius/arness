@@ -13,7 +13,7 @@ Full documentation of every infra field in the `## Arness` section of CLAUDE.md.
 
 ### Experience level (REMOVED)
 
-Experience level is now derived from the user profile and is no longer stored in `## Arness`. The derivation mapping is documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. All Arness Infra skills and agents read the user profile (`~/.arness/user-profile.yaml` or `.claude/arness-profile.local.md`) and apply the derivation rules at runtime. For backward compatibility, if no user profile exists, skills check for a legacy `Experience level` field in `## Arness` as fallback.
+Experience level is now derived from the user profile and is no longer stored in `## Arness`. The derivation mapping is documented in `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. All Arness Infra skills and agents read the user profile (`~/.arness/user-profile.yaml` or `.claude/arness-profile.local.md`) and apply the derivation rules at runtime. For backward compatibility, if no user profile exists, skills check for a legacy `Experience level` field in `## Arness` as fallback.
 
 ### Project topology
 - **Type:** `monorepo | separate-repo | infra-only`
@@ -262,9 +262,9 @@ Confidence ratings (set by `arn-infra-discover`):
 When a skill says "Read the local override or plugin default for `<filename>`":
 1. If Reference overrides is configured in `## Arness`, check `<Reference overrides>/<filename>`
 2. If the file exists there, read it
-3. Otherwise, fall back to `${CLAUDE_PLUGIN_ROOT}/skills/<owning-skill>/references/<filename>`
+3. Otherwise, fall back to `<arn-infra-plugin-root>/skills/<owning-skill>/references/<filename>`
 
-This convention applies to the 28 evolving reference files cataloged in the reference manifest. Static files (templates, schemas, stable checklists) continue using direct `${CLAUDE_PLUGIN_ROOT}` paths.
+This convention applies to the 28 evolving reference files cataloged in the reference manifest. Static files (templates, schemas, stable checklists) continue using direct `<arn-infra-plugin-root>` paths.
 
 ---
 

@@ -8,7 +8,7 @@ description: >-
   to commit, push, and optionally open a pull request. Guides through branching,
   staging, committing with meaningful messages, pushing, and PR creation.
   Works standalone or as the final Arness pipeline step. Do NOT use this for
-  reviewing PRs — use /arn-code-review-pr for that.
+  reviewing PRs — use arn-code-review-pr for that.
 version: 1.3.1
 ---
 
@@ -29,7 +29,7 @@ This skill handles the entire shipping workflow: verifying git state, ensuring t
 
 Check `## Arness` config in CLAUDE.md for `Git: yes`. If not present, run runtime check: `git rev-parse --is-inside-work-tree`.
 
-If Git is not available, inform the user: "This project is not a git repository. `/arn-code-ship` requires Git." and exit.
+If Git is not available, inform the user: "This project is not a git repository. `arn-code-ship` requires Git." and exit.
 
 Read the **Platform** field from `## Arness` config in CLAUDE.md (values: `github`, `bitbucket`, or `none`). Store this value for use in Step 5. If the `Platform` field is not present, fall back to legacy detection: check for `GitHub: yes` and treat as `github`; otherwise treat as `none`.
 
@@ -76,7 +76,7 @@ If no uncommitted changes AND no commits ahead of remote, inform the user: "Noth
      6. **If `N > 0`:** show the breakdown (per-service counts, lint vs format totals, severity totals). Determine the suggested default:
         - `N <= 20` → suggest **Fix now**
         - `N > 20` → suggest **File a backlog issue**
-        Then ask (using `AskUserQuestion`):
+        Then ask (using `user prompt`):
 
         > **Found N issues across \<comma-separated services\> (\<L\> lint, \<F\> format). Suggested: \<Fix now | File a backlog issue\>. How would you like to proceed?**
         > 1. **Fix now** — pause shipping, address the issues, then return
@@ -84,11 +84,11 @@ If no uncommitted changes AND no commits ahead of remote, inform the user: "Noth
         > 3. **Proceed with documented reason** — annotate the commit message with rationale, proceed without filing a backlog issue
 
         Apply the choice:
-        - **(1) Fix now** — exit `arn-code-ship`. Tell the user: "Run your linter or formatter, fix the issues, then re-run `/arn-code-ship` when ready." Do not commit. (Note: format violations are usually auto-fixable via the project's write-mode formatter command, but this skill never invokes mutation commands itself.)
+        - **(1) Fix now** — exit `arn-code-ship`. Tell the user: "Run your linter or formatter, fix the issues, then re-run `arn-code-ship` when ready." Do not commit. (Note: format violations are usually auto-fixable via the project's write-mode formatter command, but this skill never invokes mutation commands itself.)
         - **(2) File a backlog issue and proceed** — read the `Issue tracker` field from `## Arness`. For `github`: `gh issue create --title "Lint/format backlog: N issues from <branch>" --body "<output summary including lint vs format breakdown>"`. For `jira`: use the Atlassian MCP server to create the issue with the same title and body. For `none`: warn the user that no issue tracker is configured and fall back to choice (3). Then proceed to staging.
         - **(3) Proceed with documented reason** — prompt the user for a one-line rationale. Append "Lint/format exception: <rationale>" to the commit message body (this happens later in sub-step 6). Proceed to staging.
    - If a tool command fails to execute (binary not found, config invalid, or appears to be a mutation command): warn the user with the specific error and fall through to the standard 3-option menu treating the failure as a single issue (`N=1`, suggested default: Fix now). Do not silently skip the gate on a tool failure.
-4. Offer staging options via `AskUserQuestion`:
+4. Offer staging options via `user prompt`:
    - **Stage all changes** — `git add -A`
    - **Choose files to stage** — show the list, let user select
    - **Already staged** — user has manually staged files, proceed with what's staged
@@ -126,7 +126,7 @@ Use the **Platform** value read in Step 1 to determine the PR creation path.
 
 **Deferred Label Check:**
 
-If Platform is `github`: check if Arness labels exist by running `gh label list --search "arness-"`. If fewer than 7 Arness labels are found, create the missing ones using `gh label create --force` for each label per `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md`. This is idempotent and safe to run on every invocation.
+If Platform is `github`: check if Arness labels exist by running `gh label list --search "arness-"`. If fewer than 7 Arness labels are found, create the missing ones using `gh label create --force` for each label per `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md`. This is idempotent and safe to run on every invocation.
 
 If Platform is `bitbucket` or Issue tracker is `jira`: no label creation needed (Jira labels are implicit, Bitbucket uses different mechanisms).
 
@@ -154,7 +154,7 @@ Run runtime check if needed: `gh auth status`. If GitHub CLI is not available or
 4. Offer the option to create as a draft PR (`gh pr create --draft`) if the user wants feedback before marking it ready for review
 5. Create the PR: `gh pr create --title "..." --body "..."` (add `--draft` if chosen)
 6. Report the PR URL
-7. Suggest next step: "Run `/arn-code-review-pr` after receiving feedback on the pull request."
+7. Suggest next step: "Run `arn-code-review-pr` after receiving feedback on the pull request."
 
 #### If Platform is bitbucket
 
@@ -172,11 +172,11 @@ Run runtime check: `bkt auth status`. If `bkt` is not available or not authentic
 6. **Note:** Bitbucket Cloud does not support draft PRs. If the user requested a draft, inform them: "Bitbucket does not support draft PRs. Creating a regular PR. Consider prefixing the title with WIP: to signal work-in-progress."
 7. Parse PR URL from `bkt` output
 8. Report the PR URL
-9. Suggest next step: "Run `/arn-code-review-pr` after receiving feedback on the pull request."
+9. Suggest next step: "Run `arn-code-review-pr` after receiving feedback on the pull request."
 
 #### If Platform is none
 
-Skip PR creation. Inform user: "No platform configured for PR creation. Run `/arn-shipping` to get started."
+Skip PR creation. Inform user: "No platform configured for PR creation. Run `arn-shipping` to get started."
 
 #### After PR creation: Update CHANGE_RECORD.json
 
@@ -249,7 +249,7 @@ If no matching sketch directories are found, skip this step silently.
 
 This step is entirely optional — it activates only when a greenfield feature backlog exists. Projects without greenfield skip this step silently and proceed to the completion summary. It identifies the shipped feature (by branch name, spec, or commits), marks it as done, handles sub-feature parent rollup, and reports newly unblocked features.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ship/references/feature-tracker-update.md` for the full detection chain, update workflow, and sub-feature parent rollup logic.
+> Read `<arn-code-plugin-root>/skills/arn-code-ship/references/feature-tracker-update.md` for the full detection chain, update workflow, and sub-feature parent rollup logic.
 
 ---
 
@@ -269,7 +269,7 @@ This step is entirely optional — it activates only when a greenfield feature b
 - **Feature Tracker write fails** — print the updated Feature Tracker table in the conversation so the user can manually update. Do not fail the ship flow — the PR was already created.
 - **Multiple feature IDs in branch/commits** — present all matches, ask the user to pick the correct one.
 - **Feature backlog exists but no Feature Tracker table** — skip Step 6 silently.
-- **Feature Tracker parse error** — warn the user about the parse issue, skip Step 6. Suggest running `/arn-spark-feature-extract` to regenerate.
+- **Feature Tracker parse error** — warn the user about the parse issue, skip Step 6. Suggest running `arn-spark-feature-extract` to regenerate.
 - **Sub-feature ID detected but parent not found in tracker** — warn: "Sub-feature F-NNN.M detected but parent F-NNN not found in Feature Tracker. Updating sub-feature status only."
 - **Parent rollup ambiguity** — if some sub-feature rows cannot be parsed, warn and skip the rollup. Mark the individual sub-feature as done.
 - **Multiple sub-feature IDs in branch/commits** — present all matches, ask the user to pick the correct one (same as existing multiple feature ID handling).

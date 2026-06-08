@@ -20,14 +20,14 @@ This skill is a **sequencer and decision-gate handler**, like arn-planning. It M
 
 ## Prerequisites
 
-Check for a `## Arness` section in the project's CLAUDE.md. If missing, inform the user: "Arness is not configured for this project yet. Run `/arn-assessing` to get started — it will set everything up automatically." Do not proceed without it.
+Check for a `## Arness` section in the project's CLAUDE.md. If missing, inform the user: "Arness is not configured for this project yet. Run `arn-assessing` to get started — it will set everything up automatically." Do not proceed without it.
 
 Additionally, verify that pattern files exist at the configured code-patterns path. At minimum, these must exist:
 - `code-patterns.md`
 - `testing-patterns.md`
 - `architecture.md`
 
-If any required pattern file is missing, inform the user: "Pattern documentation is incomplete. Run `/arn-assessing` which will generate pattern docs on first use."
+If any required pattern file is missing, inform the user: "Pattern documentation is incomplete. Run `arn-assessing` which will generate pattern docs on first use."
 
 ## Decision Gates
 
@@ -92,7 +92,7 @@ Show progress:
 Arness Assess: SCOPE → assess → prioritize → spec(s) → plan → save → execute → test → ship             ^^^^^
 ```
 
-Even if the user triggered the skill with arguments (e.g., "assess the auth module"), confirm scope with `AskUserQuestion`:
+Even if the user triggered the skill with arguments (e.g., "assess the auth module"), confirm scope with `user prompt`:
 
 **"What would you like to assess?"**
 
@@ -119,7 +119,7 @@ Inform: "Running assessment agents against stored patterns..."
 
 Read the assessment protocol:
 ```
-Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-assess/references/assessment-protocol.md
+Read <arn-code-plugin-root>/skills/arn-code-assess/references/assessment-protocol.md
 ```
 
 **Agent invocations — launch all applicable agents in parallel:**
@@ -172,7 +172,7 @@ After selection, proceed to G3.
 
 ### Step 5: Gate G3 — Spec Strategy
 
-Ask with `AskUserQuestion`:
+Ask with `user prompt`:
 
 **"How should these improvements be organized into specifications?"**
 
@@ -204,7 +204,7 @@ Compose a feature description from the bundled findings:
 - Body: List each finding's description and suggested approach
 - Context: Reference the assessment report for full details
 
-Invoke `Skill: arn-code:arn-code-feature-spec` with the composed description as context.
+Invoke Codex skill `arn-code-feature-spec` with the composed description as context.
 
 After each spec is created, track the spec filename in `spec_list`.
 
@@ -222,7 +222,7 @@ Arness Assess: scope → assess → prioritize → spec(s) → PLAN → save →
 Inform: "Generating plans for all specs..."
 
 For each spec in `spec_list`:
-- Invoke `Skill: arn-code:arn-code-plan <spec-name>`
+- Invoke Codex skill `arn-code-plan <spec-name>`
 - Track the plan preview path
 
 ---
@@ -231,7 +231,7 @@ For each spec in `spec_list`:
 
 Present all generated plans with a brief summary of each (phase count, task count, estimated scope).
 
-Ask with `AskUserQuestion`:
+Ask with `user prompt`:
 
 **"Plans are ready. How would you like to proceed?"**
 
@@ -256,7 +256,7 @@ Arness Assess: scope → assess → prioritize → spec(s) → plan → SAVE →
 Inform: "Converting plans to structured projects..."
 
 For each approved plan:
-- Invoke `Skill: arn-code:arn-code-save-plan`
+- Invoke Codex skill `arn-code-save-plan`
 
 ---
 
@@ -269,7 +269,7 @@ Arness Assess: scope → assess → prioritize → spec(s) → plan → save →
 
 Read the orchestration flow:
 ```
-Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-assess/references/orchestration-flow.md
+Read <arn-code-plugin-root>/skills/arn-code-assess/references/orchestration-flow.md
 ```
 
 **Determine execution order** using the ordering heuristic from the orchestration flow. Present the suggested order and allow the user to override.
@@ -279,14 +279,14 @@ Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-assess/references/orchestration-flow.
 1. **Conflict check** (skip for the first spec):
    - Compare files modified by previously executed specs against files referenced in this spec's phase plans
    - Follow the conflict detection algorithm from the orchestration flow
-   - If conflicts detected → **Gate G5**: Present conflicts using the format from the orchestration flow. Ask with `AskUserQuestion`:
+   - If conflicts detected → **Gate G5**: Present conflicts using the format from the orchestration flow. Ask with `user prompt`:
      - **Re-plan** — Re-invoke `arn-code:arn-code-plan` and `arn-code:arn-code-save-plan` for this spec
      - **Proceed anyway** — Execute the existing plan
      - **Skip this spec** — Mark as skipped, move to next
 
-2. **Taskify**: Invoke `Skill: arn-code:arn-code-taskify`
+2. **Taskify**: Invoke Codex skill `arn-code-taskify`
 
-3. **Execute**: Invoke `Skill: arn-code:arn-code-execute-plan`
+3. **Execute**: Invoke Codex skill `arn-code-execute-plan`
 
 4. **Track results**: Collect execution reports, extract list of files modified, update spec state
 
@@ -313,7 +313,7 @@ Invoke the `arn-code-test-specialist` agent via the Agent tool, passing the mode
 
 **If FAILURES DETECTED or ERRORS DETECTED:**
 - Present the failures from the test report
-- Ask with `AskUserQuestion`:
+- Ask with `user prompt`:
 
   **"Tests have failures. How would you like to proceed?"**
 
@@ -333,17 +333,17 @@ Show progress:
 Arness Assess: scope → assess → prioritize → spec(s) → plan → save → execute → test → SHIP                                                                                      ^^^^
 ```
 
-Ask with `AskUserQuestion`:
+Ask with `user prompt`:
 
 **"Ready to ship?"**
 
 Options:
 1. **Commit, push & create PR** — Full ship workflow
 2. **Just commit** — Commit locally without pushing
-3. **Not yet** — Exit without shipping (can run `/arn-code-ship` later)
+3. **Not yet** — Exit without shipping (can run `arn-code-ship` later)
 
 If **Commit, push & create PR** or **Just commit:**
-→ `Skill: arn-code:arn-code-ship`
+→ Codex skill `arn-code-ship`
 
 If **Not yet:** show what was completed and inform the user they can ship later.
 
@@ -366,7 +366,7 @@ Present completion summary:
 - **Tests:** [verdict]
 - **Ship:** [PR URL / commit hash / deferred]
 
-"Assessment pipeline complete. Run `/arn-code-assess` again anytime to review your codebase."
+"Assessment pipeline complete. Run `arn-code-assess` again anytime to review your codebase."
 
 ---
 
@@ -375,15 +375,15 @@ Present completion summary:
 - **Sub-skill fails:** Present the error. Ask: retry / skip / abort. If retry, re-invoke. If skip, continue to next gate. If abort, show what was completed and exit.
 - **Agent returns empty findings:** Report that the agent found no issues in its domain. Continue with findings from other agents.
 - **No findings at all:** Exit gracefully with positive message (see Step 3).
-- **User says "stop" or "pause":** Show what has been completed. Inform user they can resume by running `/arn-code-assess` again (artifact detection will pick up).
+- **User says "stop" or "pause":** Show what has been completed. Inform user they can resume by running `arn-code-assess` again (artifact detection will pick up).
 - **Conflict detection finds massive overlap (5+ files across 3+ specs):** Warn and suggest re-bundling remaining specs into a single combined spec.
-- **Arness not configured:** Block and suggest running `/arn-assessing` to get started.
+- **Arness not configured:** Block and suggest running `arn-assessing` to get started.
 - **Multiple assessment files detected during resume:** List them and ask which to resume.
 
 ## Constraints
 
 - This skill MUST NOT duplicate sub-skill or agent logic. It only handles sequencing, decision gates, and multi-spec orchestration.
-- All pipeline work is done by invoked skills (via Skill tool) and agents (via Agent tool).
+- All pipeline work is done by invoked skills (via Codex skill invocation) and agents (via Agent tool).
 - Progress display uses the compact format shown above — one line with the current stage highlighted.
 - The skill runs in normal conversation (not plan mode).
 - Assessment agents are invoked in parallel (single message, multiple Agent tool calls).

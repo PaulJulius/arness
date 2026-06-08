@@ -22,7 +22,7 @@ This is an execution skill. It runs in normal conversation (NOT plan mode).
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ## Pipeline Position
 
@@ -82,7 +82,7 @@ Hold this context for use throughout the workflow.
 
 #### 2a. Pre-check specialist relevance
 
-Before invoking any agents, read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the pre-check logic using the pattern documentation loaded in Step 1 and the user's feature description. This produces two boolean flags:
+Before invoking any agents, read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the pre-check logic using the pattern documentation loaded in Step 1 and the user's feature description. This produces two boolean flags:
 
 - `ui_involved`: true if ANY of: (1) `ui-patterns.md` exists AND contains a `## Sketch Strategy` section, (2) the feature description contains UI terms (component, page, form, button, layout, dashboard, UI, UX, screen, view, modal, dialog, command, terminal, output, widget, window, panel, console, display, prompt, menu, toolbar, status bar, progress, table, tree -- case-insensitive), (3) `architecture.md` contains a frontend, CLI, TUI, desktop, or mobile framework in its Technology Stack section
 - `security_relevant`: true if BOTH: (1) `security-patterns.md` exists, AND (2) the feature description contains security terms (auth, login, password, token, payment, upload, API key, PII, encrypt, permission, session, cookie, CORS, CSRF, rate limit, secret, credential -- case-insensitive)
@@ -148,18 +148,18 @@ Present the Spec-Lite to the user, structured as:
 6. **Risks or concerns** (if any)
 7. **UI and security notes** (if applicable)
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Does this spec-lite capture the change correctly?"**
 
 Options:
 1. **Yes, proceed** -- Continue to plan generation
 2. **Adjust** -- Let me refine the requirements
-3. **Too complex -- use full pipeline** -- Redirect to `/arn-code-feature-spec`
+3. **Too complex -- use full pipeline** -- Redirect to `arn-code-feature-spec`
 
 If **Yes, proceed**: continue to Step 2b.
 If **Adjust**: let the user refine, update the spec-lite, and re-present.
-If **Too complex**: inform the user and suggest running `/arn-code-feature-spec` to develop a detailed specification. Offer to seed the feature-spec conversation with the context gathered so far.
+If **Too complex**: inform the user and suggest running `arn-code-feature-spec` to develop a detailed specification. Offer to seed the feature-spec conversation with the context gathered so far.
 
 ---
 
@@ -173,7 +173,7 @@ After the spec-lite is confirmed, check the sketch-preview preference before dec
 
 If the prerequisite conditions are NOT met, skip this step silently (regardless of preference value).
 
-**Preference check (only when prerequisite conditions are met):** Read `pipeline.sketch-preview` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check (only when prerequisite conditions are met):** Read `pipeline.sketch-preview` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.sketch-preview` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.sketch-preview` is present, use that value and note source.
@@ -181,7 +181,7 @@ If the prerequisite conditions are NOT met, skip this step silently (regardless 
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: generating sketch preview ([source])". Auto-proceed to invoke `Skill: arn-code:arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
+- If `always`: Show status line: "Preference: generating sketch preview ([source])". Auto-proceed to invoke Codex skill `arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
 
 - If `never`: Show status line: "Preference: skipping sketch preview ([source])". Skip silently even if interface scope is detected. Continue to Step 2c.
 
@@ -191,7 +191,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"This change includes significant interface work. Want to see a preview first?"**
 
@@ -199,12 +199,12 @@ Options:
 1. **Yes, sketch first** -- Generate a visual preview before implementing
 2. **No, proceed with implementation** -- Continue to implementation
 
-If **Yes, sketch first**: invoke `Skill: arn-code:arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
+If **Yes, sketch first**: invoke Codex skill `arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
 If **No, proceed with implementation**: continue to Step 2c.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -269,7 +269,7 @@ Auto-generate a project name from the description (e.g., `STANDARD_rate-limiting
 mkdir -p <plans-dir>/STANDARD_<name>
 ```
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-standard/references/standard-plan-template.md` for the plan template.
+> Read `<arn-code-plugin-root>/skills/arn-code-standard/references/standard-plan-template.md` for the plan template.
 
 Generate the standard plan using the template. The plan includes:
 - The Spec-Lite section (problem statement, key requirements, architectural notes from Step 2)
@@ -294,7 +294,7 @@ Write the plan to `<plans-dir>/STANDARD_<name>/STANDARD_<name>.md`.
 
 Present the plan to the user for approval.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Does this plan look good?"**
 
@@ -352,7 +352,7 @@ If `componentMapping` was not loaded, implement all files from scratch as normal
 
 ### Step 5: Generate STANDARD_REPORT.json
 
-Read the `STANDARD_REPORT_TEMPLATE.json` from the template path configured in `## Arness`. If the template file does not exist at the configured template path, read it from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/STANDARD_REPORT_TEMPLATE.json`.
+Read the `STANDARD_REPORT_TEMPLATE.json` from the template path configured in `## Arness`. If the template file does not exist at the configured template path, read it from `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/STANDARD_REPORT_TEMPLATE.json`.
 
 Populate with:
 - `reportType`: `"standard"`
@@ -396,7 +396,7 @@ Save to: `<plans-dir>/STANDARD_<name>/STANDARD_REPORT.json`
 
 After the report is generated:
 
-**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
@@ -404,7 +404,7 @@ After the report is generated:
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke `Skill: arn-code:arn-code-simplify`. After simplification completes, proceed to review.
+- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke Codex skill `arn-code-simplify`. After simplification completes, proceed to review.
 
 - If `skip`: Show status line: "Preference: skipping simplification ([source])". Auto-proceed directly to review.
 
@@ -414,7 +414,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like to check for simplification opportunities before review?"**
 
@@ -422,12 +422,12 @@ Options:
 1. **Yes** -- Check for simplification opportunities
 2. **Skip** -- Proceed directly to review
 
-If **Yes**: invoke `Skill: arn-code:arn-code-simplify` (auto-detects standard scope from STANDARD_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/STANDARD_<name>/SIMPLIFICATION_REPORT.json`.
+If **Yes**: invoke Codex skill `arn-code-simplify` (auto-detects standard scope from STANDARD_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/STANDARD_<name>/SIMPLIFICATION_REPORT.json`.
 If **Skip**: proceed directly to review.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -442,7 +442,7 @@ If **No**: Write `ask` to `~/.arness/workflow-preferences.yaml` under `pipeline.
 
 ### Step 6: Review-Lite
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
 
 Perform the review following the shared swift-review-checklist procedure. The review covers:
 
@@ -474,7 +474,7 @@ If **NEEDS FIXES**: present the errors, offer to fix them. After fixes, re-run t
 
 After the review completes, refresh stored pattern documentation to capture any new patterns introduced by this standard-tier implementation.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
 
 This is automatic and non-blocking. If the refresh fails, proceed to change record generation without blocking.
 
@@ -482,7 +482,7 @@ This is automatic and non-blocking. If the refresh fails, proceed to change reco
 
 ### Step 7: Generate CHANGE_RECORD.json
 
-Read the `CHANGE_RECORD_TEMPLATE.json` from the template path configured in `## Arness`. If the template file does not exist at the configured template path, read it from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/CHANGE_RECORD_TEMPLATE.json`.
+Read the `CHANGE_RECORD_TEMPLATE.json` from the template path configured in `## Arness`. If the template file does not exist at the configured template path, read it from `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/CHANGE_RECORD_TEMPLATE.json`.
 
 Populate with:
 - `recordType`: `"change-record"`
@@ -516,7 +516,7 @@ Present the completion summary:
 - Report: `<plans-dir>/STANDARD_<name>/STANDARD_REPORT.json`
 - Change Record: `<plans-dir>/STANDARD_<name>/CHANGE_RECORD.json`
 
-Run `/arn-code-ship` to commit and create a PR."
+Run `arn-code-ship` to commit and create a PR."
 
 ---
 
@@ -542,7 +542,7 @@ The report's `changePath` field should contain the artifact directory path: `<pl
 - **Pattern docs missing** -- Handled by the first-run messaging in Step 1 (one-time pattern generation).
 - **Architect assessment inconclusive** -- present what is known, ask the user to clarify scope. Proceed with available information.
 - **User says "just do it" during spec-lite** -- generate a minimal spec-lite from the description alone and note in the report that the architect assessment was skipped. Add a warning: "Spec-lite generated without full architect review."
-- **Spec-lite rejected as too complex** -- redirect to `/arn-code-feature-spec` with context seeding.
+- **Spec-lite rejected as too complex** -- redirect to `arn-code-feature-spec` with context seeding.
 - **Tests fail after implementation** -- self-heal (fix and re-run, up to 3 attempts per failing test). If the same test fails 3 times, escalate to the user with details.
 - **User changes mind mid-execution** -- show what has been done so far, offer to revert uncommitted changes or continue with adjustments.
 - **Review-Lite finds NEEDS FIXES** -- present the errors with specific guidance. Offer to fix, then re-run the review.

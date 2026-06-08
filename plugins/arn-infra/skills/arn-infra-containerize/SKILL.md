@@ -20,14 +20,14 @@ This skill reads the application context (codebase patterns, architecture, techn
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Containerization is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Containerization is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Project topology** -- how to resolve the application project (monorepo, separate-repo, infra-only)
 - **Application path** -- path to the application project root
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- informs container registry selection and platform-specific optimizations
 - **Tooling manifest** -- path to check for Docker/container tools availability
 
@@ -66,7 +66,7 @@ Scan for existing container files:
 **If existing files found:**
 Present findings: "I found existing container configurations: [list files]."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to do with existing container configurations?"**
 
@@ -165,7 +165,7 @@ Adapt comment verbosity to the experience level.
 
 Load the security checklist:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-containerize/references/container-security-checklist.md` for container security requirements.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-containerize/references/container-security-checklist.md` for container security requirements.
 
 Invoke the `arn-infra-security-auditor` agent via the Task tool, passing the model from `.arness/agent-models/infra.md` as the `model` parameter (see `plugins/arn-infra/skills/arn-infra-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context:
 
@@ -223,7 +223,7 @@ Present each generated file to the user with syntax highlighting:
 
 **Security audit results:** [summary of findings]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to proceed with the generated files?"**
 
@@ -255,16 +255,16 @@ Present the summary:
 "Container configurations are ready. Here is the recommended path:
 
 1. **Test locally:** Run `docker compose up` (or `docker build .`) to verify the configurations work
-2. **Define infrastructure:** Run `/arn-infra-define` to generate IaC for deploying these containers
-3. **Set up CI/CD:** Run `/arn-infra-pipeline` to generate a CI/CD pipeline with container builds
+2. **Define infrastructure:** Run `arn-infra-define` to generate IaC for deploying these containers
+3. **Set up CI/CD:** Run `arn-infra-pipeline` to generate a CI/CD pipeline with container builds
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
 - **Application path unreachable (separate-repo):** Ask the user to describe the application stack manually. Continue with user-provided context.
 - **Specialist agent fails:** Report the error. Fall back to generating basic container configurations directly using the loaded reference patterns, without the agent. Present them with a note: "Generated using fallback patterns -- review carefully before use."
 - **Specialist agent returns empty output:** Inform the user and ask for more details about the application stack. Retry with the additional context.

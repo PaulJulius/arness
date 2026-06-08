@@ -21,12 +21,12 @@ This skill addresses the complete secrets lifecycle: discovery of existing patte
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Secrets management is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Secrets management is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- cloud providers in use (determines available secrets services)
 - **Providers config** -- path to `providers.md` for per-provider details
 - **Default IaC tool** -- for generating secrets manager IaC
@@ -98,7 +98,7 @@ Which would you prefer?"
 **Intermediate:**
 Present the top 2 recommendations:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which secrets provider do you prefer for your [provider] setup?"**
 
@@ -212,20 +212,20 @@ Produce the secrets audit report using the **Audit Report Template** from the `s
 "Secrets management is configured. Here is the recommended path:
 
 1. **Remediate findings** (if any audit failures) -- Address the failed audit checks listed above
-2. **Set up CI/CD:** Run `/arn-infra-pipeline` to configure secret injection in your deployment pipelines
-3. **Set up monitoring:** Run `/arn-infra-monitor` to configure alerting for secret access patterns
-4. **Deploy:** Run `/arn-infra-deploy` to deploy with the new secrets configuration
+2. **Set up CI/CD:** Run `arn-infra-pipeline` to configure secret injection in your deployment pipelines
+3. **Set up monitoring:** Run `arn-infra-monitor` to configure alerting for secret access patterns
+4. **Deploy:** Run `arn-infra-deploy` to deploy with the new secrets configuration
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
 - **Security auditor agent fails:** Fall back to manual scanning using `Grep` for common patterns (.env files, hardcoded strings). Present: "Automated scan unavailable -- performed basic pattern scan instead. Install TruffleHog or Gitleaks for thorough scanning."
 - **Security auditor returns empty output:** Inform the user: "No secrets patterns were detected. This may mean secrets are well-managed, or the scan could not access all project files." Proceed to setup with an empty findings list.
-- **Provider CLI not authenticated:** Warn that secrets manager creation will be limited. Suggest running `/arn-infra-discover` to configure provider access.
+- **Provider CLI not authenticated:** Warn that secrets manager creation will be limited. Suggest running `arn-infra-discover` to configure provider access.
 - **Chosen secrets provider requires paid plan:** Inform the user of the cost and confirm before proceeding. Suggest free alternatives if available (e.g., SSM Parameter Store instead of Secrets Manager for AWS).
 - **SOPS key not available:** Guide the user through key creation (age key generation, KMS key creation). Do not proceed until encryption is verified.
 - **Existing secrets found in git history:** Warn: "Secrets were found in committed files. Even after removing them from current files, they remain in git history. Consider: (1) rotating all affected credentials, (2) using git-filter-repo to clean history (destructive), (3) treating them as compromised."

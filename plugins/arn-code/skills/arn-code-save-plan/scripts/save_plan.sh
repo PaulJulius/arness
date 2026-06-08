@@ -59,7 +59,7 @@ elif [ -z "$PLAN_FILE" ]; then
         echo "Plan: $(basename "$PLAN_FILE")"
     fi
     if [ -z "$PLAN_FILE" ]; then
-        echo "ERROR: No plan found. Run /arn-code-plan to create one first."
+        echo "ERROR: No plan found. Invoke arn-code-plan to create one first."
         exit 1
     fi
 else

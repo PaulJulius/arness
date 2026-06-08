@@ -4,10 +4,10 @@ This is the **first read** for entry-point skills' Step 0. It runs a shell-only 
 
 ## Procedure
 
-1. **Run the cache check** via Bash:
+1. **Run the cache check** via Bash from the installed `arn-code` plugin root:
 
    ```
-   bash ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/scripts/cache-check.sh
+   bash <arn-code-plugin-root>/skills/arn-code-ensure-config/scripts/cache-check.sh
    ```
 
 2. **If exit 0 (cache hit):**
@@ -17,7 +17,7 @@ This is the **first read** for entry-point skills' Step 0. It runs a shell-only 
 
 3. **If exit non-zero (cache miss):**
    - The script's stderr output includes the reason (e.g., `cache miss: pluginVersion changed`, `cache miss: fingerprint claudeMdArnessSection changed`). Surface it as an info-level note: `Ensure-config: cache miss (<reason>) — running full validation.`
-   - **Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/ensure-config.md`** and follow ALL its instructions (Layer 1: Profile, Layer 2: Config, Layer 3: Platform Labels).
+   - **Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/ensure-config.md`** and follow ALL its instructions (Layer 1: Profile, Layer 2: Config, Layer 3: Platform Labels).
    - At the end of successful validation, the ensure-config.md flow's "Cache Write" step (final step of Layer 3) writes the new `.arness/arn-code-ensure-config.local.json` per the cache schema documented inline there.
 
 ## Cross-platform notes

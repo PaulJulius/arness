@@ -16,11 +16,11 @@ version: 1.1.0
 
 Guide a greenfield product idea from raw concept to structured product vision through iterative conversation, aided by product thinking from the `arn-spark-product-strategist` agent, competitive landscape research from `arn-spark-market-researcher`, and persona generation from `arn-spark-persona-architect` (greenfield agents in this plugin). This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifact is a **product concept document** written to the project's vision directory.
 
-This skill covers the WHAT and WHY of the product, including the **product pillars** -- non-negotiable qualities that define the product's soul and guide all downstream decisions. Technology choices and system design are handled separately by `/arn-spark-arch-vision`.
+This skill covers the WHAT and WHY of the product, including the **product pillars** -- non-negotiable qualities that define the product's soul and guide all downstream decisions. Technology choices and system design are handled separately by `arn-spark-arch-vision`.
 
 ## Step 0: Ensure Configuration (Non-Blocking)
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-ensure-config/references/step-0-fast-path.md` and follow its instructions. This captures the user profile and configures `## Arness` with Arness Spark fields.
+Read `<arn-spark-plugin-root>/skills/arn-spark-ensure-config/references/step-0-fast-path.md` and follow its instructions. This captures the user profile and configures `## Arness` with Arness Spark fields.
 
 **Important:** This skill is designed for exploratory use before a project may fully exist. If ensure-config encounters errors (e.g., no git repository, CLAUDE.md cannot be created), proceed anyway using fallback defaults: Vision directory = `.arness/vision`, Reports directory = `.arness/reports`. Do not hard-block.
 
@@ -59,7 +59,7 @@ Present the agent's findings to the user as a conversation starter. Frame it as:
 Enter a conversation loop. The goal is to cover eleven discovery categories, but do so through natural conversation -- not as a sequential questionnaire.
 
 Load the discovery question bank for reference:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-discover/references/discovery-questions.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-discover/references/discovery-questions.md`
 
 Use the product strategist's output from Step 2 to drive the conversation. Start with the categories the agent flagged as weakest. Cover these categories through the conversation (not necessarily in order — the numbering and ordering here differs intentionally from the question bank and template, which are optimized for different purposes):
 
@@ -94,7 +94,7 @@ This is a two-phase process: **concrete examples first** (for user interaction),
 2. Assess what the user provides:
    - **Vague description** (e.g., "developers who want to ship faster"):
 
-     Ask (using `AskUserQuestion`):
+     Ask the user:
 
      > **I can generate concrete persona examples based on what you've described -- specific people you can picture and critique. Would you like me to draft those?**
      > 1. **Yes** — Generate persona examples for review
@@ -102,7 +102,7 @@ This is a two-phase process: **concrete examples first** (for user interaction),
 
    - **Concrete names/roles** (e.g., "Bob is a PM who cares about velocity, Julie is a dev who hates context switching"):
 
-     Ask (using `AskUserQuestion`):
+     Ask the user:
 
      > **I can expand those into full profiles with personality traits, pain points, and day-in-the-life scenarios. Want me to research and draft those?**
      > 1. **Yes** — Expand into full persona profiles
@@ -122,7 +122,7 @@ Framing adapts based on product type:
 **Commercial product framing:**
 1. Ask what competitors or alternatives the user is aware of
 2. Based on response:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **Would you like me to research the competitive landscape?**
    [Adapt the question text based on how many competitors the user named:
@@ -135,7 +135,7 @@ Framing adapts based on product type:
 **Internal tool / utility framing:**
 1. Ask: "Have you looked for existing tools that already do something like this? Sometimes there's something out there you could use directly or draw inspiration from."
 2. Based on response:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > [Adapt the question text based on the user's response:
    > - User knows of some: "Want me to search for any others that might save you time or give you ideas?"
@@ -194,7 +194,7 @@ This process ensures thorough, validated results rather than a shallow 3-query s
 | User asks "is this too much?" or "should I include X?" | Invoke `arn-spark-product-strategist` for evaluation |
 | User gives a clear, concrete answer | Acknowledge and record directly, no agent needed |
 | User makes a definitive scope decision | Record directly, confirm |
-| User asks about technology choices | Defer to `/arn-spark-arch-vision` |
+| User asks about technology choices | Defer to `arn-spark-arch-vision` |
 | User seems done or conversation is circling | Proceed to readiness check |
 | Vision & problem are clear enough to draft | **Trigger Checkpoint A** -- draft problem statement for validation |
 | User describes target users vaguely (no specific names or roles) | **Trigger Checkpoint B** -- offer persona generation |
@@ -231,9 +231,9 @@ If the user wants to explore more, continue the conversation. If ready, proceed 
 When the user is ready:
 
 1. Read the templates:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-discover/references/product-concept-template.md`
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-discover/references/persona-profile-template.md`
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-discover/references/competitive-landscape-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-discover/references/product-concept-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-discover/references/persona-profile-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-discover/references/competitive-landscape-template.md`
 
 2. Populate the template with all decisions and insights from the conversation:
    - Replace all bracketed placeholders with concrete content
@@ -257,10 +257,10 @@ After writing the document, inform the user:
 
 "Product concept saved to `[path]/product-concept.md`.
 
-Next step: Run `/arn-spark-arch-vision` to explore technology options and define the architecture for this product. That skill will load this product concept as input."
+Next step: Run `arn-spark-arch-vision` to explore technology options and define the architecture for this product. That skill will load this product concept as input."
 
 If the project does not yet have Arness initialized, also mention:
-"If you have the Arness Code plugin installed, run `/arn-planning` to start the development pipeline. Arness auto-configures code patterns on first use."
+"If you have the Arness Code plugin installed, run `arn-planning` to start the development pipeline. Arness auto-configures code patterns on first use."
 
 ## Agent Invocation Guide
 
@@ -279,18 +279,18 @@ If the project does not yet have Arness initialized, also mention:
 | User wants claims about alternatives validated | Invoke `arn-spark-market-researcher` with named alternatives for verification |
 | Clear, concrete answer | Record directly, no invocation |
 | Definitive decision | Record directly, confirm |
-| Technology question | Defer to `/arn-spark-arch-vision` |
+| Technology question | Defer to `arn-spark-arch-vision` |
 | Conversation stalls/circles | Summarize progress, suggest next category |
 | Most categories covered (pre-readiness) | Synthesize assumptions and success criteria from conversation |
 
 ## Error Handling
 
-- **User cancels mid-conversation:** Confirm cancellation. If enough content has been gathered for a partial document, offer to write it. Otherwise, inform the user they can restart with `/arn-spark-discover` at any time.
+- **User cancels mid-conversation:** Confirm cancellation. If enough content has been gathered for a partial document, offer to write it. Otherwise, inform the user they can restart with `arn-spark-discover` at any time.
 - **arn-spark-product-strategist returns unhelpful response:** Summarize the issue briefly and continue the conversation directly. Try a more specific question on the next agent invocation.
 - **Writing the document fails:** Print the full document content in the conversation so the user can copy it. Suggest checking file permissions or the output directory path.
 - **Product concept already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **A product concept already exists at `[path]`. What would you like to do?**
   > 1. **Replace** — Start a fresh discovery (existing concept is preserved in git)

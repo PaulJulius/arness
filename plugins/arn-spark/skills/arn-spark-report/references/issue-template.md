@@ -1,6 +1,6 @@
 # Issue Report Template
 
-Template for GitHub issues created by `/arn-spark-report`. The skill assembles this template with data from the user's description and the arn-spark-doctor agent's diagnostic findings.
+Template for GitHub issues created by `arn-spark-report`. The skill assembles this template with data from the user's description and the arn-spark-doctor agent's diagnostic findings.
 
 ## Template Format
 
@@ -40,7 +40,7 @@ The issue body follows this structure:
 - **Playwright:** <available/not available>
 
 ---
-*Filed via `/arn-spark-report` — Arness Spark v<version>*
+*Filed via `arn-spark-report` — Arness Spark v<version>*
 ```
 
 ## Issue Title Format

@@ -143,7 +143,7 @@ The selected sketch's layout component defined these CSS custom properties:
 
 ## Relationship to Style Brief
 
-This document provides visual direction grounding for `/arn-spark-style-explore`. The style brief will translate these approximate values into:
+This document provides visual direction grounding for `arn-spark-style-explore`. The style brief will translate these approximate values into:
 
 - Precise design tokens with exact hex/HSL values for all color roles
 - Complete typography table with font families, weights, sizes, and line heights

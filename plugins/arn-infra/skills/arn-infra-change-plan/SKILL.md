@@ -14,7 +14,7 @@ version: 1.0.0
 
 # Arness Infra Change Plan
 
-Generate a phased implementation plan from an infrastructure change specification by invoking the `arn-infra-change-planner` agent. The plan is written to disk as a PLAN_PREVIEW file, presented to the user for review, and iteratively refined based on feedback until approved. The approved plan then feeds into `/arn-infra-save-plan` for structuring into phases, tasks, and reports.
+Generate a phased implementation plan from an infrastructure change specification by invoking the `arn-infra-change-planner` agent. The plan is written to disk as a PLAN_PREVIEW file, presented to the user for review, and iteratively refined based on feedback until approved. The approved plan then feeds into `arn-infra-save-plan` for structuring into phases, tasks, and reports.
 
 This skill plans in infrastructure terms -- phases are ordered by provisioning dependency, blast radius classification, rollback checkpoint placement, and environment promotion gates -- not by application development concepts.
 
@@ -23,14 +23,14 @@ arn-infra-init -> arn-infra-change-spec -> [arn-infra-change-plan] -> arn-infra-
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change planning is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change planning is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra specs directory** -- path where INFRA_CHANGE_*.md specs are stored (default: `.arness/infra-specs`)
 - **Infra plans directory** -- path where plans are stored (default: `.arness/infra-plans`)
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- which cloud providers are configured
 - **Environments** -- which environments exist and their promotion order
 
@@ -54,7 +54,7 @@ The user may provide a spec name as an argument (e.g., "plan infra change migrat
 - List all `INFRA_CHANGE_*.md` files in `<infra-specs-dir>/`
 - If only one exists, use it automatically
 - If multiple exist, show the list sorted by modification date (most recent first) and ask the user to choose
-- If none exist, inform the user: "No infrastructure change specifications found in `<infra-specs-dir>/`. Run `/arn-infra-change-spec` to create one first."
+- If none exist, inform the user: "No infrastructure change specifications found in `<infra-specs-dir>/`. Run `arn-infra-change-spec` to create one first."
 
 ---
 
@@ -63,7 +63,7 @@ The user may provide a spec name as an argument (e.g., "plan infra change migrat
 Read these files:
 1. The selected specification file (INFRA_CHANGE_*.md)
 2. The blast radius guide for classification reference:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-change-spec/references/blast-radius-guide.md`
+   > Read `<arn-infra-plugin-root>/skills/arn-infra-change-spec/references/blast-radius-guide.md`
 
 If the spec file cannot be read, inform the user and stop.
 
@@ -79,7 +79,7 @@ The output file path is: `<infra-plans-dir>/PLAN_PREVIEW_INFRA_<spec-name>.md`
 
 **Check for existing PLAN_PREVIEW:** If a PLAN_PREVIEW file already exists at that path, inform the user: "A plan preview already exists for this spec: `<path>`."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"A plan preview already exists. What would you like to do?"**
 
@@ -193,17 +193,17 @@ Confirm with the user:
 
 "Plan approved and saved to `<infra-plans-dir>/PLAN_PREVIEW_INFRA_<spec-name>.md`.
 
-Next step: Run `/arn-infra-save-plan` to convert this plan into a structured project with phased implementation tasks and infrastructure-specific report templates."
+Next step: Run `arn-infra-save-plan` to convert this plan into a structured project with phased implementation tasks and infrastructure-specific report templates."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No change specs found:** Suggest running `/arn-infra-change-spec` first. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No change specs found:** Suggest running `arn-infra-change-spec` first. Stop.
 - **Infra plans directory does not exist:** Create it with `mkdir -p`. Continue.
 - **Change planner agent fails or crashes:** Read the agent's output to identify what went wrong. If a partial plan was written, present it and ask the user if they want to retry or edit manually: "The planner encountered an issue. A partial plan was written. Would you like me to retry, or would you prefer to edit the partial plan manually?"
-- **Change planner returns empty output:** Inform: "The planner could not generate a plan from the specification. This may mean the spec is incomplete. Review the spec and try again, or provide additional context." Offer to re-run `/arn-infra-change-spec` to refine the spec.
+- **Change planner returns empty output:** Inform: "The planner could not generate a plan from the specification. This may mean the spec is incomplete. Review the spec and try again, or provide additional context." Offer to re-run `arn-infra-change-spec` to refine the spec.
 - **Agent invocation fails during feedback loop:** Report the error. Offer to retry or let the user edit the plan file manually.
 - **PLAN_PREVIEW file not written by agent:** Check the agent output for errors. If the agent produced plan content but did not write it, write the content to the PLAN_PREVIEW file directly and continue.
 - **User cancels:** Confirm cancellation. If a PLAN_PREVIEW file was partially written, inform the user of its location so they can delete or edit it manually.

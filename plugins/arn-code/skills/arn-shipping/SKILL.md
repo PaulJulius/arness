@@ -20,7 +20,7 @@ This skill is a **thin orchestration wrapper**. It MUST NOT duplicate `arn-code-
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ## Workflow
 
@@ -34,7 +34,7 @@ Shipping: SHIP (branch -> stage -> commit -> push -> PR)
 
 Invoke the ship skill:
 
-> `Skill: arn-code:arn-code-ship`
+> Codex skill `arn-code-ship`
 
 The ship skill handles all internal decisions: branching, staging, commit message generation, pushing, and PR creation. It has its own user interactions. Wait for it to complete.
 
@@ -44,7 +44,7 @@ The ship skill handles all internal decisions: branching, staging, commit messag
 
 After `arn-code-ship` completes, present the chain exit:
 
-"When your PR gets review feedback, run `/arn-reviewing-pr` to validate and address comments."
+"When your PR gets review feedback, run `arn-reviewing-pr` to validate and address comments."
 
 ---
 

@@ -48,7 +48,7 @@ All three must pass, otherwise skip silently:
    - **F-NNN[.M]: [Feature Name]** is now done.
    [If parent rollup occurred:] - **F-NNN: [Parent Name]** -- all sub-features complete, parent marked as done.
    - Newly unblocked: **F-005: [Name]**, **F-007: [Name]** (ready to work on).
-   - Run `/arn-code-pick-issue` to pick the next feature."
+   - Run `arn-code-pick-issue` to pick the next feature."
 
    If no features are newly unblocked: "No new features were unblocked by this change."
 

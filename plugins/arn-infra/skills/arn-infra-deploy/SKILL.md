@@ -20,11 +20,11 @@ This skill is expertise-adaptive: beginner users deploy via platform CLI command
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
-- **Deferred** -- if `yes`, inform the user that infrastructure is deferred and suggest running `/arn-infra-assess` first. Stop.
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Deferred** -- if `yes`, inform the user that infrastructure is deferred and suggest running `arn-infra-assess` first. Stop.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- which cloud providers are configured
 - **Providers config** -- path to `providers.md` for per-provider details and IaC tool overrides
 - **Default IaC tool** -- the default IaC tool to use when no per-provider override exists
@@ -69,7 +69,7 @@ Read the promotion pipeline from `environments.md`. Enforce the following rules:
 2. **Refuse direct-to-prod when staging exists:** If the promotion pipeline includes a staging environment and the user requests deployment to production:
    - Check if staging has been deployed (has a `Last deployed` timestamp)
    - Check if staging has been verified (has `arn-infra-verified` label or `lastVerified` in resource manifest)
-   - If staging has NOT been deployed or verified: refuse with "Production deployment requires staging to be deployed and verified first. Run `/arn-infra-deploy` targeting staging, then `/arn-infra-verify` to validate it."
+   - If staging has NOT been deployed or verified: refuse with "Production deployment requires staging to be deployed and verified first. Run `arn-infra-deploy` targeting staging, then `arn-infra-verify` to validate it."
    - If staging IS verified: proceed with production deployment
 
 3. **First deployment to any environment is allowed:** If no environment in the pipeline has been deployed yet, allow deployment to the first environment in the pipeline (typically dev or staging).
@@ -89,7 +89,7 @@ Scan for pipeline configurations:
 
 Warn: "I detected CI/CD pipelines in this project. For staging and production deployments, CI/CD is the recommended deployment method -- it ensures reproducibility, audit trails, and team visibility."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to deploy?"**
 
@@ -113,7 +113,7 @@ Continue to Step 3 without CI/CD enforcement.
 
 Run the pre-deployment safety checklist. For each gate:
 
-1. **IaC validation:** Has the IaC been validated? Check if `arn-infra-define` has been run and the validation ladder passed. If not, suggest running `/arn-infra-define` first.
+1. **IaC validation:** Has the IaC been validated? Check if `arn-infra-define` has been run and the validation ladder passed. If not, suggest running `arn-infra-define` first.
 
 2. **Security scan:** Has a security scan been performed? (Level 2 validation). If the validation ceiling is >= 2 and no scan has been run, warn.
 
@@ -212,7 +212,7 @@ Stream deployment output and monitor for errors.
 1. Capture the error output
 2. Categorize the failure (authentication, quota, permission, resource conflict, timeout, network)
 3. Present the error with remediation suggestions
-4. Ask (using `AskUserQuestion`):
+4. Ask the user:
 
    **"Deployment failed. What would you like to do?"**
 
@@ -229,7 +229,7 @@ Stream deployment output and monitor for errors.
 
 ### Step 6: Update Resource Manifest
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-deploy/references/resource-manifest-schema.md` for the `active-resources.json` schema.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-deploy/references/resource-manifest-schema.md` for the `active-resources.json` schema.
 
 After successful deployment, update `active-resources.json` (path from `## Arness` Resource manifest field):
 
@@ -251,7 +251,7 @@ If `active-resources.json` does not exist, create it with the initial resource e
 
 ### Step 7: Generate Infrastructure Handoff File
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-deploy/references/infra-handoff-template.md` for the handoff file template.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-deploy/references/infra-handoff-template.md` for the handoff file template.
 
 Generate `INFRA_HANDOFF_<environment>.md` in the `Infra specs directory` (from `## Arness` config, default: `.arness/infra-specs`).
 
@@ -300,22 +300,22 @@ Present the deployment summary:
 
 **Recommended next steps:**
 
-1. **Verify deployment:** Run `/arn-infra-verify` to validate health checks, DNS, SSL, and resource state
-2. **Set up CI/CD:** Run `/arn-infra-pipeline` to automate future deployments
-3. **Promote to next environment:** Run `/arn-infra-deploy` targeting [next environment]
-4. **Monitor:** Run `/arn-infra-monitor` to set up observability
+1. **Verify deployment:** Run `arn-infra-verify` to validate health checks, DNS, SSL, and resource state
+2. **Set up CI/CD:** Run `arn-infra-pipeline` to automate future deployments
+3. **Promote to next environment:** Run `arn-infra-deploy` targeting [next environment]
+4. **Monitor:** Run `arn-infra-monitor` to set up observability
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Infrastructure deferred (`Deferred: yes`):** Inform the user that infrastructure is deferred. Suggest running `/arn-infra-assess` to produce a full infrastructure plan first, then `/arn-infra-define` to generate IaC, then re-running deploy. Stop.
-- **No IaC code found:** Suggest running `/arn-infra-define` to generate infrastructure code before deploying. Stop.
-- **No providers configured:** Suggest running `/arn-infra-init` to configure providers. Stop.
-- **Required IaC tool not installed:** Warn about the missing tool. Suggest running `/arn-infra-discover` to check and install required tools. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Infrastructure deferred (`Deferred: yes`):** Inform the user that infrastructure is deferred. Suggest running `arn-infra-assess` to produce a full infrastructure plan first, then `arn-infra-define` to generate IaC, then re-running deploy. Stop.
+- **No IaC code found:** Suggest running `arn-infra-define` to generate infrastructure code before deploying. Stop.
+- **No providers configured:** Suggest running `arn-infra-init` to configure providers. Stop.
+- **Required IaC tool not installed:** Warn about the missing tool. Suggest running `arn-infra-discover` to check and install required tools. Stop.
 - **Cloud credentials expired or invalid:** Present the specific authentication error. Suggest re-authenticating with the provider-specific command (`aws sso login`, `gcloud auth login`, `az login`, `fly auth login`, etc.) and retrying. Do not retry automatically. Stop.
 - **State lock held by another process:** Present the lock details (who, when, operation). Offer to wait (poll every 30 seconds) or force-unlock (with a warning about potential state corruption). Never force-unlock without explicit user confirmation.
 - **Cost threshold exceeded:** Present the cost estimate with a clear warning. Require explicit user acknowledgment before proceeding. Suggest cost-reduction alternatives (smaller instances, reserved pricing, PaaS migration, environment cleanup).
@@ -323,5 +323,5 @@ Or run `/arn-infra-wizard` for the full guided pipeline."
 - **Rollback fails:** Present the rollback error. Suggest manual intervention with the specific CLI commands to run. Do not attempt automated recovery from a failed rollback.
 - **Handoff file write fails:** Print the handoff content in the conversation so the user can save it manually. Warn about the failure.
 - **Issue tracker unavailable:** Skip label updates and issue creation. Log the deployment in environments.md only.
-- **environments.md missing:** Create it with the current deployment as the first entry. Warn that the promotion pipeline is not configured and suggest running `/arn-infra-init` to set it up.
+- **environments.md missing:** Create it with the current deployment as the first entry. Warn that the promotion pipeline is not configured and suggest running `arn-infra-init` to set it up.
 - **Re-running is safe:** Re-running updates the resource manifest and environments.md. IaC tools are idempotent -- re-applying the same configuration is a no-op. Handoff files are overwritten with current state.

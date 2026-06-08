@@ -9,7 +9,7 @@ Reference procedure for decomposing XL features into sub-feature specs. This flo
    - Spec names: `FEATURE_F-NNN.1_<sub-feature-kebab-name>.md`, `FEATURE_F-NNN.2_<sub-feature-kebab-name>.md`, etc.
    - Present the proposed names to the user for confirmation
 
-2. Read the feature spec template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/feature-spec-template.md`.
+2. Read the feature spec template at `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/feature-spec-template.md`.
 
 3. For each sub-feature, populate a spec using the template:
    - **Problem Statement:** Scoped to the sub-feature's slice. "What" from the sub-feature description in the decomposition hints. "Why" from the parent feature's Priority Rationale, contextualized to this slice.
@@ -84,8 +84,8 @@ Reference procedure for decomposing XL features into sub-feature specs. This flo
    2. F-NNN.2: [Name] -- no sub-feature dependencies
    3. F-NNN.3: [Name] -- depends on F-NNN.1, F-NNN.2
 
-   To plan a sub-feature: Run `/arn-code-plan FEATURE_F-NNN.M_<name>`
-   To pick the next sub-feature: Run `/arn-code-pick-issue`"
+   To plan a sub-feature: Run `arn-code-plan FEATURE_F-NNN.M_<name>`
+   To pick the next sub-feature: Run `arn-code-pick-issue`"
 
    The decomposition flow is now complete. Do not proceed to the standard single-spec flow.
 

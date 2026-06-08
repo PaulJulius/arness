@@ -109,7 +109,7 @@ When populating this template:
 
 [Ready for planning / Needs more investigation on X]
 
-To create a fix plan: Run `/arn-code-plan BUGFIX_<name>`
+To create a fix plan: Run `arn-code-plan BUGFIX_<name>`
 ```
 
 ---

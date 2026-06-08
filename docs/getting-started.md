@@ -7,18 +7,18 @@ sidebar:
 
 # Getting Started
 
-Arness installs through the Claude Code plugin marketplace. Pick the plugin that matches your starting point — you can always add more later.
+Arness installs through the Claude Code or Codex plugin marketplace. Pick the plugin that matches your starting point — you can always add more later.
 
 ## Prerequisites
 
-- [Claude Code](https://claude.ai/code) (CLI, Desktop, or Web)
+- [Claude Code](https://claude.ai/code) or Codex with plugin support
 - Git initialized in your project (or an empty directory for greenfield)
 - Optional: GitHub CLI (`gh`) or Bitbucket CLI (`bkt`) for PR and issue workflows
 - Optional: [Atlassian MCP](https://mcp.atlassian.com) for Jira integration
 
 ## Install the Marketplace
 
-This is a one-time setup:
+This is a one-time setup in Claude Code. In Codex, use the equivalent plugin marketplace install flow and invoke the same Arness skill names:
 
 ```
 /plugin marketplace add AppsVortex/arness
