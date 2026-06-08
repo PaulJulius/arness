@@ -134,9 +134,20 @@ Validate metadata before opening a PR:
 jq . .agents/plugins/marketplace.json .claude-plugin/marketplace.json plugins/*/.codex-plugin/plugin.json
 ```
 
+Run the full repository validation suite before opening a PR:
+
+```bash
+python3 tools/validate_arness.py
+# or
+make test
+```
+
 ## Testing Locally
 
 ```bash
+# Validate manifests, skill/agent metadata, docs inventories, evals, and links
+python3 tools/validate_arness.py
+
 # Test a single plugin
 claude --plugin-dir plugins/arn-code
 claude --plugin-dir plugins/arn-spark
