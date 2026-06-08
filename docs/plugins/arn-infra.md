@@ -15,6 +15,8 @@ Arness Infra aims to help with containerization, IaC generation, deployment, and
 
 ## Start Here
 
+In Claude Code, invoke Infra skills as slash commands. In Codex, install with `codex plugin add arn-infra@arn-marketplace`, then prompt with the same skill name in plain language, for example `codex "arn-infra-wizard"`.
+
 | Command | What it does |
 |---------|-------------|
 | `/arn-infra-wizard` | Guided walk-through of the full infrastructure pipeline |

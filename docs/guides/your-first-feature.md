@@ -11,12 +11,19 @@ This guide walks through building a feature from scratch using Arness Code. You'
 
 ## Prerequisites
 
-- Arness Code installed (`/plugin install arn-code@arn-marketplace`)
+- Arness Code installed in Claude Code: `/plugin install arn-code@arn-marketplace`
+- Arness Code installed in Codex: `codex plugin add arn-code@arn-marketplace`
 
 ## Step 1: Start Planning
 
 ```
 /arn-planning
+```
+
+In Codex, use the same skill name in your prompt:
+
+```
+codex "arn-planning add email notifications when a subscription is about to expire"
 ```
 
 Arness asks what you want to build. Describe your feature in plain language:
@@ -52,6 +59,12 @@ You review the plan and approve, adjust, or request changes.
 /arn-implementing
 ```
 
+In Codex:
+
+```
+codex "arn-implementing"
+```
+
 Arness converts the plan into a task list with dependencies, then dispatches task-executor agents. Independent tasks run in parallel; dependent tasks wait for their blockers to complete. Each task is reviewed by a task-reviewer agent before moving on.
 
 After execution, a simplification pass looks for optimization opportunities, and a review checks the implementation against your plan and codebase patterns.
@@ -62,6 +75,12 @@ After execution, a simplification pass looks for optimization opportunities, and
 /arn-shipping
 ```
 
+In Codex:
+
+```
+codex "arn-shipping"
+```
+
 Arness commits, pushes, and creates a PR with a structured description that references the spec and plan. The PR description includes what changed, why, and how to test it.
 
 ## Step 6: Handle PR Feedback
@@ -70,6 +89,12 @@ If reviewers leave comments:
 
 ```
 /arn-reviewing-pr
+```
+
+In Codex:
+
+```
+codex "arn-reviewing-pr"
 ```
 
 Arness fetches the PR comments, validates each finding against the codebase, and categorizes them as fix, defer, or reject. Approved fixes are applied and the PR is updated.

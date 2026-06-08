@@ -18,10 +18,18 @@ Arness installs through the Claude Code or Codex plugin marketplace. Pick the pl
 
 ## Install the Marketplace
 
-This is a one-time setup in Claude Code. In Codex, use the equivalent plugin marketplace install flow and invoke the same Arness skill names:
+This is a one-time setup. Choose the host you use.
+
+Claude Code:
 
 ```
 /plugin marketplace add AppsVortex/arness
+```
+
+Codex:
+
+```
+codex plugin marketplace add AppsVortex/arness
 ```
 
 ## Pick Your Path
@@ -33,6 +41,13 @@ Install Arness Spark and let it guide you from raw idea to validated prototype:
 ```
 /plugin install arn-spark@arn-marketplace
 /arn-brainstorming
+```
+
+In Codex, use:
+
+```
+codex plugin add arn-spark@arn-marketplace
+codex "arn-brainstorming a scheduling app for home service teams"
 ```
 
 Spark walks you through product discovery, concept validation, architecture decisions, prototyping, and feature extraction — with decision gates at every step. It auto-configures on first run. When you're ready to build, it hands off a prioritized feature backlog to the development pipeline.
@@ -48,6 +63,13 @@ Install Arness Code to get the development pipeline:
 /arn-planning
 ```
 
+In Codex, use:
+
+```
+codex plugin add arn-code@arn-marketplace
+codex "arn-planning add rate limiting to the API"
+```
+
 On first run, Arness analyzes your codebase, learns your patterns and conventions, and auto-configures everything it needs. Then `/arn-planning` takes your feature idea through spec, plan, build, review, and ship.
 
 [Learn more about Arness Code](plugins/arn-code.md)
@@ -59,6 +81,13 @@ Install Arness Infra for the infrastructure lifecycle:
 ```
 /plugin install arn-infra@arn-marketplace
 /arn-infra-wizard
+```
+
+In Codex, use:
+
+```
+codex plugin add arn-infra@arn-marketplace
+codex "arn-infra-wizard"
 ```
 
 The wizard audits your toolchain, walks you through containerization, IaC generation, environment configuration, and deployment — auto-configuring and adapting to your experience level.
@@ -73,6 +102,14 @@ Install all three:
 /plugin install arn-spark@arn-marketplace
 /plugin install arn-code@arn-marketplace
 /plugin install arn-infra@arn-marketplace
+```
+
+Codex:
+
+```
+codex plugin add arn-spark@arn-marketplace
+codex plugin add arn-code@arn-marketplace
+codex plugin add arn-infra@arn-marketplace
 ```
 
 Each plugin works independently, but together they connect: Spark's feature backlog feeds Code's planning pipeline, and Code's shipped artifacts feed Infra's deployment workflow.
@@ -94,7 +131,7 @@ Everything is plain text. You can read, edit, or delete any of it.
 
 ## The Seven Entry Points
 
-Once installed, these are the only commands you need to remember:
+Once installed, these are the only entry points you need to remember. The table shows Claude Code slash syntax; in Codex, prompt with the same name without requiring the slash, for example `codex "arn-code-help"` or `codex "arn-planning fix #42"`.
 
 | Command | What it does | Plugin |
 |---------|-------------|--------|
@@ -106,7 +143,7 @@ Once installed, these are the only commands you need to remember:
 | `/arn-assessing` | Deep-dive codebase review | Code |
 | `/arn-infra-wizard` | Infrastructure end-to-end | Infra |
 
-Each entry point detects your project state and guides you through the relevant workflow steps. You don't need to know the 134 skills and agents behind them — the entry points orchestrate everything.
+Each entry point detects your project state and guides you through the relevant workflow steps. You don't need to know the 135 skills and agents behind them — the entry points orchestrate everything.
 
 **Lost? Each plugin has a help skill** — `/arn-spark-help`, `/arn-code-help`, `/arn-infra-help` — that shows your current pipeline position and suggests what to do next. Help skills are cross-plugin aware: they detect activity in the other plugins and provide hints, so any help command can orient you across the full lifecycle.
 

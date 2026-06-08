@@ -31,7 +31,7 @@ arness/
 │   │   ├── .codex-plugin/plugin.json
 │   │   ├── .claude-plugin/plugin.json
 │   │   ├── skills/                # 35 pipeline skills
-│   │   ├── agents/                # 16 specialist agents
+│   │   ├── agents/                # 17 specialist agents
 │   │   └── hooks/                 # Event handlers
 │   ├── arn-spark/                  # Greenfield exploration plugin
 │   │   ├── .codex-plugin/plugin.json

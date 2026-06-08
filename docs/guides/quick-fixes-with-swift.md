@@ -9,6 +9,8 @@ sidebar:
 
 Not every change needs the full spec-plan-execute pipeline. Arness Code offers three ceremony tiers that match process depth to change scope.
 
+Examples use Claude Code slash syntax. In Codex, prompt with the same skill name without requiring the slash, for example `codex "arn-code-swift fix the broken settings link"` or `codex "arn-planning rename the billing status field"`.
+
 ## When to Use What
 
 | Tier | Scope | Files | Use when |

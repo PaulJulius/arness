@@ -8,7 +8,7 @@
 
 **Structured AI workflows for Claude Code and Codex. From first idea to production deploy.**
 
-Seven entry commands. That's all you need to remember. Behind them, 134 specialist skills and agents handle the details across three independent plugins — ideation, development, and infrastructure.
+Seven entry commands. That's all you need to remember. Behind them, 135 specialist skills and agents handle the details across three independent plugins — ideation, development, and infrastructure.
 
 Most AI coding tools help you write code faster. Arness helps you build software better. It gives your AI coding session a structured pipeline: specs before code, plans before execution, reviews before shipping. Every stage produces a human-readable artifact that feeds the next. Nothing is hidden, nothing is locked in.
 
@@ -59,6 +59,8 @@ Three ceremony tiers — swift, standard, and thorough — match process to scop
 
 ## Quick Start
 
+### Claude Code
+
 ```bash
 # Add the Arness marketplace (one-time)
 /plugin marketplace add AppsVortex/arness
@@ -69,7 +71,26 @@ Three ceremony tiers — swift, standard, and thorough — match process to scop
 /plugin install arn-infra@arn-marketplace    # Infrastructure & deployment
 ```
 
-Then run the entry point that matches what you want to do — Arness auto-configures on first use. Commands are shown with Claude Code slash syntax; in Codex, invoke the same skill names without relying on the slash prefix:
+### Codex
+
+```bash
+# Add the Arness marketplace (one-time)
+codex plugin marketplace add AppsVortex/arness
+
+# Install the plugins you need
+codex plugin add arn-spark@arn-marketplace    # New product from scratch
+codex plugin add arn-code@arn-marketplace     # Development pipeline
+codex plugin add arn-infra@arn-marketplace    # Infrastructure & deployment
+```
+
+After installing, start Codex in your project and ask for the Arness skill by name:
+
+```bash
+codex "arn-planning add rate limiting"
+codex "arn-brainstorming a habit tracker app"
+```
+
+Then run the entry point that matches what you want to do — Arness auto-configures on first use. Commands are shown with Claude Code slash syntax; in Codex, use the same skill names in your prompt:
 
 ```
 /arn-brainstorming    New product — discover, validate, prototype, extract features
@@ -83,7 +104,7 @@ Then run the entry point that matches what you want to do — Arness auto-config
 
 **Works on any project.** Install Arness on a brand-new project or an existing codebase — it adapts either way. On existing projects, Arness retroactively analyzes your code patterns, application architecture, and infrastructure tools on first run. No migration, no setup ceremony.
 
-> **Tip:** To save context, install only the plugin you need right now. When you're done with Spark's discovery phase, you can uninstall it (`/plugin uninstall arn-spark@arn-marketplace`) and install Code for the next stage. Each plugin works independently.
+> **Tip:** To save context, install only the plugin you need right now. When you're done with Spark's discovery phase, you can uninstall or disable it (`/plugin uninstall arn-spark@arn-marketplace` in Claude Code, or `codex plugin remove arn-spark@arn-marketplace` in Codex) and install Code for the next stage. Each plugin works independently.
 
 ## Learn More
 
@@ -105,7 +126,7 @@ Then run the entry point that matches what you want to do — Arness auto-config
 
 ## Built with Arness
 
-*Arness was built with Arness.* This repository — all three plugins, 134 components — was specced, planned, implemented, and shipped using its own pipeline.
+*Arness was built with Arness.* This repository — all three plugins, 135 components — was specced, planned, implemented, and shipped using its own pipeline.
 
 Created by [Fryderyk Benigni](https://github.com/fredcallagan) at [AppsVortex](https://github.com/AppsVortex).
 

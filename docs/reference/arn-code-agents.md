@@ -5,7 +5,7 @@ sidebar:
   order: 33
 ---
 
-Complete reference for all 16 Arness Code agents. Agents are specialist AI workers invoked by skills -- you don't call them directly. For workflow context, see the [Arness Code plugin guide](../plugins/arn-code.md).
+Complete reference for all 17 Arness Code agents. Agents are specialist AI workers invoked by skills -- you don't call them directly. For workflow context, see the [Arness Code plugin guide](../plugins/arn-code.md).
 
 ## Architecture & Planning
 
@@ -13,6 +13,7 @@ Complete reference for all 16 Arness Code agents. Agents are specialist AI worke
 |-------|---------|-------|-------|
 | `arn-code-architect` | Designs how features should be implemented within an existing codebase. Synthesizes feature ideas with codebase patterns to produce concrete implementation proposals. | Read, Glob, Grep, LSP, WebSearch | opus |
 | `arn-code-feature-planner` | Generates or revises implementation plans from Arness specifications and codebase patterns. Produces PLAN_PREVIEW files for review and iterative refinement. | Read, Glob, Grep, Write, Edit, Bash, LSP | opus |
+| `arn-code-drift-detector` | Checks whether an existing specification still matches the current codebase before planning or issue pickup. Flags stale paths, symbols, and architectural claims. | Glob, Grep, Read, Bash | opus |
 | `arn-code-pattern-architect` | Recommends code patterns, testing strategies, and architectural best practices for greenfield projects. Creates patterns rather than discovering existing ones. | Read, Glob, WebSearch | opus |
 | `arn-code-planner` | Compiles brief, structured fix plans for the bug-spec simple-fix path. Takes a small set of fix instructions and produces a structured plan document. | Read | opus |
 
