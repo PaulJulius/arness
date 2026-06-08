@@ -16,7 +16,7 @@ version: 2.0.0
 
 Convert a planning conversation into a structured, executable project with phased implementation plans, testing plans, task lists, and progress tracking.
 
-This skill requires Arness to be configured in the target project. If Arness configuration is not found in the project's CLAUDE.md, the user should run `/arn-planning` to get started.
+This skill requires Arness to be configured in the target project. If Arness configuration is not found in the project's CLAUDE.md, the user should run `arn-planning` to get started.
 
 ## Workflow
 
@@ -39,11 +39,11 @@ Validate that all paths exist on disk. If any path is missing, warn the user bef
 
 If the `## Arness` section contains `Template version` and `Template updates` fields, compare the project's template version against the plugin version. If they differ, check for user modifications via checksums and either auto-update, prompt the user, or skip based on the configured preference. If `## Arness` does NOT contain these fields, treat as legacy and skip.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md` for the full template version check procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md` for the full template version check procedure.
 
 **If legacy `## Arness Save Plan` is found but no `## Arness`**, offer to migrate:
 1. Inform the user: "I found a legacy `## Arness Save Plan` section. Arness now uses a unified `## Arness` configuration section."
-2. Ask (using `AskUserQuestion`):
+2. Ask the user:
 
    **"Should I migrate this to the new format?"**
 
@@ -58,7 +58,7 @@ If the `## Arness` section contains `Template version` and `Template updates` fi
 4. If **No, keep legacy**: proceed using the legacy values, treating the missing Code patterns path as `.arness/`
 
 **If NEITHER section is found**, Arness has not been configured:
-1. Inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
+1. Inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
 
 ---
 
@@ -73,14 +73,14 @@ Look for a PLAN_PREVIEW file in the plans directory:
 1. Search for files matching `PLAN_PREVIEW_*.md` in `<plans-dir>/`
 2. **If exactly one PLAN_PREVIEW file exists:** use it automatically. If PROJECT_NAME was not provided, derive it from the preview filename (e.g., `PLAN_PREVIEW_websocket-notifications.md` → `websocket-notifications`).
 3. **If multiple PLAN_PREVIEW files exist:** list them and ask the user to choose.
-4. **If no PLAN_PREVIEW files exist:** check `~/.claude/plans/` as a legacy fallback. If plans are found there, show the most recent and ask the user to confirm. If nothing is found anywhere, inform the user: "No plan found. Run `/arn-code-plan` to create one first."
+4. **If no PLAN_PREVIEW files exist:** check `~/.claude/plans/` as a legacy fallback. If plans are found there, show the most recent and ask the user to confirm. If nothing is found anywhere, inform the user: "No plan found. Run `arn-code-plan` to create one first."
 
 #### Create Project Structure
 
 Run the setup script with the resolved plan file path:
 
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/scripts/save_plan.sh <PROJECT_NAME> <OUTPUT_DIR> <resolved-plan-file-path>
+bash <arn-code-plugin-root>/skills/arn-code-save-plan/scripts/save_plan.sh <PROJECT_NAME> <OUTPUT_DIR> <resolved-plan-file-path>
 ```
 
 This creates:
@@ -97,7 +97,7 @@ If the script fails (non-zero exit code), report the error output to the user. C
 
 ### Step 3: Write INTRODUCTION.md
 
-Create `<OUTPUT_DIR>/<PROJECT_NAME>/INTRODUCTION.md` using the template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/templates.md`.
+Create `<OUTPUT_DIR>/<PROJECT_NAME>/INTRODUCTION.md` using the template from `<arn-code-plugin-root>/skills/arn-code-save-plan/references/templates.md`.
 
 #### Source Material
 
@@ -143,7 +143,7 @@ Every pattern in INTRODUCTION.md MUST reference real files and real code from th
 
 ### Step 4: Create Phase Plans
 
-For each phase identified in Step 3's Phase Overview, create `<OUTPUT_DIR>/<PROJECT_NAME>/plans/PHASE_<N>_PLAN.md` using the combined template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/templates.md`.
+For each phase identified in Step 3's Phase Overview, create `<OUTPUT_DIR>/<PROJECT_NAME>/plans/PHASE_<N>_PLAN.md` using the combined template from `<arn-code-plugin-root>/skills/arn-code-save-plan/references/templates.md`.
 
 **Extracting phase content from SOURCE_PLAN.md:** The plan may use any structure. For each phase identified in Step 3:
 - Find the corresponding content in SOURCE_PLAN.md by matching headers, numbered sections, or task groups
@@ -170,7 +170,7 @@ Each phase plan always has an Implementation section. Include a Testing section 
 
 ### Step 5: Generate TASKS.md and PROGRESS_TRACKER.json
 
-**TASKS.md** — Create `<OUTPUT_DIR>/<PROJECT_NAME>/TASKS.md` using the template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/templates.md`.
+**TASKS.md** — Create `<OUTPUT_DIR>/<PROJECT_NAME>/TASKS.md` using the template from `<arn-code-plugin-root>/skills/arn-code-save-plan/references/templates.md`.
 
 Rules:
 - Sequential task numbering (Task 1, Task 2, Task 3...)
@@ -190,7 +190,7 @@ Populate with:
 - One entry per phase in `phases[]`:
   - `phaseNumber`, `phaseTitle`, `planFile` from the phase plans
   - `implementation.status`: `"not_started"`, `implementation.taskId`: the implementation task number from TASKS.md for this phase, `implementation.reportFile`: `reports/IMPLEMENTATION_REPORT_PHASE_N.json`
-  - `implementation.modelOverride`: `"opus"` if the upstream `arn-code-plan` Step 5a or `arn-code-batch-planning` Step 3.5c marked this phase for upgrade (read from the plan structure or the in-memory upgrade list passed by the orchestrator), otherwise `null`. The upgrade decision is captured per-phase based on the phase's `**Complexity:** complex` rating combined with the user's gate answer per `pipeline.complex-phase-upgrade`. See `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md` "Complex Phase Upgrade" section for the full decision flow.
+  - `implementation.modelOverride`: `"opus"` if the upstream `arn-code-plan` Step 5a or `arn-code-batch-planning` Step 3.5c marked this phase for upgrade (read from the plan structure or the in-memory upgrade list passed by the orchestrator), otherwise `null`. The upgrade decision is captured per-phase based on the phase's `**Complexity:** complex` rating combined with the user's gate answer per `pipeline.complex-phase-upgrade`. See `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md` "Complex Phase Upgrade" section for the full decision flow.
   - `testing.status`: `"not_started"` if the phase has a Testing section, or `"none"` if it does not. `testing.taskId`: the testing task number from TASKS.md (or `null` if no testing), `testing.reportFile`: `reports/TESTING_REPORT_PHASE_N.json`
   - `review.verdict`: empty string, `review.reviewCycles`: `0`, `review.reportFile`: `reports/TASK_REVIEW_TASK_N.json`
 
@@ -210,8 +210,8 @@ Review all created files and confirm with the user:
 List all created files with their paths.
 
 **Next steps:**
-- Optionally run `/arn-code-review-plan` to validate the plan before execution
-- Run `/arn-code-taskify` to convert TASKS.md into a Claude Code task list
+- Optionally run `arn-code-review-plan` to validate the plan before execution
+- Run `arn-code-taskify` to convert TASKS.md into a Claude Code task list
 
 ## Output Structure
 

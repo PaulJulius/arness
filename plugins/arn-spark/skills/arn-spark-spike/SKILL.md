@@ -28,16 +28,16 @@ An architecture vision document should exist. Check in order:
 
 **If no architecture vision is found:** Inform the user:
 
-"No architecture vision document found. I can still run spikes if you describe the specific technical risks to validate. For a comprehensive risk assessment, run `/arn-spark-arch-vision` first."
+"No architecture vision document found. I can still run spikes if you describe the specific technical risks to validate. For a comprehensive risk assessment, run `arn-spark-arch-vision` first."
 
 If the user provides risks directly, proceed with those.
 
-The project should ideally be scaffolded (via `/arn-spark-scaffold`) so the spike runner can leverage the existing project setup. If not scaffolded, spikes will need to set up their own dependencies, which the spike runner handles.
+The project should ideally be scaffolded (via `arn-spark-scaffold`) so the spike runner can leverage the existing project setup. If not scaffolded, spikes will need to set up their own dependencies, which the spike runner handles.
 
 Determine the spike workspace:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Spikes directory path — this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the directory does not exist, create it
 
 ## Workflow
@@ -67,7 +67,7 @@ Present the risk list to the user:
 **Monitor:**
 4. [Risk title] -- [brief description]
 
-Ask (using `AskUserQuestion`) with `multiSelect: true`:
+Ask (using `user prompt`) with `multiSelect: true`:
 
 **"Which risks would you like to spike? (select multiple)"**
 
@@ -119,7 +119,7 @@ For each approved spike, in order:
 
 4. **If a spike failed:**
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"Risk [Risk Title] failed validation. How would you like to proceed?"**
 
@@ -135,14 +135,14 @@ For each approved spike, in order:
 After all spikes have been run:
 
 1. Read the spike report template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-spike/references/spike-report-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-spike/references/spike-report-template.md`
 
 2. Populate the template with all spike results
 
 3. Determine the output directory:
    - Read the project's `CLAUDE.md` and check for a `## Arness` section
    - If found, extract the configured Vision directory path — this is the source of truth
-   - If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+   - If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 
 4. Write the document as `spike-results.md`
 
@@ -168,7 +168,7 @@ If any spikes failed and the user chose an alternative approach:
 1. [Section]: [What to change and why]
 2. [Section]: [What to change and why]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Should I update the architecture vision now?**
 > 1. **Yes** — Update the affected sections
@@ -180,8 +180,8 @@ If the user chooses **Yes**, make the targeted updates to the architecture visio
 
 "All spikes complete. Recommended next steps:
 
-1. **Explore visual style:** Run `/arn-spark-style-explore` to define the look and feel
-2. **Build static prototype:** Run `/arn-spark-static-prototype` to validate visual fidelity
+1. **Explore visual style:** Run `arn-spark-style-explore` to define the look and feel
+2. **Build static prototype:** Run `arn-spark-static-prototype` to validate visual fidelity
 3. **Address deferred risks:** [List any deferred risks and when they should be revisited]"
 
 Adapt based on results. If critical risks failed and alternatives were chosen, emphasize the architecture changes. If risks were deferred, note when they should be revisited.
@@ -194,12 +194,12 @@ Adapt based on results. If critical risks failed and alternatives were chosen, e
 | Spike runner agent denied permissions | The agent likely failed because it ran in the background or in parallel. Re-run it in the foreground sequentially. If permissions are still denied, run the spike directly in the main conversation instead of delegating to the agent. |
 | User asks about technology alternatives | Answer from the architecture vision context or invoke `arn-spark-tech-evaluator` if deep comparison needed |
 | User wants to add a custom risk | Record it and proceed to Step 2 for that risk |
-| User asks about features or screens | Defer: "Feature work comes after risk validation. Next step after spikes is `/arn-spark-style-explore` or `/arn-spark-static-prototype`." |
+| User asks about features or screens | Defer: "Feature work comes after risk validation. Next step after spikes is `arn-spark-style-explore` or `arn-spark-static-prototype`." |
 | Spike runner reports environment limitation | Record as deferred, continue to next spike |
 
 ## Error Handling
 
-- **No risks found in architecture vision:** Ask the user if they have specific technical concerns to validate. If none, inform them: "No critical risks identified. You can proceed to `/arn-spark-style-explore` or `/arn-spark-static-prototype`."
+- **No risks found in architecture vision:** Ask the user if they have specific technical concerns to validate. If none, inform them: "No critical risks identified. You can proceed to `arn-spark-style-explore` or `arn-spark-static-prototype`."
 - **Spike cannot run in current environment:** The spike runner still creates all POC files and a README with manual execution instructions on disk. Mark as deferred with specific environment requirements. The user can run the spike manually on the required platform later. Continue to the next spike.
 - **Spike runner agent denied permissions (Bash/Write):** This happens when agents are launched in parallel or in the background -- permission prompts cannot reach the user. Re-run the spike in the foreground sequentially. If permissions are still denied, fall back to running the spike directly in the main conversation context (write POC files and run build/execute commands yourself rather than delegating to the agent).
 - **Spike fails repeatedly (3 times):** The spike runner will halt. Present the failure state to the user and ask how to proceed (skip, try different approach, or investigate manually).

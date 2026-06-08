@@ -13,13 +13,13 @@ version: 1.0.0
 
 # Arness Bug Spec
 
-Investigate a bug through iterative conversation, aided by diagnostic analysis from the `arn-code-investigator` agent, architectural validation from the `arn-code-architect` agent, and optional automated fix execution from the `arn-code-bug-fixer` agent. Every bug investigation gets its own project folder (`BUGFIX_<name>/`) in the plans directory. For simple bugs, the artifact is a fix plus a bug fix report. For complex bugs, the artifact is a **bug specification** written to `.arness/specs/` that informs plan creation via the `/arn-code-plan` skill.
+Investigate a bug through iterative conversation, aided by diagnostic analysis from the `arn-code-investigator` agent, architectural validation from the `arn-code-architect` agent, and optional automated fix execution from the `arn-code-bug-fixer` agent. Every bug investigation gets its own project folder (`BUGFIX_<name>/`) in the plans directory. For simple bugs, the artifact is a fix plus a bug fix report. For complex bugs, the artifact is a **bug specification** written to `.arness/specs/` that informs plan creation via the `arn-code-plan` skill.
 
-This is a conversational skill. It runs in normal conversation (NOT plan mode). A `BUGFIX_<name>/` project folder is created at the start of every investigation. For simple bugs, the folder holds the fix report. For complex bugs, a specification document is written to `<specs-dir>/BUGFIX_<name>.md`, and the project folder is used later by `arn-code-save-plan` after the plan is generated via `/arn-code-plan`.
+This is a conversational skill. It runs in normal conversation (NOT plan mode). A `BUGFIX_<name>/` project folder is created at the start of every investigation. For simple bugs, the folder holds the fix report. For complex bugs, a specification document is written to `<specs-dir>/BUGFIX_<name>.md`, and the project folder is used later by `arn-code-save-plan` after the plan is generated via `arn-code-plan`.
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ## Workflow
 
@@ -61,7 +61,7 @@ Read the project's CLAUDE.md and extract the `## Arness` section to find:
 - Template version (if present)
 - Template updates preference (if present)
 
-**Template version check:** If `Template version` and `Template updates` fields are present, run the template version check procedure documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If `## Arness` does not contain these fields, treat as legacy and skip.
+**Template version check:** If `Template version` and `Template updates` fields are present, run the template version check procedure documented in `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If `## Arness` does not contain these fields, treat as legacy and skip.
 
 Read the stored pattern documentation:
 - `<code-patterns-dir>/code-patterns.md`
@@ -113,7 +113,7 @@ Then ask: "Does this match what you're seeing? Any additional context or leads?"
 
 Iterate with the user in a conversation loop: listen for confirmations, corrections, or new symptoms, then invoke `arn-code-investigator` or `arn-code-architect` as appropriate. Summarize the current state after each exchange and check for convergence (root cause confirmed + architect validated). When converged, proceed to Step 5.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
 
 ---
 
@@ -121,7 +121,7 @@ Iterate with the user in a conversation loop: listen for confirmations, correcti
 
 Internally assess whether the fix is simple or complex based on the architect's validation and six complexity questions (file count, architectural changes, pattern repetition, dependencies, description length, test work). Route to Step 6A for simple fixes or Step 6B for complex ones.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
 
 ---
 
@@ -129,7 +129,7 @@ Internally assess whether the fix is simple or complex based on the architect's 
 
 Present the fix proposal with specific files and test plan, offer the user a choice between writing a small plan first or fixing directly, create a task list, and execute either in-session or via `arn-code-bug-fixer`. The bug fix report is written to `<project-folder>/reports/BUGFIX_REPORT.json`.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/diagnosis-flow.md` for the full diagnosis and fix procedure.
 
 ---
 
@@ -151,7 +151,7 @@ Present the fix proposal with specific files and test plan, offer the user a cho
 
 5. When the user is ready, write the bug specification:
 
-   a. Read the bug spec template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/bug-spec-template.md`.
+   a. Read the bug spec template at `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/bug-spec-template.md`.
 
    b. Populate the template with:
       - **Bug Report:** The refined bug description
@@ -170,7 +170,7 @@ Present the fix proposal with specific files and test plan, offer the user a cho
    "Bug specification saved to `<specs-dir>/BUGFIX_<name>.md`.
    Project folder is at `<project-folder>/`.
 
-   To create a fix plan, run `/arn-code-plan BUGFIX_<name>`.
+   To create a fix plan, run `arn-code-plan BUGFIX_<name>`.
 
    The skill will load this spec and your project's codebase patterns, invoke the planner agent to generate a plan, and let you review and refine it before saving."
 
@@ -180,7 +180,7 @@ Present the fix proposal with specific files and test plan, offer the user a cho
 
 For the **simple path**, execution is handled in Step 6A. The task list is created and executed (either directly in the session or via `arn-code-bug-fixer`). No further handoff is needed.
 
-For the **complex path**, after the spec is written, the user runs `/arn-code-plan` to generate the implementation plan. From there, the standard pipeline applies: arn-code-save-plan -> arn-code-review-plan -> arn-code-taskify -> arn-code-execute-plan.
+For the **complex path**, after the spec is written, the user runs `arn-code-plan` to generate the implementation plan. From there, the standard pipeline applies: arn-code-save-plan -> arn-code-review-plan -> arn-code-taskify -> arn-code-execute-plan.
 
 ---
 

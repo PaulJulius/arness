@@ -9,13 +9,13 @@ description: >-
   or wants to generate an implementation plan from a Arness specification.
   The skill invokes the arn-code-feature-planner agent to generate the plan,
   presents it for review, and iterates on user feedback until approved.
-  Produces a PLAN_PREVIEW file that feeds into /arn-code-save-plan.
+  Produces a PLAN_PREVIEW file that feeds into arn-code-save-plan.
 version: 1.1.0
 ---
 
 # Arness Plan
 
-Generate an implementation plan from a Arness specification by invoking the `arn-code-feature-planner` agent. The plan is written to disk as a PLAN_PREVIEW file, presented to the user for review, and iteratively refined based on feedback until approved. The approved plan then feeds into `/arn-code-save-plan` for structuring into phases, tasks, and reports.
+Generate an implementation plan from a Arness specification by invoking the `arn-code-feature-planner` agent. The plan is written to disk as a PLAN_PREVIEW file, presented to the user for review, and iteratively refined based on feedback until approved. The approved plan then feeds into `arn-code-save-plan` for structuring into phases, tasks, and reports.
 
 Pipeline position:
 ```
@@ -24,7 +24,7 @@ arn-code-init -> arn-code-feature-spec / arn-code-bug-spec -> **arn-code-plan** 
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed without it.
 
 ## Workflow
 
@@ -35,7 +35,7 @@ Read the project's CLAUDE.md and extract the `## Arness` section to find:
 - **Specs directory** — path to the directory containing specification files
 - **Code patterns** — path to the directory containing stored pattern documentation
 
-If `## Arness` is not found, inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed.
+If `## Arness` is not found, inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed.
 
 ---
 
@@ -53,7 +53,7 @@ The user may provide a spec name as an argument (e.g., "arness plan FEATURE_webs
 - List all `.md` files in `<specs-dir>/`
 - If only one exists, use it automatically
 - If multiple exist, show the list sorted by modification date (most recent first) and ask the user to choose
-- If none exist, inform the user: "No specifications found in `<specs-dir>/`. Run `/arn-code-feature-spec` or `/arn-code-bug-spec` to create one first."
+- If none exist, inform the user: "No specifications found in `<specs-dir>/`. Run `arn-code-feature-spec` or `arn-code-bug-spec` to create one first."
 
 ---
 
@@ -94,10 +94,10 @@ Capture the agent's drift report and branch on severity:
 
 - **`none`** — proceed silently to Step 4.
 - **`minor`** — display the report's `Summary` line to the user (one sentence). Carry the full drift report forward as an annotation to the planner agent's context (see Step 4 input block below). Proceed to Step 4.
-- **`moderate` or `major`** — display the full drift report. Then ask the user how to proceed using `AskUserQuestion`:
+- **`moderate` or `major`** — display the full drift report. Then ask the user how to proceed using `user prompt`:
 
   **The spec has drifted from the current codebase. How would you like to proceed?**
-  1. **Refresh the spec** — route to `/arn-code-feature-spec` (or `/arn-code-bug-spec` for a bug spec) with the drift report as input so the spec can be updated against current reality.
+  1. **Refresh the spec** — route to `arn-code-feature-spec` (or `arn-code-bug-spec` for a bug spec) with the drift report as input so the spec can be updated against current reality.
   2. **Proceed with annotations** — pass the drift report to the planner so it accounts for the divergence while building the plan.
   3. **Abort** — exit the skill; no plan generated.
 
@@ -157,7 +157,7 @@ Record the agent ID returned by the Task tool (needed for resume in Step 5b).
 After the planner agent completes:
 
 1. Read the generated plan from `<plans-dir>/PLAN_PREVIEW_<spec-name>.md`
-2. Parse each phase's `**Complexity:**` and `**Complexity rationale:**` fields (added by the planner per `${CLAUDE_PLUGIN_ROOT}/agents/arn-code-feature-planner.md`'s Complexity Assessment section). If a phase is missing these fields (older plans), treat its complexity as `unknown` and skip the upgrade gate for it.
+2. Parse each phase's `**Complexity:**` and `**Complexity rationale:**` fields (added by the planner per `<arn-code-plugin-root>/agents/arn-code-feature-planner.md`'s Complexity Assessment section). If a phase is missing these fields (older plans), treat its complexity as `unknown` and skip the upgrade gate for it.
 3. Present a structured summary to the user:
    - **Spec:** the linked specification name
    - **Phases:** list each phase with a 1-line description, key deliverables, **and complexity rating** (e.g., `Phase 3: Dispatch Site Edits — 7 deliverables — complexity: complex`). Always show the rating, regardless of whether an upgrade gate fires.
@@ -183,7 +183,7 @@ Before marking the plan approved, check whether the user should be offered an ex
 - If the field is `balanced` or `custom`: continue.
 - If the field is missing or `.arness/agent-models/code.md` doesn't exist: treat as unknown and continue (run the gate — the user gets the choice).
 
-**Two-tier preference lookup** for `pipeline.complex-phase-upgrade` per `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`:
+**Two-tier preference lookup** for `pipeline.complex-phase-upgrade` per `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`:
 
 1. Read `.arness/workflow.local.yaml` — if file exists and key present, use that value (note source).
 2. Else read `~/.arness/workflow-preferences.yaml` — if file exists and key present, use that value (note source).
@@ -206,7 +206,7 @@ N phases are rated complex:
   - Phase 5: <title> — <complexityRationale>
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"N phases are rated complex. Upgrade ALL of them to Opus for execution? (Reviewer dispatches stay on configured tier.)"**
 
@@ -219,7 +219,7 @@ If **No**: no override applied.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -275,14 +275,14 @@ Confirm with the user:
 
 "Plan approved and saved to `<plans-dir>/PLAN_PREVIEW_<spec-name>.md`.
 
-Next step: Run `/arn-code-save-plan` to convert this plan into a structured project with phased implementation and testing plans."
+Next step: Run `arn-code-save-plan` to convert this plan into a structured project with phased implementation and testing plans."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing in CLAUDE.md** — suggest running `/arn-planning` to get started.
-- **No specs found** — suggest running `/arn-code-feature-spec` or `/arn-code-bug-spec` first.
+- **`## Arness` config missing in CLAUDE.md** — suggest running `arn-planning` to get started.
+- **No specs found** — suggest running `arn-code-feature-spec` or `arn-code-bug-spec` first.
 - **Planner agent fails or crashes** — read the agent's output to identify what went wrong. If partial plan was written, present it and ask the user if they want to retry or edit manually.
 - **Resume fails during feedback loop** — fall back to fresh agent invocation (Step 5b fallback). Inform the user: "Could not resume the planner session. Spawning a fresh planner with the current plan and your feedback."
 - **PLAN_PREVIEW file not written by agent** — check the agent output for errors. If the agent produced plan content but did not write it, write the content to the PLAN_PREVIEW file directly and continue.

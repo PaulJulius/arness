@@ -271,7 +271,7 @@ verification checklist for the implementation.]
 
 [Brief statement: ready for planning / needs more investigation on X]
 
-To create a plan: Run `/arn-code-plan FEATURE_<name>`
+To create a plan: Run `arn-code-plan FEATURE_<name>`
 ```
 
 ---

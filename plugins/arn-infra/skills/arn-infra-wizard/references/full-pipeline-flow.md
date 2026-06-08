@@ -12,7 +12,7 @@ Infra Pipeline (Full): CHANGE-SPEC --> change-plan --> save-plan --> execute -->
 
 Inform the user: "Creating a structured change specification..."
 
-> `Skill: arn-infra:arn-infra-change-spec`
+> Codex skill `arn-infra-change-spec`
 
 When change-spec completes, the spec file exists in `.arness/infra-specs/`. Proceed to P2.
 
@@ -26,7 +26,7 @@ Infra Pipeline (Full): change-spec --> CHANGE-PLAN --> save-plan --> execute -->
 
 Inform the user: "Generating an infrastructure change plan from the specification..."
 
-> `Skill: arn-infra:arn-infra-change-plan`
+> Codex skill `arn-infra-change-plan`
 
 When change-plan completes, the plan preview exists in `.arness/infra-plans/`. Proceed to P3.
 
@@ -40,7 +40,7 @@ Infra Pipeline (Full): change-spec --> change-plan --> SAVE-PLAN --> execute -->
 
 Inform the user: "Structuring and saving the change plan..."
 
-> `Skill: arn-infra:arn-infra-save-plan`
+> Codex skill `arn-infra-save-plan`
 
 When save-plan completes, the structured plan directory exists in `.arness/infra-plans/`. Proceed to P4.
 
@@ -54,7 +54,7 @@ Infra Pipeline (Full): change-spec --> change-plan --> save-plan --> EXECUTE -->
 
 Inform the user: "Executing the infrastructure change plan..."
 
-> `Skill: arn-infra:arn-infra-execute-change`
+> Codex skill `arn-infra-execute-change`
 
 When execute-change completes, infrastructure changes have been applied. Proceed to P5.
 
@@ -68,7 +68,7 @@ Infra Pipeline (Full): change-spec --> change-plan --> save-plan --> execute -->
 
 Inform the user: "Reviewing the executed infrastructure changes..."
 
-> `Skill: arn-infra:arn-infra-review-change`
+> Codex skill `arn-infra-review-change`
 
 When review-change completes, the review report is available. Proceed to P6.
 
@@ -82,7 +82,7 @@ Infra Pipeline (Full): change-spec --> change-plan --> save-plan --> execute -->
 
 Inform the user: "Documenting the infrastructure change..."
 
-> `Skill: arn-infra:arn-infra-document-change`
+> Codex skill `arn-infra-document-change`
 
 When document-change completes, runbooks and changelogs have been generated. Show the Full Pipeline completion summary.
 
@@ -104,6 +104,6 @@ Present a completion summary:
 - **Documentation:** [runbooks, changelogs generated]
 
 **Next steps:**
-- "Run `/arn-infra-wizard` again to start a new change pipeline"
-- "Run `/arn-infra-help` to check your pipeline position"
-- "Run `/arn-infra-deploy` to deploy to additional environments"
+- "Run `arn-infra-wizard` again to start a new change pipeline"
+- "Run `arn-infra-help` to check your pipeline position"
+- "Run `arn-infra-deploy` to deploy to additional environments"

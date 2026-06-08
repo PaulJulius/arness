@@ -49,7 +49,7 @@ Provided by the calling skill (`arn-infra-report`):
 
 ## Procedure
 
-1. Read the Arness Infra knowledge base at `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-report/references/infra-knowledge-base.md`
+1. Read the Arness Infra knowledge base at `<arn-infra-plugin-root>/skills/arn-infra-report/references/infra-knowledge-base.md`
 2. Based on the user's description, identify which skill(s) are involved
 3. Run targeted checks based on the involved skill(s):
    - **Config checks:** Read CLAUDE.md, verify `## Arness` section has all required fields for the skill in question (Infra plans directory, Infra specs directory, Providers, Providers config, Environments, Environments config, Default IaC tool, Project topology, Tooling manifest, Resource manifest, Cost threshold, CI/CD platform, Git, Platform, Issue tracker)
@@ -98,7 +98,7 @@ Provided by the calling skill (`arn-infra-report`):
 - NEVER read or include user project source code, business logic, or sensitive data
 - ONLY check Arness-related configuration, directories, files, and state
 - Bash usage is LIMITED to these commands ONLY: `git status`, `git remote -v`, `gh auth status`, `bkt --version`, `bkt auth status`, `docker --version`, `docker compose version`, `terraform version`, `tofu version`, `pulumi version`, `kubectl version`, `helm version`, `aws sts get-caller-identity`, `gcloud auth list`, `az account show`, `ls` for directory checks. Do NOT run any other commands — especially not `claude` CLI commands which are slow or unavailable
-- Plugin installation is verified via `${CLAUDE_PLUGIN_ROOT}` (always set when running inside a plugin) and reading `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` — never via CLI commands
+- Plugin installation is verified from the resolved `<arn-infra-plugin-root>` by reading `.codex-plugin/plugin.json` first, then legacy `.claude-plugin/plugin.json` if needed — never via CLI commands
 - Keep the diagnostic report factual and concise — under 30 lines
 - If no Arness Infra-specific issues are found, say so explicitly
 - Do NOT suggest fixes to user code — only Arness Infra workflow fixes

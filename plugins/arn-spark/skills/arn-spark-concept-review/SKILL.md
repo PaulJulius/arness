@@ -33,25 +33,25 @@ The process:
 
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured **Vision directory** and **Reports directory** paths
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the Reports directory or `stress-tests/` subdirectory does not exist, inform the user: "No stress-tests directory found. Run a stress test skill first to generate reports." (The stress test skills create this directory when writing their reports.)
 
 ### Data Availability
 
 | Artifact | Status | Location | Fallback |
 |----------|--------|----------|----------|
-| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `/arn-spark-discover` |
-| Product pillars | REQUIRED | Product Pillars section of product concept | Cannot resolve conflicts without pillars -- suggest running `/arn-spark-discover` to define pillars |
+| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `arn-spark-discover` |
+| Product pillars | REQUIRED | Product Pillars section of product concept | Cannot resolve conflicts without pillars -- suggest running `arn-spark-discover` to define pillars |
 | At least 1 stress test report | REQUIRED | `<reports-dir>/stress-tests/` | Cannot proceed without at least one report -- see below |
 | Competitive landscape | ENRICHES | Competitive Landscape section of product concept | Review proceeds but competitive context is unavailable for conflict resolution |
 
 **Stress test report detection:**
 
 Scan `<reports-dir>/stress-tests/` for the following report files:
-- `interview-report.md` (from `/arn-spark-stress-interview`)
-- `competitive-report.md` (from `/arn-spark-stress-competitive`)
-- `premortem-report.md` (from `/arn-spark-stress-premortem`)
-- `prfaq-report.md` (from `/arn-spark-stress-prfaq`)
+- `interview-report.md` (from `arn-spark-stress-interview`)
+- `competitive-report.md` (from `arn-spark-stress-competitive`)
+- `premortem-report.md` (from `arn-spark-stress-premortem`)
+- `prfaq-report.md` (from `arn-spark-stress-prfaq`)
 
 Present the scan results to the user:
 
@@ -68,10 +68,10 @@ Use ✓ for found reports and — for missing reports.
 Inform the user: "No stress test reports found in `<reports-dir>/stress-tests/`. Run at least one stress test skill before reviewing the concept."
 
 List the available stress test skills:
-- `/arn-spark-stress-interview` -- Synthetic user interviews with adversarial personas
-- `/arn-spark-stress-competitive` -- Competitive gap analysis
-- `/arn-spark-stress-premortem` -- Pre-mortem failure investigation
-- `/arn-spark-stress-prfaq` -- PR/FAQ marketing stress test
+- `arn-spark-stress-interview` -- Synthetic user interviews with adversarial personas
+- `arn-spark-stress-competitive` -- Competitive gap analysis
+- `arn-spark-stress-premortem` -- Pre-mortem failure investigation
+- `arn-spark-stress-prfaq` -- PR/FAQ marketing stress test
 
 Do not proceed. Exit the skill.
 
@@ -82,8 +82,8 @@ Do not proceed. Exit the skill.
 ### Step 1: Load References
 
 Load the conflict resolution protocol and review report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-concept-review/references/conflict-resolution-protocol.md`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-concept-review/references/review-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-concept-review/references/conflict-resolution-protocol.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-concept-review/references/review-report-template.md`
 
 ### Step 2: Read Reports and Extract Data
 
@@ -186,7 +186,7 @@ After presenting the changeset, also show the aggregated unresolved questions (d
 
 Then ask for the user's decision:
 
-Ask (using `AskUserQuestion`): **"How would you like to handle these [N] proposed changes?"**
+Ask the user: **"How would you like to handle these [N] proposed changes?"**
 1. Accept all changes as proposed
 2. Review by section (batch accept/reject per section, then drill into individual changes if needed)
 3. Review each change individually
@@ -197,7 +197,7 @@ All non-conflicting changes are accepted as-is. For each conflict, accept the st
 **If the user chooses "Review by section":**
 Present changes grouped by product concept section. For each section with changes:
 
-Ask (using `AskUserQuestion`): **"[Section Name] — [N] changes: [brief summary of changes]"**
+Ask the user: **"[Section Name] — [N] changes: [brief summary of changes]"**
 1. Accept all in this section
 2. Reject all in this section
 3. Review individually within this section
@@ -207,18 +207,18 @@ If **Accept all** or **Reject all**, record the batch decision and move to the n
 **If the user chooses "Review individually":**
 Present changes grouped by product concept section. For each change (or batch of related changes within a section):
 
-Ask (using `AskUserQuestion`): **"[Section Name] -- [Change summary]: [Type] -- [brief description]"**
+Ask the user: **"[Section Name] -- [Change summary]: [Type] -- [brief description]"**
 1. Accept
 2. Reject
 3. Modify
 
 - **Accept:** Record the change as accepted.
-- **Reject:** Use plain-text conversational input (not AskUserQuestion) to ask "Why would you like to reject this change?" Record the change as rejected with the user's reason.
-- **Modify:** Use plain-text conversational input (not AskUserQuestion) to ask "Describe your modification." Record the change as modified with the user's modification.
+- **Reject:** Use plain-text conversational input (not user prompt) to ask "Why would you like to reject this change?" Record the change as rejected with the user's reason.
+- **Modify:** Use plain-text conversational input (not user prompt) to ask "Describe your modification." Record the change as modified with the user's modification.
 
 For conflicts, present both sides with the strategist's assessment:
 
-Ask (using `AskUserQuestion`): **"CONFLICT in [Section Name]: [Brief description]. The strategist recommends [recommended side]. How would you like to resolve this?"**
+Ask the user: **"CONFLICT in [Section Name]: [Brief description]. The strategist recommends [recommended side]. How would you like to resolve this?"**
 1. Accept strategist's recommendation ([brief description of recommended side])
 2. Choose the other recommendation ([brief description of other side])
 3. Provide a custom resolution
@@ -235,7 +235,7 @@ This step is skipped if the user rejected all changes.
 
 **6a. Read the product concept template:**
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-discover/references/product-concept-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-discover/references/product-concept-template.md`
 
 This is the template that governs the structure of the product concept. The updated concept MUST preserve this template's section structure exactly.
 
@@ -247,7 +247,7 @@ If a file named `product-concept-pre-review.md` already exists (from a previous 
 
 If the rename fails, inform the user of the error and ask whether to proceed with writing the updated concept anyway (the original would be lost) or abort. Use:
 
-Ask (using `AskUserQuestion`): **"Could not rename the original product concept. How would you like to proceed?"**
+Ask the user: **"Could not rename the original product concept. How would you like to proceed?"**
 1. Write the updated concept anyway (original will be overwritten)
 2. Abort -- do not modify the product concept
 
@@ -304,7 +304,7 @@ Product concept was not modified (all changes rejected).
 
 Review report saved to `[reports-dir]/stress-tests/concept-review-report.md`.
 
-Next step: Run `/arn-spark-arch-vision` to define the architecture based on the [updated / current] product concept."
+Next step: Run `arn-spark-arch-vision` to define the architecture based on the [updated / current] product concept."
 
 ## Agent Invocation Guide
 
@@ -317,14 +317,14 @@ Next step: Run `/arn-spark-arch-vision` to define the architecture based on the 
 
 - **No stress test reports found:** Inform the user and list available stress test skills. Do not proceed. Exit the skill.
 
-- **Product concept missing:** Inform the user: "No product concept found at `<vision-dir>/product-concept.md`. Run `/arn-spark-discover` to create a product concept before running stress tests and concept review." Do not proceed.
+- **Product concept missing:** Inform the user: "No product concept found at `<vision-dir>/product-concept.md`. Run `arn-spark-discover` to create a product concept before running stress tests and concept review." Do not proceed.
 
-- **Product pillars missing or contain "Not explored" sentinel:** Inform the user: "The product concept does not include product pillars, which are needed for conflict resolution. Run `/arn-spark-discover` to define product pillars." Do not proceed.
+- **Product pillars missing or contain "Not explored" sentinel:** Inform the user: "The product concept does not include product pillars, which are needed for conflict resolution. Run `arn-spark-discover` to define product pillars." Do not proceed.
 
 - **Report exists but recommendation table is malformed or missing:** Note the gap. Extract what is parseable. If zero recommendations can be extracted from a report, note it as having "0 recommendations (malformed or missing table)" in the review report. Continue with other reports.
 
 - **Product strategist returns poor consolidation:** Retry once with a simplified prompt that emphasizes the consolidation task steps from the conflict resolution protocol. If retry fails:
-  Ask (using `AskUserQuestion`): **"The product strategist produced a poor consolidation. How would you like to proceed?"**
+  Ask the user: **"The product strategist produced a poor consolidation. How would you like to proceed?"**
   1. Retry
   2. Skip consolidation and present raw recommendations without de-duplication
   3. Abort
@@ -347,4 +347,4 @@ Next step: Run `/arn-spark-arch-vision` to define the architecture based on the 
 - **Pre-review rename preserves the original.** The original concept is always renamed to `product-concept-pre-review.md` before the updated concept is written. This ensures recovery if the review produced undesirable results.
 - **Read-only except for the final write step.** The skill reads reports and the product concept during Steps 1-5 but writes nothing until Step 6 (concept) and Step 7 (review report).
 - **Report overwrites on re-run.** If `concept-review-report.md` already exists, it is overwritten. Git provides history.
-- **All reference loading uses `${CLAUDE_PLUGIN_ROOT}` paths.** No absolute paths or user-specific paths in reference loading instructions.
+- **All reference loading uses `<arn-spark-plugin-root>` paths.** No absolute paths or user-specific paths in reference loading instructions.

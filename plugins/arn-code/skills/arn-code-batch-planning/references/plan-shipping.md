@@ -12,7 +12,7 @@ Read the `Platform` and `Git` fields from `## Arness` config.
 
 Skip shipping entirely. Inform the user:
 
-"No version control configured. Plans are saved locally only. Batch-implement requires git for worktree-based parallel execution. You can still implement features one at a time with `/arn-implementing`."
+"No version control configured. Plans are saved locally only. Batch-implement requires git for worktree-based parallel execution. You can still implement features one at a time with `arn-implementing`."
 
 STOP — do not proceed to batch-implement handoff.
 
@@ -76,7 +76,7 @@ Plans and specifications for N features, ready for batch implementation.
 - F-005: [Name] (tier: swift, plan: .arness/plans/SWIFT_[name]/)
 
 ### Next Steps
-Merge this PR, then run `/arn-code-batch-implement` to launch parallel implementation.
+Merge this PR, then run `arn-code-batch-implement` to launch parallel implementation.
 EOF
 )"
 ```
@@ -101,13 +101,13 @@ Inform the user:
 
 "Plans PR created: [PR URL]. Merge it before launching batch-implement — workers need plans on main."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Has the plans PR been merged?"**
 
 Options:
 1. **Yes, it's merged** — proceed to batch-implement handoff
-2. **Not yet** — exit (run `/arn-code-batch-implement` later)
+2. **Not yet** — exit (run `arn-code-batch-implement` later)
 
 If **Yes**: checkout main and pull:
 ```bash
@@ -115,10 +115,10 @@ git checkout main && git pull
 ```
 Verify plans exist on disk after pull. Proceed to handoff.
 
-If **Not yet**: exit with "Merge the plans PR, then run `/arn-code-batch-implement` when ready."
+If **Not yet**: exit with "Merge the plans PR, then run `arn-code-batch-implement` when ready."
 
 ## Error Handling
 
 - Push fails: report error, offer retry
 - PR creation fails (gh/bkt not authenticated): report error, suggest manual PR creation
-- Plans PR merge check: the AskUserQuestion is trust-based (we trust the user). If they say merged but it isn't, batch-implement's pre-flight will catch it (plans won't be on main).
+- Plans PR merge check: the user prompt is trust-based (we trust the user). If they say merged but it isn't, batch-implement's pre-flight will catch it (plans won't be on main).

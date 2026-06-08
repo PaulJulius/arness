@@ -1,0 +1,31 @@
+{
+  "name": "arn-code",
+  "version": "3.7.0",
+  "description": "Structured, artifact-driven development pipeline for Codex. Plan, implement, review, and ship features with three ceremony tiers.",
+  "author": {
+    "name": "Fryderyk Benigni",
+    "url": "https://github.com/fredcallagan"
+  },
+  "repository": "https://github.com/AppsVortex/arness",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Arness Code",
+    "shortDescription": "Plan, implement, review, and ship code changes.",
+    "longDescription": "Arness Code provides an artifact-driven development pipeline for Codex. It preserves specs, plans, task lists, reviews, and shipping records under .arness while guiding work through swift, standard, and thorough ceremony tiers.",
+    "developerName": "AppsVortex",
+    "category": "Development",
+    "capabilities": [
+      "Feature planning",
+      "Implementation workflows",
+      "Code review",
+      "Release preparation",
+      "Project documentation"
+    ],
+    "defaultPrompt": [
+      "Plan a feature or fix with Arness Code.",
+      "Implement the current Arness plan.",
+      "Review and ship this Arness change."
+    ]
+  }
+}

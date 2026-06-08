@@ -19,16 +19,16 @@ This is the quality gate between execution and documentation. A PASS or WARN ver
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change review is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Change review is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra plans directory** -- where structured plan projects live (default: `.arness/infra-plans`)
 - **Infra specs directory** -- where change specs are stored (default: `.arness/infra-specs`)
 - **Providers** -- cloud providers configured
 - **Environments** -- environment names in promotion order
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Cost threshold** -- monthly budget limit for cost compliance evaluation (default: `100`)
 
 ### Locate the Completed Change Project
@@ -43,7 +43,7 @@ For each project found, read the PROGRESS_TRACKER.json and filter to projects wh
 
 **If one eligible project found:** Auto-select it.
 **If multiple eligible projects found:** Present the list with project names, phase completion status, and overall status. Ask the user to select.
-**If no eligible project found:** Inform the user: "No completed change projects found. Run `/arn-infra-execute-change` to execute a change plan first."
+**If no eligible project found:** Inform the user: "No completed change projects found. Run `arn-infra-execute-change` to execute a change plan first."
 
 ---
 
@@ -68,7 +68,7 @@ Read all artifacts from the selected project:
 4. **INTRODUCTION.md:** Read `<project-dir>/INTRODUCTION.md` for cost budget and security requirements
 
 **If any phase reports are missing (some phases not executed):**
-Warn: "Phase [N] has not been executed yet. The review will cover completed phases only. Consider running `/arn-infra-execute-change` to complete all phases before reviewing."
+Warn: "Phase [N] has not been executed yet. The review will cover completed phases only. Consider running `arn-infra-execute-change` to complete all phases before reviewing."
 
 Present a review scope summary:
 "**Review scope:**
@@ -77,7 +77,7 @@ Present a review scope summary:
 - **Environments covered:** [list]
 - **Resources deployed:** [count]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Proceed with review?"**
 
@@ -143,7 +143,7 @@ full post-execution review (not a single-phase gate check).
 
 Receive the structured review output from the agent.
 
-> Read the report template: `Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/report-templates/default/INFRA_REVIEW_REPORT_TEMPLATE.json`
+> Read the report template: `Read <arn-infra-plugin-root>/skills/arn-infra-save-plan/report-templates/default/INFRA_REVIEW_REPORT_TEMPLATE.json`
 
 Write `INFRA_REVIEW_REPORT.json` to the project's `reports/` directory following the loaded template schema.
 
@@ -194,16 +194,16 @@ Present the verdict with plain-language explanations. For each finding:
 "All quality checks passed. Your infrastructure change is complete.
 
 **Next steps:**
-1. **Document** -- Run `/arn-infra-document-change` to generate runbooks, changelog, and architecture docs
-2. **Monitor** -- Run `/arn-infra-monitor` to set up observability"
+1. **Document** -- Run `arn-infra-document-change` to generate runbooks, changelog, and architecture docs
+2. **Monitor** -- Run `arn-infra-monitor` to set up observability"
 
 **If verdict is WARN:**
 "Quality review passed with warnings. Review the [N] warnings in the report.
 
 **Next steps:**
 1. **Address warnings** -- Review the warnings and decide which to fix
-2. **Document** -- Run `/arn-infra-document-change` to generate documentation (warnings will be noted)
-3. **Monitor** -- Run `/arn-infra-monitor` to set up observability"
+2. **Document** -- Run `arn-infra-document-change` to generate documentation (warnings will be noted)
+3. **Monitor** -- Run `arn-infra-monitor` to set up observability"
 
 **If verdict is NEEDS_FIXES:**
 "Quality review found [N] issues that need to be fixed.
@@ -213,15 +213,15 @@ Present the verdict with plain-language explanations. For each finding:
 2. [Action 2 -- specific fix with affected resource]
 ...
 
-**After fixing:** Re-execute the affected phase(s) with `/arn-infra-execute-change`, then re-run `/arn-infra-review-change` to verify the fixes."
+**After fixing:** Re-execute the affected phase(s) with `arn-infra-execute-change`, then re-run `arn-infra-review-change` to verify the fixes."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Project not found:** Suggest running `/arn-infra-save-plan` to create a structured project. Stop.
-- **No phase reports found:** Suggest running `/arn-infra-execute-change` to execute the plan. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Project not found:** Suggest running `arn-infra-save-plan` to create a structured project. Stop.
+- **No phase reports found:** Suggest running `arn-infra-execute-change` to execute the plan. Stop.
 - **Agent invocation fails:** Report the error. Offer to retry the review. If retry also fails, present the raw phase report data and suggest manual review.
 - **Incomplete phase reports (some phases not executed):** Warn the user and proceed with available data. Note the incomplete coverage in the review report.
 - **Review report write fails:** Print the review findings in the conversation so the user can capture them. Warn about the write failure.

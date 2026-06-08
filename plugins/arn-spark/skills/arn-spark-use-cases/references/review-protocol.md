@@ -33,7 +33,7 @@ Focus areas:
 - Is scope appropriate -- no use cases that exceed the product concept's boundaries?
 - Do the use case levels make sense (are subfunctions actually reused, are user goals actually what a user sits down to do)?
 
-**File output:** The business reviewer writes its review to `[use-cases-dir]/reviews/round-N-business-review.md` using the expert review template (`${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`). The skill tells the agent the exact file path and template path. The agent returns a brief summary in conversation — the full review is in the file.
+**File output:** The business reviewer writes its review to `[use-cases-dir]/reviews/round-N-business-review.md` using the expert review template (`<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`). The skill tells the agent the exact file path and template path. The agent returns a brief summary in conversation — the full review is in the file.
 
 **Step 3: Flow reviewer reviews all use cases** (1 invocation)
 

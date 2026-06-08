@@ -7,7 +7,7 @@ This template defines the structure for the `visual-strategy.md` document writte
 ```markdown
 # Visual Testing Strategy
 
-Defined by `/arn-spark-visual-strategy` on [date].
+Defined by `arn-spark-visual-strategy` on [date].
 
 ## Summary
 
@@ -126,7 +126,7 @@ Defined by `/arn-spark-visual-strategy` on [date].
 1. [e.g., Native window chrome and transparency effects (Layer 2 deferred)]
 2. [e.g., Sub-pixel rendering differences between Linux and macOS]
 3. [e.g., Dark mode variants not yet baselined]
-- Deferred layers can be activated with `/arn-spark-visual-readiness` once their activation criteria are met.
+- Deferred layers can be activated with `arn-spark-visual-readiness` once their activation criteria are met.
 
 ## Updating Baselines
 

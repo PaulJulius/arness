@@ -26,7 +26,7 @@ arn-code-batch-planning -> **arn-code-batch-implement** (pre-flight -> spawn wor
 
 ### Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. Extract from `## Arness`:
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. Extract from `## Arness`:
 
 - **Plans directory** -- base path where project plans are saved
 - **Code patterns** -- path to the directory containing stored pattern documentation
@@ -34,15 +34,15 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast
 
 ### Step 1: Pre-flight Validation
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-implement/references/preflight-validation.md` and follow its procedure. The preflight reference handles scanning and returns a structured result. Based on that result:
+Read `<arn-code-plugin-root>/skills/arn-code-batch-implement/references/preflight-validation.md` and follow its procedure. The preflight reference handles scanning and returns a structured result. Based on that result:
 
-If **zero pending plans found**: inform the user: "No pending plans found. Run `/arn-code-batch-planning` to plan features first." Exit.
+If **zero pending plans found**: inform the user: "No pending plans found. Run `arn-code-batch-planning` to plan features first." Exit.
 
-If **Git is `no`** in `## Arness`: "Batch implementation requires git for worktree-based parallel execution. Run `/arn-implementing` to implement features one at a time instead." STOP.
+If **Git is `no`** in `## Arness`: "Batch implementation requires git for worktree-based parallel execution. Run `arn-implementing` to implement features one at a time instead." STOP.
 
 If **gh/bkt auth not available** (based on Platform): warn that PRs cannot be created — workers will commit but skip PR creation.
 
-If **uncommitted changes detected**: warn and suggest committing first. Ask (using `AskUserQuestion`):
+If **uncommitted changes detected**: warn and suggest committing first. Ask the user:
 
 > **Uncommitted changes detected. Commit or stash before launching batch?**
 > 1. Proceed anyway
@@ -50,7 +50,7 @@ If **uncommitted changes detected**: warn and suggest committing first. Ask (usi
 
 If Cancel, exit.
 
-If **not on main/master**: plans should be on main (merged via the plans PR from batch-planning). Ask (using `AskUserQuestion`):
+If **not on main/master**: plans should be on main (merged via the plans PR from batch-planning). Ask the user:
 
 > **You're on branch [name], but plans should be on main. Checkout main?**
 > 1. Checkout main — run `git checkout main && git pull`
@@ -85,7 +85,7 @@ Inform the user about worktree location: "Workers run in pre-created worktrees a
 
 ### Step 3: Launch Confirmation
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Launch [N] parallel implementations?**
 > 1. Launch all
@@ -93,14 +93,14 @@ Ask (using `AskUserQuestion`):
 > 3. Cancel
 
 - **Launch all** -- proceed with all pending features.
-- **Select subset** -- present a multi-select (using `AskUserQuestion` with `multiSelect: true`) listing all pending features by name. Proceed with selected features only.
+- **Select subset** -- present a multi-select (using `user prompt` with `multiSelect: true`) listing all pending features by name. Proceed with selected features only.
 - **Cancel** -- exit.
 
 ### Step 4: Pre-create Worktrees and Spawn Workers
 
 The Agent tool's built-in `isolation: "worktree"` has known silent-failure modes (see upstream issues anthropics/claude-code#27881 and #39886) where concurrent spawns can skip worktree creation entirely and run agents directly in the main checkout. To eliminate this risk, the orchestrator pre-creates every worktree itself via `git worktree add`, then spawns agents **without** `isolation` and passes the absolute worktree path in the prompt.
 
-Read the worker instructions template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-implement/references/worker-instructions.md`.
+Read the worker instructions template from `<arn-code-plugin-root>/skills/arn-code-batch-implement/references/worker-instructions.md`.
 
 #### Step 4a: Compute Worktree Slugs
 
@@ -215,10 +215,10 @@ Determine the suggested default for the prompt:
 - Total lint errors > 0 OR test failures > 0 → suggest **Address now**
 - Otherwise (warnings/infos/unrelated only) → suggest **File a backlog issue and proceed**
 
-Then ask (using `AskUserQuestion`):
+Then ask (using `user prompt`):
 
 > **Workers reported \<E\> lint errors, \<W\> warnings, \<I\> infos, \<U\> unrelated test failures, \<F\> hard test failures. Suggested: \<Address now | File a backlog issue and proceed\>. How would you like to proceed?**
-> 1. **Address now** — cancel batch-merge for now, fix issues per worktree (each worker's PR is already open), then re-run `/arn-code-batch-merge` when ready
+> 1. **Address now** — cancel batch-merge for now, fix issues per worktree (each worker's PR is already open), then re-run `arn-code-batch-merge` when ready
 > 2. **File a backlog issue and proceed** — create one aggregated tracker issue with per-feature breakdown, then continue to Step 7
 > 3. **Proceed with documented reason** — continue to Step 7; rationale will be appended to PR descriptions when batch-merge runs
 
@@ -230,17 +230,17 @@ Apply the choice:
   - For `jira`: use the Atlassian MCP server with the same title and body
   - For `none`: warn the user that no issue tracker is configured and fall back to choice (3)
   Then proceed to Step 7.
-- **(3) Proceed with documented reason** — prompt the user for a one-line rationale (free-form text, NOT `AskUserQuestion` — this is open-ended per CLAUDE.md "User Interaction Convention"). Store the rationale for use in Step 7. Proceed to Step 7.
+- **(3) Proceed with documented reason** — prompt the user for a one-line rationale (free-form text, NOT `user prompt` — this is open-ended per CLAUDE.md "User Interaction Convention"). Store the rationale for use in Step 7. Proceed to Step 7.
 
 ---
 
 ### Step 7: Handoff
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Batch implementation complete. What next?**
 > 1. Merge PRs
 > 2. Not yet
 
-- **Merge PRs** -- invoke `Skill: arn-code:arn-code-batch-merge`. If a rationale was captured in Step 6.5 (option 3 was chosen), pass it through so batch-merge can append "Lint/test exception: \<rationale\>" to each PR description.
-- **Not yet** -- inform: "Run `/arn-code-batch-merge` when ready." Exit. If a rationale was captured in Step 6.5, also note: "Findings rationale captured: \<rationale\>. Re-running `/arn-code-batch-merge` will not preserve this — pass it again at merge time if needed."
+- **Merge PRs** -- invoke Codex skill `arn-code-batch-merge`. If a rationale was captured in Step 6.5 (option 3 was chosen), pass it through so batch-merge can append "Lint/test exception: \<rationale\>" to each PR description.
+- **Not yet** -- inform: "Run `arn-code-batch-merge` when ready." Exit. If a rationale was captured in Step 6.5, also note: "Findings rationale captured: \<rationale\>. Re-running `arn-code-batch-merge` will not preserve this — pass it again at merge time if needed."

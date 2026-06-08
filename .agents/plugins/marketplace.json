@@ -1,0 +1,44 @@
+{
+  "name": "arn-marketplace",
+  "interface": {
+    "displayName": "Arness"
+  },
+  "plugins": [
+    {
+      "name": "arn-spark",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arn-spark"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "arn-code",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arn-code"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "arn-infra",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arn-infra"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}

@@ -20,12 +20,12 @@ This skill focuses on initial monitoring setup and critical alerts. It does NOT 
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Monitoring setup is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Monitoring setup is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- cloud providers in use
 - **Providers config** -- path to `providers.md` for per-provider details
 - **Default IaC tool** -- for generating monitoring IaC
@@ -170,7 +170,7 @@ Set up alerts for critical conditions:
 
 **Notification channels:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Where should alerts be sent?"**
 
@@ -260,7 +260,7 @@ Present the generated monitoring configuration for user approval:
 [generated content]
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to proceed with the monitoring configuration?"**
 
@@ -287,19 +287,19 @@ Upon approval, write the files.
 
 "Monitoring is configured. Here is the recommended path:
 
-1. **Deploy monitoring:** Run `/arn-infra-deploy` to deploy the monitoring configuration alongside your infrastructure
+1. **Deploy monitoring:** Run `arn-infra-deploy` to deploy the monitoring configuration alongside your infrastructure
 2. **Verify alerts:** After deployment, trigger a test alert to confirm notifications work
 3. **Review thresholds:** After running for a few days, review alert thresholds based on actual usage patterns
-4. **Set up secrets:** Run `/arn-infra-secrets` if your monitoring requires API keys (e.g., Datadog, PagerDuty)
+4. **Set up secrets:** Run `arn-infra-secrets` if your monitoring requires API keys (e.g., Datadog, PagerDuty)
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No providers configured:** Suggest running `/arn-infra-init` to configure providers. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No providers configured:** Suggest running `arn-infra-init` to configure providers. Stop.
 - **No deployed resources yet:** Proceed with monitoring IaC generation. The monitoring resources will be deployed alongside the infrastructure. Note: "Health check alerts will activate once services are deployed."
 - **Specialist agent fails:** Report the error. Fall back to generating basic monitoring configurations directly using the loaded reference patterns. Present with a note: "Generated using fallback patterns -- review carefully."
 - **Specialist agent returns empty output:** Inform the user and retry with additional context. If retry fails, generate minimal monitoring with health check alerts only.

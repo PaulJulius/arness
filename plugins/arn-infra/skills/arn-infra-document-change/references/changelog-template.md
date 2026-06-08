@@ -126,7 +126,7 @@ Each changelog entry follows this format. Entries are prepended to `CHANGELOG.md
 
 ### 10. Review Verdict
 - The overall verdict from `arn-infra-review-change`.
-- If the review has not been run, note: "Not reviewed -- run `/arn-infra-review-change`"
+- If the review has not been run, note: "Not reviewed -- run `arn-infra-review-change`"
 - Key findings are summarized for quick reference.
 
 ---

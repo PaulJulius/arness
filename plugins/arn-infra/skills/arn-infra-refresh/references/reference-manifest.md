@@ -106,16 +106,16 @@ Comprehensive infrastructure guides with provider feature lists, tool capabiliti
 
 ## Source Path Convention
 
-All source paths in this manifest are relative to `${CLAUDE_PLUGIN_ROOT}/skills/`. The full plugin path for any file is:
+All source paths in this manifest are relative to `<arn-infra-plugin-root>/skills/`. The full plugin path for any file is:
 
 ```
-${CLAUDE_PLUGIN_ROOT}/skills/<source-path>
+<arn-infra-plugin-root>/skills/<source-path>
 ```
 
 For example, `arn-infra-discover/references/mcp-registry.md` resolves to:
 
 ```
-${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-discover/references/mcp-registry.md
+<arn-infra-plugin-root>/skills/arn-infra-discover/references/mcp-registry.md
 ```
 
 When externalized to the project-local override directory, the file is copied to:

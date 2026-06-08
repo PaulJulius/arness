@@ -47,7 +47,7 @@ If any of these are missing, infer what you can and proceed.
 Before starting analysis, read the pattern documentation schema:
 
 ```
-Read ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md
+Read `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md`
 ```
 
 This schema defines the exact structure your output must follow. Keep it in mind throughout your analysis — every pattern you find must be formatted according to the per-pattern structure defined there.
@@ -229,7 +229,7 @@ utility libraries, simple scripts with no auth/API/user input).
 
 ## Output Format
 
-Output must follow the pattern file schemas. Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md` for the exact format specification.
+Output must follow the pattern file schemas. Read `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md` for the exact format specification.
 
 Your output format is shared with the `arn-code-pattern-architect` agent. Both agents must produce structurally identical output so downstream consumers can use either interchangeably. For projects with a user-facing interface (frontend, fullstack, cli, tui, desktop, mobile), both agents produce a fourth `# UI Patterns` section including a `## Sketch Strategy`. For projects with a security surface, both agents produce a fifth `# Security Patterns` section.
 

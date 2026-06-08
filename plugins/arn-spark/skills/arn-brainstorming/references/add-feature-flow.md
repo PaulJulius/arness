@@ -44,7 +44,7 @@ Skipping a step is allowed but has consequences:
 
    The original locked snapshot (v[N]) will be preserved alongside the new lock. Ready to proceed?"
 
-3. Ask (using `AskUserQuestion`):
+3. Ask the user:
 
    > **How would you like to proceed with adding this feature?**
    > 1. **Proceed with all steps** (Recommended) — Use cases, prototype, extract, and re-lock if applicable
@@ -67,7 +67,7 @@ Add Feature: USE-CASES --> prototype --> extract [→ re-lock]
 
 Invoke the use-cases skill in resume mode. The skill detects the existing `use-cases/` directory and offers to add new use cases.
 
-> `Skill: arn-spark:arn-spark-use-cases`
+> Codex skill `arn-spark-use-cases`
 
 Pass context: "The user wants to add a new feature: [user's description from AF2]. Resume the existing use case catalog and add use case(s) for this new behavior."
 
@@ -83,7 +83,7 @@ Add Feature: use-cases --> PROTOTYPE --> extract [→ re-lock]
 
 Invoke the clickable-prototype skill. It detects existing versions and offers to iterate. The lock does NOT prevent this — the locked snapshot is in `prototypes/locked/clickable-v[N]/`, while the skill creates a new version in `prototypes/clickable/v[N+1]/`.
 
-> `Skill: arn-spark:arn-spark-clickable-prototype`
+> Codex skill `arn-spark-clickable-prototype`
 
 Pass context: "Iterate on the current clickable prototype to add screens for the new feature: [user's description]. New use case(s) added: [UC-NNN list from AF3]."
 
@@ -99,7 +99,7 @@ Add Feature: use-cases --> prototype --> EXTRACT [→ re-lock]
 
 Invoke the feature-extract skill. It detects the existing feature backlog and offers to add features.
 
-> `Skill: arn-spark:arn-spark-feature-extract`
+> Codex skill `arn-spark-feature-extract`
 
 Pass context: "Add a new feature to the backlog for: [user's description]. New use case(s): [UC-NNN list]. New prototype screens: [screen list from AF4]."
 
@@ -115,7 +115,7 @@ Add Feature: use-cases --> prototype --> extract --> RE-LOCK
 
 The prototype was previously locked at v[N]. A new version v[N+1] has been created and validated. Re-lock to update the reference artifact.
 
-> `Skill: arn-spark:arn-spark-prototype-lock`
+> Codex skill `arn-spark-prototype-lock`
 
 The lock skill detects the existing lock and offers to replace it. It will:
 - Create a new frozen snapshot at `prototypes/locked/clickable-v[N+1]/`
@@ -140,16 +140,16 @@ Present what was done:
 - **Prototype lock:** Updated to v[N+1] (or "not locked" / "skipped")
 
 Offer next steps:
-- "Run `/arn-code-pick-issue` to pick this feature for implementation"
-- "Run `/arn-code-feature-spec F-NNN` to start specifying this feature"
-- "Run `/arn-brainstorming` again to add another feature"
+- "Run `arn-code-pick-issue` to pick this feature for implementation"
+- "Run `arn-code-feature-spec F-NNN` to start specifying this feature"
+- "Run `arn-brainstorming` again to add another feature"
 
 ## Error Handling
 
-- **Use-cases skill fails:** Ask (using `AskUserQuestion`): **"Use-cases skill failed. How would you like to proceed?"** 1. Retry / 2. Skip use cases and continue to prototype / 3. Abort. If skip: note that prototype and extract will proceed without UC grounding.
-- **Clickable-prototype skill fails:** Ask (using `AskUserQuestion`): **"Clickable-prototype skill failed. How would you like to proceed?"** 1. Retry / 2. Skip prototype and continue to extract / 3. Abort. If skip: note that extract will proceed without new screens, and re-lock will be skipped.
-- **Feature-extract skill fails:** Ask (using `AskUserQuestion`): **"Feature-extract skill failed. How would you like to proceed?"** 1. Retry / 2. Create the feature file manually / 3. Abort.
-- **Prototype-lock skill fails during re-lock:** Ask (using `AskUserQuestion`): **"Re-lock failed. How would you like to proceed?"** 1. Retry / 2. Skip re-lock / 3. Abort. If skip: Inform "The new prototype v[N+1] was created successfully but is not locked. Run `/arn-spark-prototype-lock` manually when ready."
+- **Use-cases skill fails:** Ask the user: **"Use-cases skill failed. How would you like to proceed?"** 1. Retry / 2. Skip use cases and continue to prototype / 3. Abort. If skip: note that prototype and extract will proceed without UC grounding.
+- **Clickable-prototype skill fails:** Ask the user: **"Clickable-prototype skill failed. How would you like to proceed?"** 1. Retry / 2. Skip prototype and continue to extract / 3. Abort. If skip: note that extract will proceed without new screens, and re-lock will be skipped.
+- **Feature-extract skill fails:** Ask the user: **"Feature-extract skill failed. How would you like to proceed?"** 1. Retry / 2. Create the feature file manually / 3. Abort.
+- **Prototype-lock skill fails during re-lock:** Ask the user: **"Re-lock failed. How would you like to proceed?"** 1. Retry / 2. Skip re-lock / 3. Abort. If skip: Inform "The new prototype v[N+1] was created successfully but is not locked. Run `arn-spark-prototype-lock` manually when ready."
 - **User cancels mid-flow:** Show what was completed so far. Inform: "Partial updates are preserved. Run the wizard again to continue."
 - **No clickable prototype exists:** This mode requires a completed clickable prototype. If not found, inform: "Add Feature mode requires a completed clickable prototype. Run the full greenfield wizard first." Redirect to normal wizard flow.
-- **Lock exists but PreToolUse hook blocks prototype iteration:** This should not happen because the lock protects the snapshot directory, not the working prototype directory. If it does occur, the hook guard script may have overly broad path matching. Inform: "The prototype lock hook is blocking iteration. Run `/arn-spark-prototype-lock` with a narrower scope, or temporarily remove the hook from `.claude/settings.json`."
+- **Lock exists but PreToolUse hook blocks prototype iteration:** This should not happen because the lock protects the snapshot directory, not the working prototype directory. If it does occur, the hook guard script may have overly broad path matching. Inform: "The prototype lock hook is blocking iteration. Run `arn-spark-prototype-lock` with a narrower scope, or temporarily remove the hook from `.claude/settings.json`."

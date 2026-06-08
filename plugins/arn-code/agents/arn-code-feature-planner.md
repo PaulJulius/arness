@@ -109,7 +109,7 @@ Group the work into logical phases. Each phase should produce a **testable incre
 
 #### Complexity Assessment per Phase
 
-Rate each phase against the 6 criteria from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/complexity-criteria.md`:
+Rate each phase against the 6 criteria from `<arn-code-plugin-root>/skills/arn-code-swift/references/complexity-criteria.md`:
 
 1. **File count** — simple: 1-3 files; moderate: 4-8; complex: 9+
 2. **Architectural changes** — simple: none; moderate: minor extensions; complex: new abstractions or patterns
@@ -128,7 +128,7 @@ Rate each phase against the 6 criteria from `${CLAUDE_PLUGIN_ROOT}/skills/arn-co
 - `moderate` → "5 files in 2 modules; extends existing event-handler pattern with one new variant"
 - `simple` → "2 files in single module; adds test for existing utility"
 
-The `arn-code-plan` skill consumes the per-phase complexity to surface it in the plan summary and, if `complex` AND the user's profile is not `all-opus`, to gate an executor model upgrade per `pipeline.complex-phase-upgrade` (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`). Be honest in your ratings — under-rating cheats the user out of the upgrade offer; over-rating creates unnecessary cost.
+The `arn-code-plan` skill consumes the per-phase complexity to surface it in the plan summary and, if `complex` AND the user's profile is not `all-opus`, to gate an executor model upgrade per `pipeline.complex-phase-upgrade` (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`). Be honest in your ratings — under-rating cheats the user out of the upgrade offer; over-rating creates unnecessary cost.
 
 ### 4. Write the Plan
 

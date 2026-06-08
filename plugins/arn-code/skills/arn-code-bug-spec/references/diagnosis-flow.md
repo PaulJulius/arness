@@ -76,7 +76,7 @@ Otherwise, answer these six questions internally:
      - Tests to **add** (coverage gaps the investigator identified)
      - Tests to **verify** (existing tests that should still pass as regression check)
 
-2. **Write the fix plan:** Invoke `arn-code-planner` with the bugfix-plan-template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bug-spec/references/bugfix-plan-template.md` and the inline proposal context. Write to `<project-folder>/FIX_PLAN.md`. Present the plan to the user for review before proceeding.
+2. **Write the fix plan:** Invoke `arn-code-planner` with the bugfix-plan-template at `<arn-code-plugin-root>/skills/arn-code-bug-spec/references/bugfix-plan-template.md` and the inline proposal context. Write to `<project-folder>/FIX_PLAN.md`. Present the plan to the user for review before proceeding.
 
 3. **Create a task list** (via TaskCreate/TaskUpdate) with these tasks:
    - **Task 1: Implement fix** -- apply code changes per the plan
@@ -84,7 +84,7 @@ Otherwise, answer these six questions internally:
    - **Task 3: Verify** -- run the test suite, confirm all tests pass
    - **Task 4: Write report** -- read BUGFIX_REPORT_TEMPLATE.json from the template path configured in `## Arness`, populate with fix details, test results, and outcome
 
-4. Ask (using `AskUserQuestion`):
+4. Ask the user:
 
    **"How would you like to execute the fix?"**
 
@@ -106,7 +106,7 @@ Otherwise, answer these six questions internally:
 
 6. **Simplification (optional):**
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"Would you like to check the fix for simplification opportunities?"**
 
@@ -114,5 +114,5 @@ Otherwise, answer these six questions internally:
    1. **Yes** -- Check for simplification opportunities before proceeding
    2. **Skip** -- Proceed to next steps
 
-   If **Yes**: invoke `Skill: arn-code:arn-code-simplify` (auto-detects bugfix scope from BUGFIX_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<project-folder>/reports/SIMPLIFICATION_REPORT.json`.
+   If **Yes**: invoke Codex skill `arn-code-simplify` (auto-detects bugfix scope from BUGFIX_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<project-folder>/reports/SIMPLIFICATION_REPORT.json`.
    If **Skip**: proceed to next steps.

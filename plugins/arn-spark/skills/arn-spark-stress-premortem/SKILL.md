@@ -29,14 +29,14 @@ This technique surfaces failure modes that optimism obscures. The product concep
 
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured **Vision directory** and **Reports directory** paths
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the Reports directory does not exist, create it with `mkdir -p <reports-dir>/stress-tests/`
 
 ### Data Availability
 
 | Artifact | Status | Location | Fallback |
 |----------|--------|----------|----------|
-| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `/arn-spark-discover` |
+| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `arn-spark-discover` |
 | Product pillars | ENRICHES | Product Pillars section of product concept | Investigation proceeds but pillar-as-evidence analysis is less targeted |
 | Competitive landscape | ENRICHES | Competitive Landscape section of product concept | Root Cause C (market misread) is less grounded in competitive dynamics |
 | Target personas | ENRICHES | Target Personas section of product concept | Root Cause A and C are less grounded in persona-specific failure scenarios |
@@ -45,8 +45,8 @@ This technique surfaces failure modes that optimism obscures. The product concep
 
 If no product concept exists:
 
-Ask (using `AskUserQuestion`): **"No product concept found. The pre-mortem needs a product concept to investigate. How would you like to proceed?"**
-1. Run `/arn-spark-discover` to create a product concept first
+Ask the user: **"No product concept found. The pre-mortem needs a product concept to investigate. How would you like to proceed?"**
+1. Run `arn-spark-discover` to create a product concept first
 2. Describe the product now (I will conduct the pre-mortem from your description)
 3. Skip the pre-mortem stress test
 
@@ -57,8 +57,8 @@ If the user chooses option 2, collect a product description and proceed with a r
 ### Step 1: Load References
 
 Load the pre-mortem protocol and report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-premortem/references/premortem-protocol.md`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-premortem/references/premortem-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-premortem/references/premortem-protocol.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-premortem/references/premortem-report-template.md`
 
 ### Step 2: Read Product Concept and Extract Context
 
@@ -151,7 +151,7 @@ Present a summary to the user:
 **Recommended concept updates:** [N] recommendations ([X] Add, [Y] Modify, [Z] Remove)
 **Unresolved questions:** [N]
 
-This report will be used by `/arn-spark-concept-review` to propose changes to the product concept."
+This report will be used by `arn-spark-concept-review` to propose changes to the product concept."
 
 ## Agent Invocation Guide
 
@@ -169,7 +169,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 - **Forensic investigator produces overlapping root causes:** Retry specifying that each root cause must have a distinct causal mechanism. If two root causes share the same first link in the causal chain, they are one root cause.
 
 - **Agent invocation fails entirely:** Retry once with a simplified prompt. If retry fails:
-  Ask (using `AskUserQuestion`): **"Agent invocation failed. How would you like to proceed?"**
+  Ask the user: **"Agent invocation failed. How would you like to proceed?"**
   1. Retry
   2. Skip this step
   3. Abort

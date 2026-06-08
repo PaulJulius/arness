@@ -41,7 +41,7 @@ Read the configured directories from the `## Arness` section (use defaults if no
 - **Vision directory** for the output (default: `.arness/vision`)
 - **Visual grounding directory** (default: `.arness/visual-grounding`)
 
-If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 
 > All references to `use-cases/`, `prototypes/`, and `visual-grounding/` in this skill refer to the configured directories determined above.
 
@@ -153,7 +153,7 @@ The UX specialist returns:
 - Visual target validation
 - UX complexity assessment (some features look simple but have complex interaction patterns)
 
-Merge the two expert outputs into a consolidated feature list. Then enrich each feature with the remaining fields defined in `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-feature-extract/references/feature-entry-template.md` — specifically: technical notes (from architecture vision and spike results), acceptance criteria (from journey steps, prototype behavior, and use case postconditions), use case context (references with step ranges; postconditions and business rules referenced, not inlined), prototype and showcase references (matched to specific screens and sections), component compilation (library + product-specific from both experts), and debate insights (from all debate report sources). The template provides field definitions, examples, and spec readiness criteria.
+Merge the two expert outputs into a consolidated feature list. Then enrich each feature with the remaining fields defined in `<arn-spark-plugin-root>/skills/arn-spark-feature-extract/references/feature-entry-template.md` — specifically: technical notes (from architecture vision and spike results), acceptance criteria (from journey steps, prototype behavior, and use case postconditions), use case context (references with step ranges; postconditions and business rules referenced, not inlined), prototype and showcase references (matched to specific screens and sections), component compilation (library + product-specific from both experts), and debate insights (from all debate report sources). The template provides field definitions, examples, and spec readiness criteria.
 
 ### Step 2b: Gap Resolution (Collaborative)
 
@@ -249,7 +249,7 @@ Enter a conversation loop for the user to refine the backlog:
 | "What am I missing?" | Invoke `arn-spark-product-strategist` with the current list and journey definitions to identify gaps |
 | "These priorities look wrong" | Invoke `arn-spark-product-strategist` for re-prioritization with the user's feedback |
 | "Split F-010 into smaller features" | Decompose with the user's guidance, distribute journey steps across the new features |
-| "Keep F-005 as one feature" (UX says don't split) | If XL: add a `## Decomposition Hints` section to the feature with suggested implementation sub-features, journey segment mapping, and component allocation per the feature entry template. Update spec readiness to Yes if all other criteria are met. Explain: "F-005 will stay as one backlog entry. When you run `/arn-code-feature-spec` on it, it will be decomposed into sub-feature specs (F-005.1, F-005.2, ...) with separate tracker rows and issue tracker entries." |
+| "Keep F-005 as one feature" (UX says don't split) | If XL: add a `## Decomposition Hints` section to the feature with suggested implementation sub-features, journey segment mapping, and component allocation per the feature entry template. Update spec readiness to Yes if all other criteria are met. Explain: "F-005 will stay as one backlog entry. When you run `arn-code-feature-spec` on it, it will be decomposed into sub-feature specs (F-005.1, F-005.2, ...) with separate tracker rows and issue tracker entries." |
 | "Merge F-003 and F-004" | Combine, consolidate journey references and behavior descriptions |
 | "The interaction for F-002 is wrong" | Update the UI behavior description based on user's correction |
 | "What does F-005 look like in the prototype?" | Reference the clickable prototype journey screenshots and showcase screens for that feature |
@@ -275,7 +275,7 @@ If sizing concerns were already resolved during Step 4 refinement (user already 
 - If the UX specialist or user determines that an XL feature is one coherent user-facing capability that should not be split in the backlog, the feature can remain as a single backlog entry.
 - Add a `## Decomposition Hints` section to the feature per the feature entry template. The hints must include at least 2 suggested sub-features with journey segment mappings, component allocations, a split rationale, and inter-sub-feature dependencies.
 - Update the spec readiness assessment: the feature is ready for spec if all other criteria are met AND the decomposition hints section is present.
-- Inform the user: "F-NNN will remain as one entry in the backlog. When you run `/arn-code-feature-spec` on it, it will be decomposed into [N] sub-feature specs (F-NNN.1, F-NNN.2, ...) with separate issue tracker entries and Feature Tracker rows. Each sub-feature will be a separate pickable and shippable work item."
+- Inform the user: "F-NNN will remain as one entry in the backlog. When you run `arn-code-feature-spec` on it, it will be decomposed into [N] sub-feature specs (F-NNN.1, F-NNN.2, ...) with separate issue tracker entries and Feature Tracker rows. Each sub-feature will be a separate pickable and shippable work item."
 
 **Too thin (should merge):**
 - Any S-complexity feature that is a minor UI change or single interaction step might not warrant its own spec. Consider merging it into a parent feature.
@@ -294,8 +294,8 @@ Present sizing concerns to the user and resolve before writing.
 When the user is ready:
 
 1. Read both templates:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-feature-extract/references/feature-entry-template.md`
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-feature-extract/references/feature-backlog-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-feature-extract/references/feature-entry-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-feature-extract/references/feature-backlog-template.md`
 
 2. Create the features directory: `[vision-dir]/features/`
 
@@ -346,7 +346,7 @@ When the user is ready:
 
 3. If Issue tracker is `github` or `jira`:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like to upload these [N] features as issues to [GitHub/Jira]?"**
 
@@ -359,7 +359,7 @@ Options:
 5. If the user accepts:
 
    a. **Ensure labels exist:**
-      - If GitHub: Create labels if missing using `gh label create --force`. Reference `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-init/references/platform-labels.md` for label definitions (name, color, description). Labels needed: `arness-feature-issue` + priority labels (`arness-priority-high`, `arness-priority-medium`, `arness-priority-low`).
+      - If GitHub: Create labels if missing using `gh label create --force`. Reference `<arn-spark-plugin-root>/skills/arn-spark-init/references/platform-labels.md` for label definitions (name, color, description). Labels needed: `arness-feature-issue` + priority labels (`arness-priority-high`, `arness-priority-medium`, `arness-priority-low`).
       - If Jira: No label creation needed (labels are freeform and created implicitly).
 
    b. **Priority mapping:**
@@ -378,7 +378,7 @@ Options:
       - Order features by implementation sequence (Foundation first, then Core, Enhancement, Polish; within each phase, by dependency order)
       - For each batch of 4-5 features:
         - Spawn Task agents in parallel (one per feature in the batch)
-        - Each Task agent reads the individual feature file (`[vision-dir]/features/F-NNN-kebab-name.md`) and formats the issue body using the **Issue Body Template** section in `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-feature-extract/references/feature-backlog-template.md`, constructing repo links using the base URL. Then creates the issue:
+        - Each Task agent reads the individual feature file (`[vision-dir]/features/F-NNN-kebab-name.md`) and formats the issue body using the **Issue Body Template** section in `<arn-spark-plugin-root>/skills/arn-spark-feature-extract/references/feature-backlog-template.md`, constructing repo links using the base URL. Then creates the issue:
           - **If GitHub:**
             ```bash
             gh issue create --title "F-NNN: Feature Name" --body "<issue-body>" --label "arness-feature-issue,arness-priority-<level>"
@@ -410,25 +410,25 @@ Options:
 | F-002 | [Name] | #43 | Must-have |
 | ... | ... | ... | ... |
 
-Dependencies are noted in the issue bodies. Use `/arn-code-pick-issue` to work through these features in dependency order."
+Dependencies are noted in the issue bodies. Use `arn-code-pick-issue` to work through these features in dependency order."
 
 ### Step 8: Recommend Next Steps
 
 "Your feature backlog is ready. Next steps:
 
-1. **Set up visual testing:** Run `/arn-spark-visual-strategy` to define visual regression testing against the prototype baselines. This ensures that feature implementations match the validated design.
-2. **Start developing:** If you have the Arness Code plugin installed, run `/arn-planning` to begin the development pipeline. Arness auto-configures on first use.
-3. **Pick features from the backlog:** Run `/arn-code-pick-issue` to browse features in dependency order and route to `/arn-code-feature-spec` for detailed specification. The Feature Tracker shows which features are unblocked.
-4. **Or start speccing directly:** Run `/arn-code-feature-spec` with a feature from the backlog to create a detailed specification. Each feature file (`features/F-NNN-name.md`) includes journey summaries with UC references, validated components, and UI behavior details. `/arn-code-feature-spec` will read the referenced UC documents for full behavioral detail.
+1. **Set up visual testing:** Run `arn-spark-visual-strategy` to define visual regression testing against the prototype baselines. This ensures that feature implementations match the validated design.
+2. **Start developing:** If you have the Arness Code plugin installed, run `arn-planning` to begin the development pipeline. Arness auto-configures on first use.
+3. **Pick features from the backlog:** Run `arn-code-pick-issue` to browse features in dependency order and route to `arn-code-feature-spec` for detailed specification. The Feature Tracker shows which features are unblocked.
+4. **Or start speccing directly:** Run `arn-code-feature-spec` with a feature from the backlog to create a detailed specification. Each feature file (`features/F-NNN-name.md`) includes journey summaries with UC references, validated components, and UI behavior details. `arn-code-feature-spec` will read the referenced UC documents for full behavioral detail.
 
 
-I recommend starting with the Foundation phase features (those with no dependencies that enable other features). Each feature file references its upstream use case documents -- `/arn-code-feature-spec` will expand these references at spec time, reading the full UC documents for behavioral detail.
+I recommend starting with the Foundation phase features (those with no dependencies that enable other features). Each feature file references its upstream use case documents -- `arn-code-feature-spec` will expand these references at spec time, reading the full UC documents for behavioral detail.
 
-The Feature Tracker in `features/feature-backlog.md` is updated by `/arn-code-ship` after each PR — marking shipped features as done and surfacing newly unblocked features."
+The Feature Tracker in `features/feature-backlog.md` is updated by `arn-code-ship` after each PR — marking shipped features as done and surfacing newly unblocked features."
 
 If the development pipeline is already configured (`## Arness` section exists in CLAUDE.md with Code patterns field), skip the development transition recommendation.
 
-If issues were uploaded (Step 7), emphasize `/arn-code-pick-issue` as the primary path: "Since features are uploaded as issues, `/arn-code-pick-issue` will show you unblocked features with dependency resolution and validate against the remote issue tracker."
+If issues were uploaded (Step 7), emphasize `arn-code-pick-issue` as the primary path: "Since features are uploaded as issues, `arn-code-pick-issue` will show you unblocked features with dependency resolution and validate against the remote issue tracker."
 
 ## Agent Invocation Guide
 
@@ -445,14 +445,14 @@ If issues were uploaded (Step 7), emphasize `/arn-code-pick-issue` as the primar
 | User asks about components for a feature | Reference showcase-manifest.json (library) and screen-manifest.json (product-specific); no agent invocation needed |
 | User makes direct changes | Record directly, no agent needed |
 | User asks about technology choices | Defer: "Technology choices are in the architecture vision. This skill focuses on what features to build, not how." |
-| User asks about implementation details | Defer: "Implementation details come during `/arn-code-feature-spec`. The backlog captures what to build and how it should behave." |
+| User asks about implementation details | Defer: "Implementation details come during `arn-code-feature-spec`. The backlog captures what to build and how it should behave." |
 | arn-spark-ux-specialist unavailable | Proceed with `arn-spark-product-strategist` alone. Derive behavior descriptions and component mapping from journey definitions, prototype screenshots, and showcase outputs directly. Note the limitation. |
 
 ## Error Handling
 
 - **Only product concept available:** Extract from the product concept alone. Note that features will lack journey context and interaction behavior without prototype input. Behavior descriptions will be speculative. Components, showcase references, debate insights, and use case context will be "None".
-- **No prototype results available:** Extract features from product concept and architecture vision. Note that UI behavior, component mapping, and journey mapping will be less detailed. Suggest running `/arn-spark-static-prototype` and `/arn-spark-clickable-prototype` first for richer feature context.
-- **No product concept found and user declines to describe:** Cannot extract features from nothing. Suggest: "Run `/arn-spark-discover` first to define what you are building."
+- **No prototype results available:** Extract features from product concept and architecture vision. Note that UI behavior, component mapping, and journey mapping will be less detailed. Suggest running `arn-spark-static-prototype` and `arn-spark-clickable-prototype` first for richer feature context.
+- **No product concept found and user declines to describe:** Cannot extract features from nothing. Suggest: "Run `arn-spark-discover` first to define what you are building."
 - **Product strategist returns unhelpful analysis:** Summarize the issue and continue the conversation directly. Extract features from the artifacts manually and present for user review.
 - **arn-spark-ux-specialist unavailable:** Proceed with product strategist output. Derive UI behavior descriptions and component mapping from journey definitions, prototype screenshots, and showcase outputs directly. Gap resolution (Step 2b) will use product strategist only.
 - **Gap resolution finds no gaps:** Skip Step 2b entirely — this is normal for simpler projects with good artifact coverage.
@@ -463,7 +463,7 @@ If issues were uploaded (Step 7), emphasize `/arn-code-pick-issue` as the primar
 - **Features directory creation fails:** Try the parent directory. If that also fails, fall back to writing a single `feature-backlog.md` at the vision directory root (monolithic fallback).
 - **Feature backlog already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **A feature backlog already exists at `[path]/features/`. How would you like to proceed?**
   > 1. **Replace** — Fresh extraction, overwriting existing files
@@ -472,7 +472,7 @@ If issues were uploaded (Step 7), emphasize `/arn-code-pick-issue` as the primar
   If **Update**, read the existing Feature Tracker to preserve status and issue references for features being kept.
 - **Spike results show failed risks:** Features that depended on failed technologies should be flagged. Either adjust the feature to use the alternative approach from the spike, or defer the feature. Note the spike limitation in the feature's technical notes.
 - **Journey definitions missing but prototype exists:** Derive journeys from the prototype screen navigation flow. The journey will be less detailed than one from the clickable prototype validation, but still provides useful structure.
-- **User cancels mid-conversation:** If enough features have been discussed, offer to write a partial backlog. Otherwise, inform the user they can restart with `/arn-spark-feature-extract` at any time.
+- **User cancels mid-conversation:** If enough features have been discussed, offer to write a partial backlog. Otherwise, inform the user they can restart with `arn-spark-feature-extract` at any time.
 - **Showcase outputs not found:** Note in artifact inventory. Features will not have showcase references. Component mapping will rely on style brief Component Style section only.
 - **Debate reports not found:** Note in artifact inventory. Features will not have debate insights.
 - **Visual grounding directory not found or empty:** Note in artifact inventory. All features default to `Style brief only` visual target.

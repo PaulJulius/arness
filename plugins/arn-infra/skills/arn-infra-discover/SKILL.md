@@ -20,12 +20,12 @@ This skill is proactive: it does not just check what is installed, but actively 
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
 - **Providers** -- which providers to discover tools for
 - **Default IaC tool** -- which IaC tooling to check
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Tooling manifest** -- path where the manifest will be written
 
 ## Workflow
@@ -131,7 +131,7 @@ For tools tagged **Required**, warn: "Without [tool], Arness Infra cannot perfor
 
 ### Phase D: Produce Tooling Manifest and Present Summary
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-discover/references/tooling-manifest-schema.md` for the manifest JSON schema.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-discover/references/tooling-manifest-schema.md` for the manifest JSON schema.
 
 **D.1. Write tooling manifest:**
 Write `tooling-manifest.json` to the path configured in `## Arness` (default: `.arness/infra/tooling-manifest.json`).
@@ -181,7 +181,7 @@ Adapt output detail to experience level:
 **D.4. Auto-configure MCP offers:**
 For each recommended MCP:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like me to add the [Provider] MCP to your `.mcp.json`?"**
 
@@ -198,7 +198,7 @@ Update each provider's `Confidence` rating in `.arness/infra/providers.md` based
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
 - **CLI detection command fails:** Record the tool as "not installed." Do not crash on individual detection failures.
 - **Auth check fails:** Record as "not authenticated." Suggest the auth command (e.g., `aws configure`, `gcloud auth login`).
 - **WebSearch unavailable:** Skip Phase B. Note in the summary: "Online check skipped -- WebSearch not available. Results are based on curated registries only."

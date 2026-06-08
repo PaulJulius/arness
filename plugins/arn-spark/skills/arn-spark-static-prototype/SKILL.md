@@ -17,7 +17,7 @@ Create a static component showcase and validate it through iterative build-revie
 
 The primary artifacts are **versioned showcase pages** with component renders, **review reports** with per-criterion scores, and a **final report** documenting the complete validation history. All output is versioned so the user can compare evolution across cycles.
 
-This skill covers visual fidelity validation: do the components look correct according to the style brief? It does not cover interactive behavior -- that is `/arn-spark-clickable-prototype`'s job.
+This skill covers visual fidelity validation: do the components look correct according to the style brief? It does not cover interactive behavior -- that is `arn-spark-clickable-prototype`'s job.
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ The following artifacts inform the validation. Check in order:
 Determine the prototypes output directory:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Prototypes directory path — this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the directory does not exist, create it
 
 > All references to `prototypes/` in this skill refer to the configured prototypes directory determined above.
@@ -53,7 +53,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 **Fresh design assets (optional):**
 1. Read the `## Arness` section for `Figma` and `Canva` fields
 2. If either is `yes` AND the visual grounding directory already has assets in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **Design assets exist from style exploration. Would you like to pull fresh versions from [Figma/Canva] before starting validation?**
    > 1. **Yes** — Pull fresh design assets
@@ -62,7 +62,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
    - If **Yes**: ask the user to specify which assets to fetch (Figma file URL, page, or frame names / Canva design URL). Use the corresponding MCP to fetch and save to `[visual-grounding]/designs/` or `[visual-grounding]/brand/`. Show a summary of what was downloaded or replaced.
    - If no: proceed with existing assets on disk.
 3. If either is `yes` but NO existing design assets found in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **No design mockups found yet. Would you like to pull design assets from [Figma/Canva]?**
    > 1. **Yes** — Pull design assets now
@@ -74,9 +74,9 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 
 **If a style brief is found:** Use it for visual validation criteria.
 
-**If no style brief is found:** Inform the user: "No style brief found. I can create a component showcase with default styling, but visual validation is more meaningful with a style brief. Consider running `/arn-spark-style-explore` first." Proceed if the user wants to continue -- criteria will focus on component quality and layout rather than style fidelity.
+**If no style brief is found:** Inform the user: "No style brief found. I can create a component showcase with default styling, but visual validation is more meaningful with a style brief. Consider running `arn-spark-style-explore` first." Proceed if the user wants to continue -- criteria will focus on component quality and layout rather than style fidelity.
 
-**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. Check the project's dependency configuration. If not scaffolded, inform the user: "The project needs to be scaffolded before building a component showcase. Run `/arn-spark-scaffold` first."
+**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. Check the project's dependency configuration. If not scaffolded, inform the user: "The project needs to be scaffolded before building a component showcase. Run `arn-spark-scaffold` first."
 
 ## Workflow
 
@@ -89,7 +89,7 @@ Check for existing versioned output:
 
 **If existing versions found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"I found existing static prototype versions up to v[N]. Which would you prefer?"**
 
@@ -123,7 +123,7 @@ Adjust any parameter or criterion, or confirm to proceed."
 
 To propose criteria:
 1. Read the default criteria template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype/references/static-prototype-criteria.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype/references/static-prototype-criteria.md`
 2. Adapt based on available artifacts (remove dark mode criterion if not applicable, add reference image criterion if images exist, etc.)
 3. Present the adapted list
 
@@ -199,7 +199,7 @@ For each criterion, use the LOWER of the two expert scores as the combined score
 
 1. Check all combined scores against the minimum threshold
 2. Read the review report template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype/references/review-report-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype/references/review-report-template.md`
 3. Write the review report to `prototypes/static/v[N]/review-report.md`
 4. Write version notes to `prototypes/static/v[N]/version-notes.md` (what changed from previous version, or "Initial version" for v1)
 
@@ -230,7 +230,7 @@ Write the judge's report to `prototypes/static/v[N]/judge-report.md`.
 **If Judge returns FAIL and cycle budget remains:**
 - Present the judge's failing criteria to the user
 - Calculate remaining budget (original max_cycles minus cycles used)
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **The judge flagged [N] criteria below threshold. You have [M] cycles remaining. Run more fix cycles?**
 > 1. **Yes** — Run [M] more fix cycles
@@ -246,7 +246,7 @@ Ask (using `AskUserQuestion`):
 After the judge review completes (whether PASS or FAIL with no budget), generate structured screenshot images so the user can review the final visual state without running a dev server. This is the user's primary visual deliverable.
 
 1. Read the showcase capture guide:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype/references/showcase-capture-guide.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype/references/showcase-capture-guide.md`
 
 2. Read the section manifest from `prototypes/static/v[N]/showcase-manifest.json` (written by the prototype builder). If the manifest does not exist, note the limitation and capture a single full-page screenshot only.
 
@@ -297,7 +297,7 @@ Present the complete validation history:
 The showcase is at `prototypes/static/v[N]/`.
 [If showcase images were generated:] Visual showcase images are at `prototypes/static/v[N]/showcase/showcase-index.md` — open this file to see all components at a glance without running the dev server.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Are you satisfied with this result?**
 > 1. **Yes, finalize** — Write the final report
@@ -320,9 +320,9 @@ Write `prototypes/static/final-report.md` with:
 "Static prototype validation complete. Results saved to `prototypes/static/`.
 
 Recommended next steps:
-1. **Build clickable prototype:** Run `/arn-spark-clickable-prototype` to add interaction and validate user journeys
-2. **Lock the prototype:** After clickable validation, run `/arn-spark-prototype-lock` to freeze a snapshot before development modifies shared source files
-3. **Extract features:** Run `/arn-spark-feature-extract` to create a prioritized feature backlog
+1. **Build clickable prototype:** Run `arn-spark-clickable-prototype` to add interaction and validate user journeys
+2. **Lock the prototype:** After clickable validation, run `arn-spark-prototype-lock` to freeze a snapshot before development modifies shared source files
+3. **Extract features:** Run `arn-spark-feature-extract` to create a prioritized feature backlog
 
 The clickable prototype will build on the validated visual direction from this static prototype."
 
@@ -335,16 +335,16 @@ The clickable prototype will build on the validated visual direction from this s
 | Expert review (Step 4c) | Invoke `arn-spark-product-strategist` and `arn-spark-ux-specialist` in parallel with screenshots, criteria, scoring parameters, and visual grounding assets (with category context). After both complete, take the LOWER score per criterion. |
 | Judge review (Step 5) | Invoke `arn-spark-ux-judge` in `static` mode with latest screenshots, criteria, scoring parameters, review reports, and visual grounding assets for direct comparison |
 | Generate visual showcase (Step 5b) | Read the showcase capture guide, start the prototype, generate and run a Playwright capture script per the section manifest, write `showcase-index.md`. Skip if Playwright unavailable. |
-| User asks about interactive behavior | Defer: "Interactive behavior is validated in `/arn-spark-clickable-prototype`. This skill focuses on visual fidelity." |
-| User asks to change the style | Defer to `/arn-spark-style-explore` for style brief updates, then re-run static prototype validation |
-| User asks about features | Defer: "Feature work starts after `/arn-spark-feature-extract`. If Arness Code is installed, continue with `/arn-code-feature-spec` for detailed specifications." |
+| User asks about interactive behavior | Defer: "Interactive behavior is validated in `arn-spark-clickable-prototype`. This skill focuses on visual fidelity." |
+| User asks to change the style | Defer to `arn-spark-style-explore` for style brief updates, then re-run static prototype validation |
+| User asks about features | Defer: "Feature work starts after `arn-spark-feature-extract`. If Arness Code is installed, continue with `arn-code-feature-spec` for detailed specifications." |
 | Builder fails | Retry up to 3 times. If still failing, present the error for manual investigation. |
 | Expert returns unhelpful scores | Re-invoke with more specific prompt referencing the exact criteria and screenshots. |
 
 ## Error Handling
 
 - **No style brief found:** Proceed with component quality and layout criteria only. Note that visual fidelity criteria are deferred until a style brief exists.
-- **Project not scaffolded:** Cannot build showcase. Suggest `/arn-spark-scaffold` first.
+- **Project not scaffolded:** Cannot build showcase. Suggest `arn-spark-scaffold` first.
 - **Builder fails (3 times):** Present the error. The user can investigate manually or adjust the approach.
 - **Capture fails (Playwright unavailable):** Fall back to asking the user for manual screenshots. Note the limitation. The visual showcase (Step 5b) is also skipped.
 - **Showcase manifest missing:** The builder did not write `showcase-manifest.json`. Capture a full-page screenshot only. Note: "Section manifest not found. Re-build the showcase to generate per-section captures."
@@ -354,7 +354,7 @@ The clickable prototype will build on the validated visual direction from this s
 - **Resume from interrupted cycle:** Detect the latest version directory. If it has a review-report.md, the cycle completed -- continue from the next cycle. If it has showcase files but no review-report.md, the build completed but review did not -- run review on the existing build.
 - **Criteria file already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **Existing criteria found at `prototypes/criteria.md`. What would you like to do?**
   > 1. **Use existing** — Keep the current criteria

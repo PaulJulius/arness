@@ -8,8 +8,8 @@ description: >-
   problem with an Arness Code workflow skill. Invokes the arn-code-doctor agent to
   diagnose the issue, then files a GitHub issue on the Arness plugin repository.
   Do NOT use this for filing issues on the user's own project — use
-  /arn-code-create-issue for that. For Spark issues use /arn-spark-report. For
-  Infra issues use /arn-infra-report.
+  arn-code-create-issue for that. For Spark issues use arn-spark-report. For
+  Infra issues use arn-infra-report.
 version: 1.1.0
 ---
 
@@ -27,8 +27,8 @@ Before gathering details, check if the issue might belong to another plugin:
 2. If the user has already described the issue (e.g., in their initial message), scan for keyword signals:
    - **Spark keywords**: "discover", "prototype", "greenfield", "stress test", "naming", "brainstorming", "feature extract", "visual sketch", "use cases", "scaffold", "spike"
    - **Infra keywords**: "deploy", "Dockerfile", "container", "IaC", "terraform", "pipeline", "CI/CD", "environment", "secrets", "monitor", "infrastructure", "verify", "cleanup"
-3. If Spark signals detected and Spark fields exist in `## Arness`: suggest "This sounds like an Arness Spark issue. Run `/arn-spark-report` instead, or confirm this is a Code issue."
-4. If Infra signals detected and Infra fields exist in `## Arness`: suggest "This sounds like an Arness Infra issue. Run `/arn-infra-report` instead, or confirm this is a Code issue."
+3. If Spark signals detected and Spark fields exist in `## Arness`: suggest "This sounds like an Arness Spark issue. Run `arn-spark-report` instead, or confirm this is a Code issue."
+4. If Infra signals detected and Infra fields exist in `## Arness`: suggest "This sounds like an Arness Infra issue. Run `arn-infra-report` instead, or confirm this is a Code issue."
 5. If no signals or user confirms it's a Code issue: proceed to Step 1.
 
 ---
@@ -49,7 +49,7 @@ Your project code and business logic are never included in the report."
 
 ### Step 2: Gather User Description
 
-Ask the user using `AskUserQuestion`:
+Ask the user using `user prompt`:
 - "What happened? Which Arness skill were you using and what went wrong?"
 
 Let the user type a free-form description. This becomes the `user_description` for the diagnostic.
@@ -59,13 +59,13 @@ Let the user type a free-form description. This becomes the `user_description` f
 ### Step 3: Check Prerequisites
 
 1. Detect the plugin's GitHub repository:
-   - Read `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` and extract the `repository` field.
+   - Read `<arn-code-plugin-root>/.codex-plugin/plugin.json` and extract the `repository` field.
    - Parse `owner/repo` from the URL (strip `https://github.com/` prefix and any trailing `.git`).
-   - **Fallback** (for local dev testing with `--plugin-dir`): if no `repository` field exists, try `git -C ${CLAUDE_PLUGIN_ROOT} remote get-url origin`.
+   - **Fallback** (for local dev testing with `--plugin-dir`): if no `repository` field exists, try `git -C <arn-code-plugin-root> remote get-url origin`.
 
 2. Check `gh auth status` — user must be authenticated to file issues.
 
-3. Read plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`.
+3. Read plugin version from `<arn-code-plugin-root>/.codex-plugin/plugin.json`.
 
 4. Read `## Arness` config from the project's CLAUDE.md (if it exists).
 
@@ -80,7 +80,7 @@ Spawn the `arn-code-doctor` agent via the Task tool, passing the model from `.ar
 - Project root path
 - `## Arness` config content (or "not configured")
 - Plugin version
-- Instruction to read the knowledge base at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-report/references/arness-knowledge-base.md`
+- Instruction to read the knowledge base at `<arn-code-plugin-root>/skills/arn-code-report/references/arness-knowledge-base.md`
 
 Wait for the agent to complete and collect the diagnostic report.
 
@@ -88,7 +88,7 @@ Wait for the agent to complete and collect the diagnostic report.
 
 ### Step 5: Compose and Review Issue
 
-Assemble the GitHub issue using the template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-report/references/issue-template.md`:
+Assemble the GitHub issue using the template from `<arn-code-plugin-root>/skills/arn-code-report/references/issue-template.md`:
 - Include the user's original description in the "User Report" section
 - Include the doctor's diagnostic findings (ISSUE items only, not OK items)
 - Include the doctor's assessment
@@ -98,7 +98,7 @@ Assemble the GitHub issue using the template from `${CLAUDE_PLUGIN_ROOT}/skills/
 
 Present the complete draft to the user, then request explicit consent.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **This report will be filed as a public GitHub issue on the Arness repository.** It contains only Arness configuration state and diagnostic findings — no project source code or business logic. Please review the report above carefully.
 >

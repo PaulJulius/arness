@@ -15,7 +15,7 @@ version: 1.0.0
 
 Generate visual direction proposals as real HTML/CSS in the scaffolded project, compare them side by side in the browser, and iteratively refine until a direction is selected. This is a conversational skill that runs in normal conversation (NOT plan mode). The primary artifacts are a **visual-direction.md** document in the Vision directory and **screenshot captures** of the selected direction in the visual grounding directory.
 
-This skill sits between `/arn-spark-scaffold` and `/arn-spark-style-explore` in the greenfield pipeline. It produces a visual-direction.md that style-explore uses as primary input for detailed design token specification. The user sees what the product could look like before committing to a full design system.
+This skill sits between `arn-spark-scaffold` and `arn-spark-style-explore` in the greenfield pipeline. It produces a visual-direction.md that style-explore uses as primary input for detailed design token specification. The user sees what the product could look like before committing to a full design system.
 
 The iterative process works in rounds:
 1. **Round 1:** N proposals with distinct visual directions (default 3)
@@ -31,7 +31,7 @@ The following artifacts inform the sketch generation. Check in order:
 Determine the output directories:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Vision directory path and Visual grounding directory path
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. Create directories if they do not exist
 
 > All references to "Vision directory" and "visual grounding directory" in this skill refer to the configured directories determined above.
@@ -43,7 +43,7 @@ Determine the output directories:
 
 **If a scaffold-summary is found:** Read it to extract the full technology stack — UI framework, CSS framework, component library, icon library, dev server command, build command.
 
-**If no scaffold-summary is found:** Inform the user: "The project must be scaffolded before visual sketching. The sketch needs a real CSS framework and component library to generate proposals. Run `/arn-spark-scaffold` first." Do not proceed.
+**If no scaffold-summary is found:** Inform the user: "The project must be scaffolded before visual sketching. The sketch needs a real CSS framework and component library to generate proposals. Run `arn-spark-scaffold` first." Do not proceed.
 
 **Architecture vision (required for fallback context):**
 1. Check the Vision directory for `architecture-vision.md`
@@ -132,7 +132,7 @@ The user's choices guide how the direction briefs (Step 4) differ from each othe
 ### Step 4: Compose Direction Briefs
 
 Read the aesthetic philosophy reference for tone palette and design vocabulary:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-sketch/references/aesthetic-philosophy.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-visual-sketch/references/aesthetic-philosophy.md`
 
 Use the tone palette (Section 1), anti-generic rules (Section 2), and design dimension guidance (Section 3) to inform brief composition. Each brief should be informed by these principles but written in the skill's own voice — do not copy-paste from the reference.
 
@@ -209,7 +209,7 @@ Create:
 3. The `round-1/` directory with empty `proposal-{N}/` subdirectories for each proposal
 
 Read the sketch gallery guide for gallery structure details:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-sketch/references/sketch-gallery-guide.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-visual-sketch/references/sketch-gallery-guide.md`
 
 ### Step 6: Spawn Agents in Parallel
 
@@ -220,7 +220,7 @@ Launch N `arn-spark-visual-sketcher` agents simultaneously using the Task tool. 
 - **Direction brief:** This proposal's unique brief from Step 4
 - **Tech context:** From scaffold-summary.md — UI framework, CSS framework, component library, icon library
 - **Output route path:** The specific proposal directory (e.g., `src/routes/arness-sketches/round-1/proposal-1/`)
-- **Aesthetic philosophy path:** `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-sketch/references/aesthetic-philosophy.md`
+- **Aesthetic philosophy path:** `<arn-spark-plugin-root>/skills/arn-spark-visual-sketch/references/aesthetic-philosophy.md`
 
 All agents are launched in a single message with multiple Task tool calls to maximize parallelism.
 
@@ -307,13 +307,13 @@ When the user has selected a final direction:
 2. **Read the selected proposal's manifest:** Get CSS variables, screen routes, and direction summary from `proposal-manifest.json`
 
 3. **Write visual-direction.md:** Read the template and populate it:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-sketch/references/visual-direction-template.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-visual-sketch/references/visual-direction-template.md`
 
    Write the populated document to the Vision directory as `visual-direction.md`.
 
 4. **Offer route cleanup:**
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **What should happen to the sketch routes at `[route path]/arness-sketches/`?**
    1. **Keep** — Leave them for reference (I will suggest adding `arness-sketches/` to `.gitignore`)
@@ -332,8 +332,8 @@ When the user has selected a final direction:
 - [If captured:] Screenshots saved to `[visual-grounding]/designs/`
 
 Recommended next steps:
-1. **Define the design system:** Run `/arn-spark-style-explore` to translate this visual direction into precise design tokens and toolkit configuration
-2. [If use cases not done:] **Write use cases:** Run `/arn-spark-use-cases` to specify system behavior
+1. **Define the design system:** Run `arn-spark-style-explore` to translate this visual direction into precise design tokens and toolkit configuration
+2. [If use cases not done:] **Write use cases:** Run `arn-spark-use-cases` to specify system behavior
 
 The style explorer will use your visual direction as a starting point — you won't need to describe the style from scratch."
 
@@ -344,10 +344,10 @@ The style explorer will use your visual direction as a starting point — you wo
 | Generate initial proposals (Step 6) | Invoke N `arn-spark-visual-sketcher` agents in parallel via Task tool, each with unique direction brief and output path |
 | Generate expansions (Step 8) | Invoke N `arn-spark-visual-sketcher` agents in parallel with expansion briefs derived from selected proposal + user adjustments |
 | Capture final screenshots (Step 9) | Invoke `arn-spark-style-capture` with localhost URLs of selected sketch's screens and output to visual grounding `designs/` |
-| User asks about detailed design tokens | Defer: "Design tokens are specified in `/arn-spark-style-explore`. This skill establishes the visual direction." |
-| User asks about interactive behavior | Defer: "Interactive behavior is validated in `/arn-spark-clickable-prototype`." |
-| User asks about component showcases | Defer: "Component showcases are created by `/arn-spark-static-prototype`." |
-| User asks about features or architecture | Defer to the appropriate skill (`/arn-code-feature-spec`, `/arn-spark-arch-vision`) |
+| User asks about detailed design tokens | Defer: "Design tokens are specified in `arn-spark-style-explore`. This skill establishes the visual direction." |
+| User asks about interactive behavior | Defer: "Interactive behavior is validated in `arn-spark-clickable-prototype`." |
+| User asks about component showcases | Defer: "Component showcases are created by `arn-spark-static-prototype`." |
+| User asks about features or architecture | Defer to the appropriate skill (`arn-code-feature-spec`, `arn-spark-arch-vision`) |
 | Agent build fails (single proposal) | Report which proposal failed. Present successful proposals. Offer to retry. |
 | All agents fail | Report all errors. Ask user to verify the scaffold builds correctly. Suggest fixing the scaffold before retrying. |
 | Style-capture unavailable | Proceed without screenshots. Visual-direction.md is still written with all other content. Note screenshots are pending. |
@@ -355,10 +355,10 @@ The style explorer will use your visual direction as a starting point — you wo
 
 ## Error Handling
 
-- **Scaffold not found:** Cannot proceed. Suggest `/arn-spark-scaffold` first.
+- **Scaffold not found:** Cannot proceed. Suggest `arn-spark-scaffold` first.
 - **Product concept not found:** Proceed with the user's verbal description. Screen identification will be based on conversation. Note the limitation.
 - **Architecture vision not found:** Proceed if scaffold-summary exists — it contains sufficient technical context. Note the limitation.
-- **Build fails before sketch generation:** Report the error. Do not attempt to fix the scaffold — that is the user's responsibility or `/arn-spark-scaffold`'s job.
+- **Build fails before sketch generation:** Report the error. Do not attempt to fix the scaffold — that is the user's responsibility or `arn-spark-scaffold`'s job.
 - **One agent fails (others succeed):** Present successful proposals. Show a placeholder card for the failed one. Offer to retry.
 - **All agents fail:** Report errors for all proposals. The most likely cause is a scaffold issue (missing dependencies, broken build). Suggest verifying the scaffold.
 - **Dev server won't start:** Report the error. The user can start it manually and provide the URL. Proceed with gallery creation.
@@ -367,7 +367,7 @@ The style explorer will use your visual direction as a starting point — you wo
 - **User wants to restart from scratch:** Clear the `arness-sketches/` directory and return to Step 2.
 - **visual-direction.md already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **A visual direction document already exists at `[path]`. What should I do?**
   > 1. **Replace** — Overwrite with the new direction

@@ -19,7 +19,7 @@ Spark Exploration Pipeline
   Stress tests: arn-spark-stress-interview, arn-spark-stress-competitive, arn-spark-stress-premortem, arn-spark-stress-prfaq (multi-select)
   Variants: arn-spark-use-cases-teams, arn-spark-static-prototype-teams, arn-spark-clickable-prototype-teams
   Standalone: arn-spark-dev-setup, arn-spark-visual-readiness, arn-spark-visual-strategy
-  Guided: /arn-brainstorming -- walks through the entire pipeline with decision gates
+  Guided: arn-brainstorming -- walks through the entire pipeline with decision gates
 ```
 
 ---
@@ -28,20 +28,20 @@ Spark Exploration Pipeline
 
 | Stage | Primary Skill | Notes |
 |-------|--------------|-------|
-| `gf-init` | `/arn-brainstorming` or `/arn-spark-discover` | Brainstorming is the guided wizard; discover is the direct entry |
-| `discover` | `/arn-spark-discover` | Produces product-concept.md with vision, personas, competitive landscape, pillars |
-| `stress-test` | `/arn-spark-stress-interview`, `/arn-spark-stress-competitive`, `/arn-spark-stress-premortem`, `/arn-spark-stress-prfaq` | Multi-select: user picks which tests to run. All are read-only on product-concept.md |
-| `concept-review` | `/arn-spark-concept-review` | Consolidates stress test findings. ONLY skill that modifies product-concept.md |
-| `naming` | `/arn-spark-naming` | 4-step methodology: Brand DNA, creative generation, Six Senses scoring, WHOIS/trademark due diligence |
-| `arch-vision` | `/arn-spark-arch-vision` | Technology choices, system design, packaging strategy |
-| `use-cases` | `/arn-spark-use-cases` | Cockburn fully-dressed format. Teams variant: `/arn-spark-use-cases-teams` |
-| `scaffold` | `/arn-spark-scaffold` | Creates project skeleton with chosen framework and dependencies |
-| `spike` | `/arn-spark-spike` | Optional — validate risky technical assumptions with POC code |
-| `visual-sketch` | `/arn-spark-visual-sketch` | Multiple visual direction proposals as live HTML/CSS |
-| `style-explore` | `/arn-spark-style-explore` | Define complete design system from the visual direction |
-| `prototypes` | `/arn-spark-static-prototype` then `/arn-spark-clickable-prototype` | Teams variants available for both. Includes UX judge validation |
-| `lock` | `/arn-spark-prototype-lock` | Freezes validated prototype as development reference |
-| `feature-extract` | `/arn-spark-feature-extract` | Extracts prioritized feature backlog. Optional issue tracker upload |
+| `gf-init` | `arn-brainstorming` or `arn-spark-discover` | Brainstorming is the guided wizard; discover is the direct entry |
+| `discover` | `arn-spark-discover` | Produces product-concept.md with vision, personas, competitive landscape, pillars |
+| `stress-test` | `arn-spark-stress-interview`, `arn-spark-stress-competitive`, `arn-spark-stress-premortem`, `arn-spark-stress-prfaq` | Multi-select: user picks which tests to run. All are read-only on product-concept.md |
+| `concept-review` | `arn-spark-concept-review` | Consolidates stress test findings. ONLY skill that modifies product-concept.md |
+| `naming` | `arn-spark-naming` | 4-step methodology: Brand DNA, creative generation, Six Senses scoring, WHOIS/trademark due diligence |
+| `arch-vision` | `arn-spark-arch-vision` | Technology choices, system design, packaging strategy |
+| `use-cases` | `arn-spark-use-cases` | Cockburn fully-dressed format. Teams variant: `arn-spark-use-cases-teams` |
+| `scaffold` | `arn-spark-scaffold` | Creates project skeleton with chosen framework and dependencies |
+| `spike` | `arn-spark-spike` | Optional — validate risky technical assumptions with POC code |
+| `visual-sketch` | `arn-spark-visual-sketch` | Multiple visual direction proposals as live HTML/CSS |
+| `style-explore` | `arn-spark-style-explore` | Define complete design system from the visual direction |
+| `prototypes` | `arn-spark-static-prototype` then `arn-spark-clickable-prototype` | Teams variants available for both. Includes UX judge validation |
+| `lock` | `arn-spark-prototype-lock` | Freezes validated prototype as development reference |
+| `feature-extract` | `arn-spark-feature-extract` | Extracts prioritized feature backlog. Optional issue tracker upload |
 
 ---
 
@@ -65,7 +65,7 @@ Spark Exploration Pipeline
   Stress tests: arn-spark-stress-interview, arn-spark-stress-competitive, arn-spark-stress-premortem, arn-spark-stress-prfaq
   Variants: arn-spark-use-cases-teams, arn-spark-static-prototype-teams, arn-spark-clickable-prototype-teams
   Standalone: arn-spark-dev-setup, arn-spark-visual-readiness, arn-spark-visual-strategy
-  Guided: /arn-brainstorming
+  Guided: arn-brainstorming
 ```
 
 ---
@@ -102,7 +102,7 @@ Spark exploration is considered **complete** when `<vision-dir>/features/feature
 
 **Stress test stage:** Four independent reports can exist in any combination. The presence of ANY stress-test report triggers the `gf-stress-test` stage. If `concept-review-report.md` also exists, it takes precedence (concept-review > stress-test in detection order).
 
-**Naming stage:** `naming-brief.md` gets written incrementally during the naming process. Any existence of naming-brief.md or naming-report.md is treated as naming complete. If naming is in-progress and the user runs `/arn-spark-naming`, it handles its own resume.
+**Naming stage:** `naming-brief.md` gets written incrementally during the naming process. Any existence of naming-brief.md or naming-report.md is treated as naming complete. If naming is in-progress and the user runs `arn-spark-naming`, it handles its own resume.
 
 **Spike stage:** Optional. If a project skips spike and goes directly from scaffold to visual-sketch, the detection works correctly — `gf-visual-sketch` is detected based on `visual-direction.md` existence.
 
@@ -116,21 +116,21 @@ After detecting the current Spark stage, suggest the next command.
 
 | Current Stage | Next Command | Description |
 |---------------|-------------|-------------|
-| Spark initialized (`gf-init`) | `/arn-spark-discover` | Shape the product idea into a structured concept. Or run `/arn-brainstorming` for the guided wizard. |
-| Product discovered (`gf-discover`) | `/arn-spark-stress-interview`, etc. OR `/arn-spark-arch-vision` | Run stress tests to validate the concept (optional), or skip to architecture. |
-| Stress tests run (`gf-stress-test`) | `/arn-spark-concept-review` | Consolidate stress test findings and update the product concept. |
-| Concept reviewed (`gf-concept-review`) | `/arn-spark-naming` or `/arn-spark-arch-vision` | Name your product (optional), or skip to architecture. |
-| Naming complete (`gf-naming`) | `/arn-spark-arch-vision` | Choose technologies and design the system architecture. |
-| Architecture defined (`gf-arch-vision`) | `/arn-spark-use-cases` | Write use cases (or `/arn-spark-use-cases-teams` for expert debate). |
-| Use cases written (`gf-use-cases`) | `/arn-spark-scaffold` | Create the project skeleton with the chosen tech stack. |
-| Scaffold built (`gf-scaffold`) | `/arn-spark-spike` or `/arn-spark-visual-sketch` | Validate risky assumptions (optional), or explore visual directions. |
-| Spike complete (`gf-spike`) | `/arn-spark-visual-sketch` | Generate visual direction proposals on the dev server. |
-| Visual direction chosen (`gf-visual-sketch`) | `/arn-spark-style-explore` | Define the complete design system from the visual direction. |
-| Style defined (`gf-style-explore`) | `/arn-spark-static-prototype` | Build and validate a static HTML/CSS prototype. |
-| Static prototype done (`gf-static-proto`) | `/arn-spark-clickable-prototype` | Build and validate an interactive prototype with linked screens. |
-| Clickable prototype done (`gf-clickable-proto`) | `/arn-spark-prototype-lock` or `/arn-spark-feature-extract` | Lock the prototype (optional), or extract features directly. |
-| Prototype locked (`gf-prototype-lock`) | `/arn-spark-feature-extract` | Extract features into a prioritized backlog for development. |
-| Feature backlog ready (`gf-feature-extract`) | `/arn-planning` | Transition to development — start specifying features. Or `/arn-infra-wizard` for infrastructure. |
+| Spark initialized (`gf-init`) | `arn-spark-discover` | Shape the product idea into a structured concept. Or run `arn-brainstorming` for the guided wizard. |
+| Product discovered (`gf-discover`) | `arn-spark-stress-interview`, etc. OR `arn-spark-arch-vision` | Run stress tests to validate the concept (optional), or skip to architecture. |
+| Stress tests run (`gf-stress-test`) | `arn-spark-concept-review` | Consolidate stress test findings and update the product concept. |
+| Concept reviewed (`gf-concept-review`) | `arn-spark-naming` or `arn-spark-arch-vision` | Name your product (optional), or skip to architecture. |
+| Naming complete (`gf-naming`) | `arn-spark-arch-vision` | Choose technologies and design the system architecture. |
+| Architecture defined (`gf-arch-vision`) | `arn-spark-use-cases` | Write use cases (or `arn-spark-use-cases-teams` for expert debate). |
+| Use cases written (`gf-use-cases`) | `arn-spark-scaffold` | Create the project skeleton with the chosen tech stack. |
+| Scaffold built (`gf-scaffold`) | `arn-spark-spike` or `arn-spark-visual-sketch` | Validate risky assumptions (optional), or explore visual directions. |
+| Spike complete (`gf-spike`) | `arn-spark-visual-sketch` | Generate visual direction proposals on the dev server. |
+| Visual direction chosen (`gf-visual-sketch`) | `arn-spark-style-explore` | Define the complete design system from the visual direction. |
+| Style defined (`gf-style-explore`) | `arn-spark-static-prototype` | Build and validate a static HTML/CSS prototype. |
+| Static prototype done (`gf-static-proto`) | `arn-spark-clickable-prototype` | Build and validate an interactive prototype with linked screens. |
+| Clickable prototype done (`gf-clickable-proto`) | `arn-spark-prototype-lock` or `arn-spark-feature-extract` | Lock the prototype (optional), or extract features directly. |
+| Prototype locked (`gf-prototype-lock`) | `arn-spark-feature-extract` | Extract features into a prioritized backlog for development. |
+| Feature backlog ready (`gf-feature-extract`) | `arn-planning` | Transition to development — start specifying features. Or `arn-infra-wizard` for infrastructure. |
 
 ---
 
@@ -140,9 +140,9 @@ These can be used as alternatives at specific stages:
 
 | Variant | Replaces | When to Suggest |
 |---------|----------|-----------------|
-| `/arn-spark-use-cases-teams` | `/arn-spark-use-cases` | User prefers expert debate format for use cases |
-| `/arn-spark-static-prototype-teams` | `/arn-spark-static-prototype` | User prefers expert debate for prototype validation |
-| `/arn-spark-clickable-prototype-teams` | `/arn-spark-clickable-prototype` | User prefers expert debate for prototype validation |
+| `arn-spark-use-cases-teams` | `arn-spark-use-cases` | User prefers expert debate format for use cases |
+| `arn-spark-static-prototype-teams` | `arn-spark-static-prototype` | User prefers expert debate for prototype validation |
+| `arn-spark-clickable-prototype-teams` | `arn-spark-clickable-prototype` | User prefers expert debate for prototype validation |
 
 ### Standalone Commands
 
@@ -150,21 +150,21 @@ These operate outside the main pipeline and can be suggested at any time:
 
 | Command | Purpose | Prerequisite |
 |---------|---------|--------------|
-| `/arn-spark-dev-setup` | Define or follow development environment setup | Greenfield config exists |
-| `/arn-spark-prototype-lock` | Freeze approved prototypes with guardrail hooks | Prototypes directory configured, prototype approved |
-| `/arn-spark-visual-readiness` | Check visual layer readiness before activating deferred tests | Visual strategy defined |
-| `/arn-spark-visual-strategy` | Define layered visual testing strategy | Scaffold built, at least style-explore complete |
+| `arn-spark-dev-setup` | Define or follow development environment setup | Greenfield config exists |
+| `arn-spark-prototype-lock` | Freeze approved prototypes with guardrail hooks | Prototypes directory configured, prototype approved |
+| `arn-spark-visual-readiness` | Check visual layer readiness before activating deferred tests | Visual strategy defined |
+| `arn-spark-visual-strategy` | Define layered visual testing strategy | Scaffold built, at least style-explore complete |
 
 ### Entry Points
 
-- `/arn-brainstorming` — Walks through the entire Spark exploration pipeline with guided decision gates. This is the recommended way to use Spark for new projects.
-- `/arn-spark-discover` — Direct entry into product discovery without the wizard.
-- `/arn-spark-init` — (Optional) Explicitly configure the greenfield environment. Not required — Arness auto-configures on first use.
+- `arn-brainstorming` — Walks through the entire Spark exploration pipeline with guided decision gates. This is the recommended way to use Spark for new projects.
+- `arn-spark-discover` — Direct entry into product discovery without the wizard.
+- `arn-spark-init` — (Optional) Explicitly configure the greenfield environment. Not required — Arness auto-configures on first use.
 
 When suggesting next steps at an early stage (`gf-init` or `gf-discover`):
 
 ```
-Tip: Run `/arn-brainstorming` for the guided pipeline, or invoke individual skills directly.
+Tip: Run `arn-brainstorming` for the guided pipeline, or invoke individual skills directly.
 ```
 
 ---
@@ -175,12 +175,12 @@ When Step 0 detects other plugin activity, append these hints at the bottom of t
 
 **Code active:**
 ```
-Development pipeline: active — run `/arn-code-help` for details.
+Development pipeline: active — run `arn-code-help` for details.
 ```
 
 **Infra active:**
 ```
-Infrastructure pipeline: active — run `/arn-infra-help` for details.
+Infrastructure pipeline: active — run `arn-infra-help` for details.
 ```
 
 **Code not started but configured:**
@@ -196,16 +196,16 @@ Infrastructure pipeline: configured but not started.
 **When Spark pipeline is complete (`gf-feature-extract`):**
 ```
 Spark exploration is complete. Next steps:
-- Start developing features: `/arn-planning`
-- Deploy infrastructure: `/arn-infra-wizard`
+- Start developing features: `arn-planning`
+- Deploy infrastructure: `arn-infra-wizard`
 ```
 
 **When own plugin idle (`gf-init`) and other plugins have activity:**
 Show own suggestions first:
 ```
-Ready to start: run `/arn-spark-discover` to shape your product idea, or `/arn-brainstorming` for the guided wizard.
+Ready to start: run `arn-spark-discover` to shape your product idea, or `arn-brainstorming` for the guided wizard.
 ```
 Then mention others:
 ```
-You also have active work in Code — run `/arn-code-help` for details.
+You also have active work in Code — run `arn-code-help` for details.
 ```

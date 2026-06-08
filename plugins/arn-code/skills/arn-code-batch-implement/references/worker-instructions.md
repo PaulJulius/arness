@@ -255,7 +255,7 @@ Step 0 anchors `$WORKTREE` and states the core rules (no bare `git`, absolute pa
 
 ### Implementation discipline
 
-- Do NOT use AskUserQuestion -- you have no user interaction.
+- Do NOT use user prompt -- you have no user interaction.
 - If tests fail 3 times on the same assertion, note the failure in your report and continue with the remaining work.
 - Follow all codebase patterns from the pattern documentation read in Step 1.
 - If {sketch_manifest_path} is not "none", ALWAYS promote from sketch rather than writing from scratch for matching files.

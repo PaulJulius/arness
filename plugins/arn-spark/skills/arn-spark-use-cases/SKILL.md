@@ -20,7 +20,7 @@ The primary artifacts are a **use-cases/ directory** at the project root contain
 
 Use cases bridge the gap between the high-level product concept and the concrete artifacts consumed by downstream skills. They describe the WHAT (system behavior) not the HOW (implementation). Each use case specifies actors, preconditions, main success scenarios, alternate flows, postconditions, and business rules -- structured detail that the product concept alone does not provide.
 
-For a richer review process where experts debate each other's findings (product strategist and UX specialist cross-review and respond to each other), use `/arn-spark-use-cases-teams` instead. The teams variant produces the same output format but through structured expert debate with mandatory per-round reports.
+For a richer review process where experts debate each other's findings (product strategist and UX specialist cross-review and respond to each other), use `arn-spark-use-cases-teams` instead. The teams variant produces the same output format but through structured expert debate with mandatory per-round reports.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ The following artifacts inform the use cases. Check in order:
 Determine the use cases output directory:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Use cases directory path — this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the directory does not exist, create it
 
 > All references to `use-cases/` in this skill refer to the configured use cases directory determined above.
@@ -40,7 +40,7 @@ Determine the use cases output directory:
 
 **If a product concept is found:** Use it as the primary source for actors, goals, and use case derivation.
 
-**If no product concept is found:** Ask the user: "No product concept found. I recommend running `/arn-spark-discover` first to define your product. Alternatively, describe your application's purpose, users, and main capabilities and I will work from that."
+**If no product concept is found:** Ask the user: "No product concept found. I recommend running `arn-spark-discover` first to define your product. Alternatively, describe your application's purpose, users, and main capabilities and I will work from that."
 
 **Architecture vision (optional):**
 1. Check the same Vision directory (from the `## Arness` section) for `architecture-vision.md`
@@ -69,7 +69,7 @@ Check for existing use case output:
 
 **If existing use cases found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"I found an existing use cases directory with [N] use case files. Which would you prefer?"**
 
@@ -182,13 +182,13 @@ Draft use cases in parallel by invoking multiple `arn-spark-use-case-writer` age
 - **Actor catalog:** the confirmed actor table
 - **Use case catalog:** the FULL confirmed catalog with all relationships (not just the assigned subset)
 - **Assigned use cases:** the specific UC-IDs this writer should draft
-- **Use case template:** `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/use-case-template.md`
+- **Use case template:** `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/use-case-template.md`
 - **Output directory:** `use-cases/`
 - **Existing prototype screens (if any):** paths to prototype directories
 - **Architecture vision (if available):** for system capability context
 
 After all parallel writers complete, invoke one final `arn-spark-use-case-writer` agent via the Task tool, passing the model from `.arness/agent-models/spark.md` as the `model` parameter (see `plugins/arn-spark/skills/arn-spark-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context:
-- **Index template:** `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/use-case-index-template.md`
+- **Index template:** `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/use-case-index-template.md`
 - **Output directory:** `use-cases/`
 - **Product concept:** document path
 - **Actor catalog and use case catalog:** for populating the index
@@ -199,7 +199,7 @@ Present a brief summary: "**[N] use cases drafted.** Files written to `use-cases
 ### Step 4: Product Strategist Review (Batch)
 
 Read the review protocol for the team process:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/review-protocol.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/review-protocol.md`
 
 Create the `[use-cases-dir]/reviews/` directory if it does not exist.
 
@@ -207,7 +207,7 @@ Invoke the `arn-spark-product-strategist` agent via the Task tool, passing the m
 - All drafted use case content (read each file and provide the content)
 - Product concept for context
 - Actor catalog
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: `[use-cases-dir]/reviews/round-1-business-review.md`
 - Review focus instructions: "Review these use cases from a business perspective. For each use case, assess: Is the goal business-relevant and aligned with the product concept? Is the actor correct? Are the priority and level appropriate? Are there missing alternate flows from a business perspective (policy limits, resource constraints, edge cases)? Are business rules complete? Cross-cutting: are there missing actors or missing use cases for capabilities in the product concept? Is scope appropriate? Write your complete review to the specified file path using the expert review template. Return a brief summary in conversation."
 
@@ -219,7 +219,7 @@ Invoke the `arn-spark-ux-specialist` agent via the Task tool, passing the model 
 - All drafted use case content
 - Product concept for context
 - Existing prototype screens (if available)
-- Expert review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-use-cases/references/expert-review-template.md`
+- Expert review template path: `<arn-spark-plugin-root>/skills/arn-spark-use-cases/references/expert-review-template.md`
 - File path to write to: `[use-cases-dir]/reviews/round-1-flow-review.md`
 - Review focus instructions: "Review these use cases from a user experience perspective. For each use case, assess: Is the main success scenario natural from the actor's perspective? Are steps at the right granularity? Are common interaction patterns covered (cancel, undo, timeout, retry, empty states)? Are error recovery flows present for likely failures? Is accessibility considered? Do preconditions and postconditions make sense as observable states? Are related use cases properly connected? Cross-cutting: is step granularity consistent across use cases? Write your complete review to the specified file path using the expert review template. Return a brief summary in conversation."
 
@@ -294,7 +294,7 @@ Present the final use case catalog:
 
 All files are in the `use-cases/` directory. Read any use case: `use-cases/UC-001-device-pairing.md`.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to do?"**
 
@@ -312,12 +312,12 @@ If the user is satisfied: proceed to Step 8.
 "Use cases saved to `use-cases/`.
 
 These use cases are now available as input for downstream skills:
-1. **Scaffold the project:** Run `/arn-spark-scaffold` to set up the development skeleton
-2. **Explore visual style:** Run `/arn-spark-style-explore` to establish the visual direction
-3. **Prototype the UI:** Run `/arn-spark-clickable-prototype` -- use cases will enrich screen derivation and replace manually defined journeys
-4. **Extract features:** Run `/arn-spark-feature-extract` -- use cases provide structured behavioral specs for richer feature extraction
+1. **Scaffold the project:** Run `arn-spark-scaffold` to set up the development skeleton
+2. **Explore visual style:** Run `arn-spark-style-explore` to establish the visual direction
+3. **Prototype the UI:** Run `arn-spark-clickable-prototype` -- use cases will enrich screen derivation and replace manually defined journeys
+4. **Extract features:** Run `arn-spark-feature-extract` -- use cases provide structured behavioral specs for richer feature extraction
 
-Use cases are living documents. As the project evolves, run `/arn-spark-use-cases` again to add or revise them."
+Use cases are living documents. As the project evolves, run `arn-spark-use-cases` again to add or revise them."
 
 ## Agent Invocation Guide
 
@@ -331,21 +331,21 @@ Use cases are living documents. As the project evolves, run `/arn-spark-use-case
 | Second review round (Step 6b) | Repeat Steps 4-6 if convergence criteria not met. Max 2 rounds. |
 | User requests specific UC adjustment (Step 7) | Invoke `arn-spark-use-case-writer` with the specific UC path and the user's change description |
 | User wants to add new use cases | Return to Step 2 with additions to the catalog |
-| User asks about technology choices | Defer: "Use cases describe behavior, not implementation. Technology choices are in `/arn-spark-arch-vision`." |
-| User asks about screen design | Defer: "Screen design is handled by `/arn-spark-style-explore` and `/arn-spark-clickable-prototype`. Use cases focus on what the system does, not how it looks." |
-| User asks about features | Defer: "Feature extraction happens in `/arn-spark-feature-extract`, which will consume these use cases as input." |
-| User asks about implementation specs | Defer: "Implementation specifications are created by `/arn-code-feature-spec`. Use cases provide the behavioral foundation that feature specs build on." |
+| User asks about technology choices | Defer: "Use cases describe behavior, not implementation. Technology choices are in `arn-spark-arch-vision`." |
+| User asks about screen design | Defer: "Screen design is handled by `arn-spark-style-explore` and `arn-spark-clickable-prototype`. Use cases focus on what the system does, not how it looks." |
+| User asks about features | Defer: "Feature extraction happens in `arn-spark-feature-extract`, which will consume these use cases as input." |
+| User asks about implementation specs | Defer: "Implementation specifications are created by `arn-code-feature-spec`. Use cases provide the behavioral foundation that feature specs build on." |
 | Product strategist returns vague feedback | Re-invoke with more specific prompt: "Review each use case individually. For each, provide at least one Critical or Minor feedback item with a specific observation and suggestion." |
 | UX specialist unavailable | Proceed with product strategist review only. Note the limitation in all subsequent summaries. |
 
 ## Error Handling
 
-- **No product concept found and user declines to describe:** Cannot proceed meaningfully. Suggest: "Run `/arn-spark-discover` first to define what you are building."
-- **Product concept is very brief:** Proceed but warn: "The product concept has limited detail. Use cases may be thin and need more revision. Consider expanding the product concept with `/arn-spark-discover` first."
+- **No product concept found and user declines to describe:** Cannot proceed meaningfully. Suggest: "Run `arn-spark-discover` first to define what you are building."
+- **Product concept is very brief:** Proceed but warn: "The product concept has limited detail. Use cases may be thin and need more revision. Consider expanding the product concept with `arn-spark-discover` first."
 - **arn-spark-use-case-writer fails to write files:** Print the use case content in conversation so the user can copy it manually. Suggest checking file permissions or the output directory path.
 - **arn-spark-product-strategist returns unhelpful review:** Re-invoke with more specific instructions referencing the review protocol format. If still unhelpful, proceed to UX specialist review and note the limitation.
 - **arn-spark-ux-specialist unavailable:** Proceed with product strategist review only. Note the limitation. The review will be less thorough on flow quality and interaction completeness.
-- **User cancels mid-process:** Inform the user that partial use case files exist in `use-cases/` and they can resume later by running `/arn-spark-use-cases` again.
+- **User cancels mid-process:** Inform the user that partial use case files exist in `use-cases/` and they can resume later by running `arn-spark-use-cases` again.
 - **Very large number of use cases (>15):** Warn the user: "This is a large number of use cases, which increases review time and token cost. I recommend focusing on must-have use cases first and adding should-have and nice-to-have in a follow-up run."
 - **Expert feedback conflicts:** Present the specific conflict to the user with both positions. User resolves before the writer revises.
 - **Revision introduces new issues:** Caught by the second review round (Step 6b). Maximum 2 rounds prevents infinite loops.
@@ -353,7 +353,7 @@ Use cases are living documents. As the project evolves, run `/arn-spark-use-case
 - **Product strategist returns no suggestions in Step 2b:** The initial extraction was already comprehensive. Proceed with the initial catalog.
 - **UX specialist unavailable in Step 2b:** Proceed with the initial extraction + product strategist suggestions only. Note the limitation — user flow gaps may be caught later during the UX review in Step 5.
 - **Use case level ambiguity:** Default to user-goal level. Only create subfunction use cases when a substep is clearly reused by 2+ user-goal use cases and is complex enough to warrant its own document.
-- **Prototype screens change after use cases are written:** Use cases remain valid because they describe behavior, not screens. Screen references can be updated by running `/arn-spark-use-cases` again with the "Continue" option.
+- **Prototype screens change after use cases are written:** Use cases remain valid because they describe behavior, not screens. Screen references can be updated by running `arn-spark-use-cases` again with the "Continue" option.
 - **Writing the index/README fails:** Print the index content in conversation so the user can save it manually.
 - **User wants to add a use case during review (Steps 4-6):** Accept the addition. Add it to the catalog and include it in the current or next writer invocation.
 - **Resume with corrupted or incomplete files:** Offer a fresh start. If the user wants to preserve partial work, read what exists and present it for the user to decide what to keep.

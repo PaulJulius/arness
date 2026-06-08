@@ -15,7 +15,7 @@ Pre-deployment gates that must be evaluated before any infrastructure deployment
 
 **Status logic:**
 - **PASS:** IaC files exist and validation has been run
-- **WARN:** IaC files exist but no evidence of validation -- suggest running `/arn-infra-define`
+- **WARN:** IaC files exist but no evidence of validation -- suggest running `arn-infra-define`
 - **FAIL:** No IaC files found -- deployment cannot proceed without infrastructure code
 - **SKIP:** PaaS deployment (beginner path) -- platform-native configs do not require IaC validation
 
@@ -164,7 +164,7 @@ Pre-deployment checklist for [environment]:
 [SKIP] Changes: Cannot compute (no IaC)
 
 BLOCKED: 1 critical gate failed. Resolve before deploying.
-Action: Run /arn-infra-define to generate infrastructure code.
+Action: Run arn-infra-define to generate infrastructure code.
 ```
 
 ---

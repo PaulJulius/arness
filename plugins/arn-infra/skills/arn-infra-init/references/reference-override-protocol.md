@@ -16,19 +16,19 @@ mkdir -p .arness/infra-references
 
 **8b.2. Read the reference manifest:**
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-refresh/references/reference-manifest.md` to get the full list of 28 evolving reference files with their source paths and categories.
+Read `<arn-infra-plugin-root>/skills/arn-infra-refresh/references/reference-manifest.md` to get the full list of 28 evolving reference files with their source paths and categories.
 
 **8b.3. Copy each file from the plugin to the local overrides directory:**
 
 For each file listed in the manifest, copy from the plugin source to the local directory:
 
 ```
-${CLAUDE_PLUGIN_ROOT}/skills/<source-path>  -->  .arness/infra-references/<filename>
+<arn-infra-plugin-root>/skills/<source-path>  -->  .arness/infra-references/<filename>
 ```
 
 For example:
 ```
-${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-discover/references/mcp-registry.md  -->  .arness/infra-references/mcp-registry.md
+<arn-infra-plugin-root>/skills/arn-infra-discover/references/mcp-registry.md  -->  .arness/infra-references/mcp-registry.md
 ```
 
 All 28 filenames are unique across skills, so the flat directory structure works without renaming.
@@ -45,7 +45,7 @@ Or equivalently: `shasum -a 256 .arness/infra-references/*.md`
 
 **8b.5. Write the checksums file:**
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-refresh/references/reference-checksums-schema.md` for the full schema.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-refresh/references/reference-checksums-schema.md` for the full schema.
 
 Write `.arness/infra-references/.reference-checksums.json` with:
 
@@ -90,7 +90,7 @@ This step runs during the Update flow (from Step 1) to check whether reference f
 **U1.1. Read version information:**
 
 1. Read `Reference version` from the existing `## Arness` config
-2. Read current plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
+2. Read current plugin version from `<arn-infra-plugin-root>/.codex-plugin/plugin.json`
 3. Read `Reference overrides` path from config (default: `.arness/infra-references`)
 
 **U1.2. Version comparison:**
@@ -102,7 +102,7 @@ This step runs during the Update flow (from Step 1) to check whether reference f
 **U1.3. Checksum-based conflict detection:**
 
 1. Read the existing `.reference-checksums.json` from the Reference overrides directory
-2. Read the reference manifest from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-refresh/references/reference-manifest.md`
+2. Read the reference manifest from `<arn-infra-plugin-root>/skills/arn-infra-refresh/references/reference-manifest.md`
 3. For each of the 28 files listed in the manifest:
    a. Compute current SHA-256 of the local file in the overrides directory
    b. Compare against the stored `sha256` value in `.reference-checksums.json`
@@ -150,5 +150,5 @@ Read `Reference updates` from config (default: `ask`).
 - If **Skip**: leave files unchanged, do not update `Reference version`
 
 **`manual`:**
-- Inform the user: "New reference file versions are available in plugin version X.Y.Z. Your local reference files were not changed. Run `/arn-infra-init` and choose Update to apply them later."
+- Inform the user: "New reference file versions are available in plugin version X.Y.Z. Your local reference files were not changed. Run `arn-infra-init` and choose Update to apply them later."
 - Do not touch files or update `Reference version`

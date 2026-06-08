@@ -30,14 +30,14 @@ The product concept is read but never modified -- all recommendations are captur
 
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured **Vision directory** and **Reports directory** paths
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the Reports directory does not exist, create it with `mkdir -p <reports-dir>/stress-tests/`
 
 ### Data Availability
 
 | Artifact | Status | Location | Fallback |
 |----------|--------|----------|----------|
-| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `/arn-spark-discover` |
+| Product concept | REQUIRED | `<vision-dir>/product-concept.md` | Cannot proceed without it -- suggest running `arn-spark-discover` |
 | Product pillars | ENRICHES | Product Pillars section of product concept | Draft messaging is less focused; critique has fewer anchors |
 | Competitive landscape | ENRICHES | Competitive Landscape section of product concept | Draft positioning is less grounded in market context |
 | Target personas | ENRICHES | Target Personas section of product concept | Customer quote in press release is less persona-specific |
@@ -46,8 +46,8 @@ The product concept is read but never modified -- all recommendations are captur
 
 If no product concept exists:
 
-Ask (using `AskUserQuestion`): **"No product concept found. The PR/FAQ stress test needs a product concept to draft and critique messaging for. How would you like to proceed?"**
-1. Run `/arn-spark-discover` to create a product concept first
+Ask the user: **"No product concept found. The PR/FAQ stress test needs a product concept to draft and critique messaging for. How would you like to proceed?"**
+1. Run `arn-spark-discover` to create a product concept first
 2. Describe the product now (I will conduct the PR/FAQ from your description)
 3. Skip the PR/FAQ stress test
 
@@ -58,8 +58,8 @@ If the user chooses option 2, collect a product description and proceed with a r
 ### Step 1: Load References
 
 Load the PR/FAQ workflow and report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-prfaq/references/prfaq-workflow.md`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-stress-prfaq/references/prfaq-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-prfaq/references/prfaq-workflow.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-stress-prfaq/references/prfaq-report-template.md`
 
 ### Step 2: Read Product Concept and Extract Context
 
@@ -172,7 +172,7 @@ Present a summary to the user:
 **Recommended concept updates:** [N] recommendations ([X] Add, [Y] Modify, [Z] Remove)
 **Unresolved questions:** [N]
 
-This report will be used by `/arn-spark-concept-review` to propose changes to the product concept."
+This report will be used by `arn-spark-concept-review` to propose changes to the product concept."
 
 ## Agent Invocation Guide
 
@@ -184,7 +184,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 ## Error Handling
 
 - **Marketing PM produces generic/thin draft:** Retry with more specific context from the product concept -- highlight specific features, personas, and competitive positioning. If retry still produces thin output:
-  Ask (using `AskUserQuestion`): **"The PR/FAQ draft is too generic to produce a useful critique. How would you like to proceed?"**
+  Ask the user: **"The PR/FAQ draft is too generic to produce a useful critique. How would you like to proceed?"**
   1. Retry with additional context
   2. Proceed with the current draft (critique may be less effective)
   3. Abort the PR/FAQ stress test
@@ -194,7 +194,7 @@ This report will be used by `/arn-spark-concept-review` to propose changes to th
 - **Critique mode receives draft context (accidental context leak):** This should not happen if invocations are properly separated. If detected (the critique references drafting decisions or uses phrases like "when I wrote..."), discard the critique and re-invoke in critique mode with only the draft output and product concept -- no conversational context.
 
 - **Any agent invocation fails entirely:** Retry once with a simplified prompt. If retry fails:
-  Ask (using `AskUserQuestion`): **"Agent invocation failed. How would you like to proceed?"**
+  Ask the user: **"Agent invocation failed. How would you like to proceed?"**
   1. Retry
   2. Skip this step
   3. Abort

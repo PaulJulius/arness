@@ -10,7 +10,7 @@ description: >-
   discuss their scores and findings before producing a combined review,
   with per-criterion scoring, an independent judge verdict, and versioned output.
   Supports Agent Teams for parallel debate or sequential simulation as fallback.
-  For standard lower-of-two-scores visual review, use /arn-spark-static-prototype instead.
+  For standard lower-of-two-scores visual review, use arn-spark-static-prototype instead.
 version: 1.0.0
 ---
 
@@ -18,11 +18,11 @@ version: 1.0.0
 
 Create a static component showcase and validate it through iterative build-review cycles with expert debate, aided by the `arn-spark-prototype-builder` agent (in showcase mode) for rendering, the `arn-spark-style-capture` agent for screenshots, `arn-spark-product-strategist` and `arn-spark-ux-specialist` (greenfield agents in this plugin) for debate-based expert review, and the `arn-spark-ux-judge` agent for an independent final verdict. This is a conversational skill that runs in normal conversation (NOT plan mode).
 
-This is an alternative to `/arn-spark-static-prototype` (independent sequential review with mechanical lower-of-two scoring). Use this when the project has enough visual complexity that expert debate adds value -- nuanced style decisions, multiple visual grounding assets, components where strategist and UX perspectives genuinely differ. For simpler projects or lower token budgets, use `/arn-spark-static-prototype` instead.
+This is an alternative to `arn-spark-static-prototype` (independent sequential review with mechanical lower-of-two scoring). Use this when the project has enough visual complexity that expert debate adds value -- nuanced style decisions, multiple visual grounding assets, components where strategist and UX perspectives genuinely differ. For simpler projects or lower token budgets, use `arn-spark-static-prototype` instead.
 
 The primary artifacts are **versioned showcase pages** with component renders, **debate review reports** with per-criterion scores and debate findings, and a **final report** documenting the complete validation and debate history. All output is versioned so the user can compare evolution across cycles.
 
-This skill covers visual fidelity validation: do the components look correct according to the style brief? It does not cover interactive behavior -- that is `/arn-spark-clickable-prototype`'s job.
+This skill covers visual fidelity validation: do the components look correct according to the style brief? It does not cover interactive behavior -- that is `arn-spark-clickable-prototype`'s job.
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ The following artifacts inform the validation. Check in order:
 Determine the prototypes output directory:
 1. Read the project's `CLAUDE.md` and check for a `## Arness` section
 2. If found, extract the configured Prototypes directory path -- this is the source of truth
-3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+3. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 4. If the directory does not exist, create it
 
 > All references to `prototypes/` in this skill refer to the configured prototypes directory determined above.
@@ -58,7 +58,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 **Fresh design assets (optional):**
 1. Read the `## Arness` section for `Figma` and `Canva` fields
 2. If either is `yes` AND the visual grounding directory already has assets in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **Design assets exist from style exploration. Would you like to pull fresh versions from [Figma/Canva] before starting validation?**
    > 1. **Yes** — Pull fresh design assets
@@ -66,7 +66,7 @@ If found: visual grounding assets will be provided to expert reviewers and the j
    - If yes: ask the user to specify which assets to fetch (Figma file URL, page, or frame names / Canva design URL). Use the corresponding MCP to fetch and save to `[visual-grounding]/designs/` or `[visual-grounding]/brand/`. Show a summary of what was downloaded or replaced.
    - If no: proceed with existing assets on disk.
 3. If either is `yes` but NO existing design assets found in `designs/` or `brand/`:
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    > **No design mockups found yet. Would you like to pull design assets from [Figma/Canva]?**
    > 1. **Yes** — Pull design assets now
@@ -77,11 +77,11 @@ If found: visual grounding assets will be provided to expert reviewers and the j
 
 **If a style brief is found:** Use it for visual validation criteria.
 
-**If no style brief is found:** Inform the user: "No style brief found. I can create a component showcase with default styling, but visual validation is more meaningful with a style brief. Consider running `/arn-spark-style-explore` first." Proceed if the user wants to continue -- criteria will focus on component quality and layout rather than style fidelity.
+**If no style brief is found:** Inform the user: "No style brief found. I can create a component showcase with default styling, but visual validation is more meaningful with a style brief. Consider running `arn-spark-style-explore` first." Proceed if the user wants to continue -- criteria will focus on component quality and layout rather than style fidelity.
 
-**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. Check the project's dependency configuration. If not scaffolded, inform the user: "The project needs to be scaffolded before building a component showcase. Run `/arn-spark-scaffold` first."
+**Project scaffold:** The project must be scaffolded with the UI framework and component library installed. Check the project's dependency configuration. If not scaffolded, inform the user: "The project needs to be scaffolded before building a component showcase. Run `arn-spark-scaffold` first."
 
-**Agent Teams (strongly recommended):** This skill works best with Agent Teams enabled for parallel expert debate. Agent Teams availability is verified in Step 1 before any work begins. If not enabled, the skill falls back to sequential debate mode (or suggests `/arn-spark-static-prototype` for the non-debate alternative).
+**Agent Teams (strongly recommended):** This skill works best with Agent Teams enabled for parallel expert debate. Agent Teams availability is verified in Step 1 before any work begins. If not enabled, the skill falls back to sequential debate mode (or suggests `arn-spark-static-prototype` for the non-debate alternative).
 
 ## Workflow
 
@@ -99,7 +99,7 @@ Run via Bash: `echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
 
 This skill will use Agent Teams for parallel expert debate. Both experts will score in parallel (Phase 1) and cross-review each other's findings in parallel (Phase 2).
 
-Confirm to proceed, or type 'skip' to use `/arn-spark-static-prototype` instead (non-debate review, lower token cost)."
+Confirm to proceed, or type 'skip' to use `arn-spark-static-prototype` instead (non-debate review, lower token cost)."
 
 Wait for user confirmation before proceeding.
 
@@ -120,13 +120,13 @@ This skill works without Agent Teams using sequential debate (I will pass feedba
   ```
 - Then **restart this Claude Code session** (the variable must be set before the session starts).
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to do?"**
 
 Options:
 1. **Continue with sequential debate** — Same debate quality, slower execution (3 sequential expert invocations per debate round instead of 2 parallel)
-2. **Use /arn-spark-static-prototype instead** — Non-debate review (mechanical lower-of-two scoring, lower token cost)
+2. **Use arn-spark-static-prototype instead** — Non-debate review (mechanical lower-of-two scoring, lower token cost)
 3. **Enable Agent Teams and restart** — Set the env var, restart Claude Code, then re-run this skill"
 
 Wait for user response.
@@ -144,7 +144,7 @@ Check for existing versioned output:
 
 **If existing versions found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"I found existing static prototype versions up to v[N]. Which would you prefer?"**
 
@@ -174,7 +174,7 @@ Present defaults and ask the user to confirm or adjust:
 - **Execution mode:** [Agent Teams / Sequential] (detected in Step 1)
 
 **Token cost comparison:**
-- `/arn-spark-static-prototype` (no debate): 2 expert invocations per cycle
+- `arn-spark-static-prototype` (no debate): 2 expert invocations per cycle
 - This skill (divergence mode): 2-4 expert invocations per cycle (2 if no divergence, 4 if divergence detected)
 - This skill (standard mode): 3-4 expert invocations per cycle (always full debate)
 
@@ -189,13 +189,13 @@ Adjust any parameter, debate mode, or criterion, or confirm to proceed."
 
 To propose criteria:
 1. Read the default criteria template:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype/references/static-prototype-criteria.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype/references/static-prototype-criteria.md`
 2. Adapt based on available artifacts (remove dark mode criterion if not applicable, add visual grounding criteria if assets exist, etc.)
 3. Present the adapted list
 
 Check `arn-spark-ux-specialist` availability by attempting to invoke it with a minimal prompt (e.g., "Respond with OK to confirm availability"). If the agent is not found or the invocation fails, record single-reviewer mode and inform the user:
 
-"UX specialist is not available. Review will be strategist-only (no debate). Consider `/arn-spark-static-prototype` which handles single-reviewer mode identically with lower overhead."
+"UX specialist is not available. Review will be strategist-only (no debate). Consider `arn-spark-static-prototype` which handles single-reviewer mode identically with lower overhead."
 
 Present the full configuration summary:
 
@@ -263,10 +263,10 @@ If Playwright is unavailable, ask the user to provide screenshots of the showcas
 
 #### 5c: Expert Debate Review
 
-This step replaces the mechanical lower-of-two scoring in `/arn-spark-static-prototype` with a structured expert debate.
+This step replaces the mechanical lower-of-two scoring in `arn-spark-static-prototype` with a structured expert debate.
 
 1. Read the debate protocol:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype-teams/references/debate-protocol.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype-teams/references/debate-protocol.md`
 
 2. Create the `prototypes/static/reviews/` directory if it does not exist.
 
@@ -283,7 +283,7 @@ Spawn both experts simultaneously as teammates. Each receives:
 - Style brief (full document)
 - Product concept (full document)
 - Visual grounding assets (with category context: references=inspirational, designs=specification, brand=constraints)
-- Expert visual review template path: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`
+- Expert visual review template path: `<arn-spark-plugin-root>/skills/arn-spark-static-prototype-teams/references/expert-visual-review-template.md`
 - File path to write to:
   - Product strategist -> `prototypes/static/reviews/round-N-strategist-review.md`
   - UX specialist -> `prototypes/static/reviews/round-N-ux-review.md`
@@ -299,7 +299,7 @@ Invocation 2: Invoke `arn-spark-ux-specialist` with all inputs and file path `pr
 
 **If single-reviewer mode:**
 
-Invoke `arn-spark-product-strategist` only. No debate. Strategist scores become the combined scores directly (same behavior as `/arn-spark-static-prototype` single-reviewer). Skip Phases 2-4.
+Invoke `arn-spark-product-strategist` only. No debate. Strategist scores become the combined scores directly (same behavior as `arn-spark-static-prototype` single-reviewer). Skip Phases 2-4.
 
 **Divergence Check:**
 
@@ -354,7 +354,7 @@ For each criterion, categorize:
 - **No-debate:** Phase 2 was skipped. Combined score = min(strategist, ux).
 
 Read the debate review report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype-teams/references/debate-review-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype-teams/references/debate-review-report-template.md`
 
 Write the debate report to `prototypes/static/reviews/round-N-cycle-M-debate-report.md`.
 
@@ -418,7 +418,7 @@ Write the judge's report to `prototypes/static/v[N]/judge-report.md`.
 After the judge review completes, generate structured screenshot images so the user can review the final visual state without running a dev server.
 
 1. Read the showcase capture guide:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-static-prototype/references/showcase-capture-guide.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-static-prototype/references/showcase-capture-guide.md`
 
 2. Read the section manifest from `prototypes/static/v[N]/showcase-manifest.json`.
 
@@ -480,8 +480,8 @@ Write `prototypes/static/final-report.md` with:
 "Static prototype validation complete. Results saved to `prototypes/static/`.
 
 Recommended next steps:
-1. **Build clickable prototype:** Run `/arn-spark-clickable-prototype` to add interaction and validate user journeys
-2. **Extract features:** Run `/arn-spark-feature-extract` to create a prioritized feature backlog
+1. **Build clickable prototype:** Run `arn-spark-clickable-prototype` to add interaction and validate user journeys
+2. **Extract features:** Run `arn-spark-feature-extract` to create a prioritized feature backlog
 
 The clickable prototype will build on the validated visual direction from this static prototype."
 
@@ -495,26 +495,26 @@ The clickable prototype will build on the validated visual direction from this s
 | Expert debate -- Agent Teams Phase 1 (Step 5c) | Spawn both experts simultaneously as teammates. Each writes to own file. Verify both files exist after completion. |
 | Expert debate -- Agent Teams Phase 2 (Step 5c) | Through Teams communication, tell each expert to read the other's file and write cross-review to separate file. |
 | Expert debate -- Sequential (Step 5c) | (1) Strategist Phase 1, writes file. (2) UX specialist Phase 1 + Phase 2, reads strategist file, writes own file. (3) Strategist Phase 2, reads UX file, writes cross-review. |
-| Expert debate -- UX unavailable (Step 5c) | Strategist only. No debate. Same as `/arn-spark-static-prototype` single-reviewer. Suggest base skill. |
+| Expert debate -- UX unavailable (Step 5c) | Strategist only. No debate. Same as `arn-spark-static-prototype` single-reviewer. Suggest base skill. |
 | Divergence check (Step 5c) | Skill reads both Phase 1 files, compares per-criterion scores. If divergence mode and all diffs < 2: skip Phase 2. |
 | Synthesize debate report (Step 5c) | Skill reads all expert files (not from conversation). Categorizes per criterion: consensus, addition, disagreement, no-debate. Writes debate report. |
 | Resolve disagreements (Step 5c Phase 4) | Present each disagreement to user with both positions and evidence. Wait for decisions. Update report. |
 | Agent Teams failure detection (Step 5c) | After Phase 1, if one expert's file is missing, invoke that expert sequentially. Log the issue in the debate report. |
 | Judge review (Step 6) | Invoke `arn-spark-ux-judge` in `static` mode with latest screenshots, criteria, scoring parameters, review reports, and visual grounding assets for direct comparison |
 | Generate visual showcase (Step 6b) | Read shared showcase capture guide from base skill. Start prototype, generate and run Playwright capture script, write showcase-index.md. |
-| User asks about interactive behavior | Defer: "Interactive behavior is validated in `/arn-spark-clickable-prototype`. This skill focuses on visual fidelity." |
-| User asks to change the style | Defer to `/arn-spark-style-explore` for style brief updates, then re-run static prototype validation |
-| User asks about features | Defer: "Feature work starts after `/arn-spark-feature-extract` and `/arn-code-feature-spec`." |
+| User asks about interactive behavior | Defer: "Interactive behavior is validated in `arn-spark-clickable-prototype`. This skill focuses on visual fidelity." |
+| User asks to change the style | Defer to `arn-spark-style-explore` for style brief updates, then re-run static prototype validation |
+| User asks about features | Defer: "Feature work starts after `arn-spark-feature-extract` and `arn-code-feature-spec`." |
 | Builder fails | Retry up to 3 times. If still failing, present the error for manual investigation. |
 | Expert returns vague scores (all maximum, no evidence) | Re-invoke with more specific prompt requiring per-criterion evidence referencing exact screenshots. |
 
 ## Error Handling
 
-- **Agent Teams not enabled:** Fall back to sequential debate mode. Inform user clearly with setup instructions and offer `/arn-spark-static-prototype` as lower-cost alternative.
+- **Agent Teams not enabled:** Fall back to sequential debate mode. Inform user clearly with setup instructions and offer `arn-spark-static-prototype` as lower-cost alternative.
 - **Agent Teams enabled but one expert fails to write its file:** Detect the missing file after Phase 1. Invoke the missing expert sequentially. Note the issue in the debate report: "Agent Teams Phase 1 partial failure."
-- **arn-spark-ux-specialist unavailable:** Single-reviewer mode. No debate, strategist reviews alone. Suggest `/arn-spark-static-prototype` as equivalent for single-reviewer. Note limitation in all reports.
+- **arn-spark-ux-specialist unavailable:** Single-reviewer mode. No debate, strategist reviews alone. Suggest `arn-spark-static-prototype` as equivalent for single-reviewer. Note limitation in all reports.
 - **No style brief found:** Proceed with component quality and layout criteria only. Note that visual fidelity criteria are deferred until a style brief exists.
-- **Project not scaffolded:** Cannot build showcase. Suggest `/arn-spark-scaffold` first.
+- **Project not scaffolded:** Cannot build showcase. Suggest `arn-spark-scaffold` first.
 - **Builder fails (3 times):** Present the error. The user can investigate manually or adjust the approach.
 - **Capture fails (Playwright unavailable):** Fall back to asking the user for manual screenshots. Note the limitation. The visual showcase (Step 6b) is also skipped.
 - **Showcase manifest missing:** The builder did not write `showcase-manifest.json`. Capture a full-page screenshot only. Note: "Section manifest not found. Re-build the showcase to generate per-section captures."
@@ -524,7 +524,7 @@ The clickable prototype will build on the validated visual direction from this s
 - **Resume from interrupted cycle:** Detect the latest version directory. If it has a review-report.md, the cycle completed -- continue from the next cycle. If it has showcase files but no review-report.md, the build completed but review did not -- run review on the existing build.
 - **Criteria file already exists:**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   > **Existing criteria found at `prototypes/criteria.md`. What would you like to do?**
   > 1. **Use existing** — Keep the current criteria

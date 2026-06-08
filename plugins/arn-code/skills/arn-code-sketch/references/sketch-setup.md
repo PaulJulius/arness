@@ -13,7 +13,7 @@ Read `ui-patterns.md` from the project's code patterns directory. Locate the `##
 | Preview mechanism | How the user previews the sketch | Browser URL (web), terminal command (CLI/TUI) |
 | Promotion rules | How sketches move into the real codebase | Copy to real routes (web), integrate into command module (CLI) |
 
-If `## Sketch Strategy` is not found, halt with: "No sketch strategy found. Run `/arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework."
+If `## Sketch Strategy` is not found, halt with: "No sketch strategy found. Run `arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework."
 
 ---
 
@@ -30,11 +30,11 @@ Based on the paradigm extracted from the sketch strategy, load the corresponding
 
 Load the reference file:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/paradigm-<paradigm>.md`
+> Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/paradigm-<paradigm>.md`
 
 If the file does not exist, fall back to:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/paradigm-stub.md`
+> Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/paradigm-stub.md`
 
 The paradigm reference file contains all paradigm-specific detection, artifact structure, and creation rules. Follow its instructions for Steps 4-6 of the arn-code-sketch workflow.
 
@@ -69,8 +69,8 @@ Run these checks before proceeding to sketch creation. Report all failures at on
 
 | Check | How | Failure Message |
 |-------|-----|-----------------|
-| `## Arness` config exists | Read CLAUDE.md, look for `## Arness` heading | "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." |
-| Sketch strategy found | Read `ui-patterns.md`, look for `## Sketch Strategy` | "No sketch strategy found. Run `/arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework." |
+| `## Arness` config exists | Read CLAUDE.md, look for `## Arness` heading | "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." |
+| Sketch strategy found | Read `ui-patterns.md`, look for `## Sketch Strategy` | "No sketch strategy found. Run `arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework." |
 | Paradigm reference loadable | Load `paradigm-<paradigm>.md` or fall back to `paradigm-stub.md` | "No paradigm reference found for '[paradigm]'. Using generic guidelines." (warning, not a halt) |
 | Target directory is writable | Verify the `arness-sketches/` parent directory exists and is writable | "Cannot write to [directory]. Check permissions." |
 

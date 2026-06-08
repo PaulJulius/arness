@@ -46,7 +46,7 @@ The five first-citizen entry points are the primary way to interact with Arness 
 
 | Command | Description | Version |
 |---------|-------------|---------|
-| `/arn-code-taskify` | Convert a project's TASKS.md into a Claude Code task list with dependency management. Creates tasks and wires up the dependency graph. | 1.0.0 |
+| `/arn-code-taskify` | Convert a project's TASKS.md into an executable task list with dependency management. Uses host task APIs when available and file-backed fallback in Codex. | 1.0.0 |
 | `/arn-code-execute-plan` | Execute a structured project plan by dispatching parallel batches of task-executor agents with review gates. Independent tasks run concurrently; dependent tasks wait for blockers. | 0.3.0 |
 | `/arn-code-execute-plan-teams` | Execute a structured project plan using the experimental Agent Teams feature. Creates a coordinated team of executor, reviewer, and architect teammates. | 0.3.0 |
 | `/arn-code-execute-task` | Execute a single specific task from the task list by spawning a task-executor agent with optional review. For one task only -- use execute-plan for the full plan. | 0.3.0 |

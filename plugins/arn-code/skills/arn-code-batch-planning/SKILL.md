@@ -45,7 +45,7 @@ Sources:
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 After configuration is ensured, extract the following from `## Arness`:
 - **Plans directory** — base path where project plans and PLAN_PREVIEW files are stored
@@ -64,7 +64,7 @@ Batch planning supports multiple feature sources. Check them in order — the fi
 
 ### 1a. Check for Greenfield Feature Tracker
 
-Read the backlog-selection reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-planning/references/backlog-selection.md`. Follow its procedure to scan the Feature Tracker and identify unblocked features.
+Read the backlog-selection reference: `<arn-code-plugin-root>/skills/arn-code-batch-planning/references/backlog-selection.md`. Follow its procedure to scan the Feature Tracker and identify unblocked features.
 
 **If greenfield backlog exists with 2+ unblocked features:** Proceed to Step 2 with greenfield features (input_type: `greenfield` for each).
 
@@ -72,7 +72,7 @@ Read the backlog-selection reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-bat
 
 Inform the user: "Only 1 unblocked feature found: **F-XXX [Feature Name]**. Batch planning is designed for 2+ features."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to proceed?"**
 
@@ -81,7 +81,7 @@ Options:
 2. **Proceed with batch anyway** — Use the batch pipeline for this single feature
 3. **Exit**
 
-If **Plan this feature**: invoke `Skill: arn-code:arn-planning` with the F-XXX reference. Exit batch-planning.
+If **Plan this feature**: invoke Codex skill `arn-planning` with the F-XXX reference. Exit batch-planning.
 If **Proceed with batch anyway**: continue to Step 2 with the single feature pre-selected.
 If **Exit**: STOP.
 
@@ -89,7 +89,7 @@ If **Exit**: STOP.
 
 Inform the user: "No unblocked features found. All pending features have incomplete dependencies." Present the summary counts.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"No features are available for batch planning. What would you like to do?"**
 
@@ -97,14 +97,14 @@ Options:
 1. **Switch to single-feature planning** — Run arn-planning to describe a feature or report a bug
 2. **Exit** — I'll wait for dependencies to complete
 
-If **Switch**: invoke `Skill: arn-code:arn-planning`. Exit batch-planning.
+If **Switch**: invoke Codex skill `arn-planning`. Exit batch-planning.
 If **Exit**: STOP.
 
 ### 1b. Check for Remote Issues (Non-Greenfield Fallback)
 
 **If no greenfield Feature Tracker exists** (no Vision directory field, or no `feature-backlog.md`) BUT Issue tracker is `github` or `jira`:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"No greenfield feature backlog found, but [GitHub/Jira] issues are available. How would you like to select features?"**
 
@@ -121,7 +121,7 @@ If **Browse issues:**
 - For each selected issue, set input_type: `github_issue` or `jira_issue`
 - Proceed to Step 2 with the selected issues
 
-If **Switch**: invoke `Skill: arn-code:arn-planning`. Exit.
+If **Switch**: invoke Codex skill `arn-planning`. Exit.
 If **Exit**: STOP.
 
 ### 1c. No Feature Source Available
@@ -152,7 +152,7 @@ Also show summary: "[total] features in tracker, [unblocked] unblocked, [in-prog
 
 **If 4 or fewer unblocked features:**
 
-Ask (using `AskUserQuestion`, multiSelect: true):
+Ask the user (multi-select):
 
 **"Which features would you like to plan for batch implementation? Select all that apply."**
 
@@ -160,9 +160,9 @@ Options: list each unblocked feature as `F-XXX: [Feature Name]`
 
 **If more than 4 unblocked features:**
 
-Use layered selection to stay within the 4-option AskUserQuestion limit.
+Use layered selection to stay within the 4-option user prompt limit.
 
-First, ask (using `AskUserQuestion`):
+First, ask (using `user prompt`):
 
 **"There are [N] unblocked features. How would you like to select?"**
 
@@ -172,13 +172,13 @@ Options:
 
 If **All unblocked features**: select all, proceed to Step 2.5.
 
-If **Let me choose**: present features in groups of 4 using sequential `AskUserQuestion` calls (multiSelect: true). After each group, ask if the user wants to select from the next group or proceed with current selections. Continue until all groups are offered or the user says proceed.
+If **Let me choose**: present features in groups of 4 using sequential `user prompt` calls (multiSelect: true). After each group, ask if the user wants to select from the next group or proceed with current selections. Continue until all groups are offered or the user says proceed.
 
 After feature selection is confirmed, inform the user about the batch workflow:
 
 "**Batch planning workflow:** After all features are planned, the specs and plans will be committed to a new branch, pushed, and a PR will be opened to merge them into main. This is required before batch implementation — workers need the plans on main to find them. You'll be asked to confirm the PR merge before any implementation begins."
 
-If Git is `no`: instead inform: "Plans will be saved locally. Note: batch implementation requires git — you can implement features one at a time with `/arn-implementing`."
+If Git is `no`: instead inform: "Plans will be saved locally. Note: batch implementation requires git — you can implement features one at a time with `arn-implementing`."
 
 ---
 
@@ -191,7 +191,7 @@ Score each selected feature to determine its ceremony tier. This is a lightweigh
 Read (if not already loaded):
 - `<code-patterns-dir>/architecture.md`
 - `<code-patterns-dir>/code-patterns.md`
-- `${CLAUDE_PLUGIN_ROOT}/skills/arn-planning/references/scope-router-criteria.md`
+- `<arn-code-plugin-root>/skills/arn-planning/references/scope-router-criteria.md`
 
 ### 2.5b. Score Each Feature
 
@@ -231,7 +231,7 @@ Pipeline routing:
 
 ### 2.5d. Tier Override Gate
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Tier assignments look right?"**
 
@@ -250,8 +250,8 @@ If **Adjust tiers**: for each feature the user wants to change, ask which tier t
 For features assigned to swift or standard tiers, generate plan artifacts immediately. These features skip the interactive spec review — batch-implement workers will read these plans and handle execution autonomously.
 
 Read the plan templates:
-- `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-plan-template.md` (for swift features)
-- `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-standard/references/standard-plan-template.md` (for standard features)
+- `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-plan-template.md` (for swift features)
+- `<arn-code-plugin-root>/skills/arn-code-standard/references/standard-plan-template.md` (for standard features)
 
 **For each swift feature:**
 
@@ -289,7 +289,7 @@ Swift/Standard Plans Generated: [N] features
 
 For each plan, show: the tier, problem statement (or scope summary), files to modify, and key patterns that will be followed. This gives the user a quick sanity check without full interactive exploration.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Review these plans before proceeding?"**
 
@@ -339,8 +339,8 @@ For each thorough feature, spawn a `arn-code-batch-analyzer` agent via the Task 
   - Jira issue: issue key
 - Code patterns path
 - Specs directory and derived spec name
-- Template reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/feature-spec-template.md`
-- Greenfield loading reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/greenfield-loading.md`
+- Template reference: `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/feature-spec-template.md`
+- Greenfield loading reference: `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/greenfield-loading.md`
 
 **ALL agents MUST be spawned in a SINGLE message** for true parallelism.
 
@@ -353,7 +353,7 @@ Pre-analysis complete: F-XXX [Name] (draft spec written)
 
 "Pre-analysis failed for F-XXX [Name] after 3 attempts: [error details]"
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to handle this?"**
 
@@ -400,7 +400,7 @@ If the source is greenfield: update the Feature Tracker status to `in-progress` 
 
 ### 3c. Invoke Feature Spec
 
-Invoke `Skill: arn-code:arn-code-feature-spec` with the feature context.
+Invoke Codex skill `arn-code-feature-spec` with the feature context.
 
 Feature-spec will detect the pre-built `DRAFT_FEATURE_*.md` file (written by the batch-analyzer in Step 2.7) and offer: "Resume or start fresh?" The user picks "Resume" and exploration starts immediately with the pre-built analysis — no agent wait.
 
@@ -440,7 +440,7 @@ Feature F-XXX [Name] spec finalized. Plan generating in background. [remaining] 
 
 **If feature-spec fails (error or unexpected exit):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Feature spec for F-XXX encountered an error. How would you like to proceed?"**
 
@@ -451,7 +451,7 @@ Options:
 
 **If the user says "stop" mid-loop:**
 
-Show what has been completed so far (completed specs and any plans already generated). Inform the user: "Batch planning paused. [M] of [N] features spec'd. Plans are generating in background for completed specs. Run `/arn-code-batch-implement` when ready — it will pick up completed plans."
+Show what has been completed so far (completed specs and any plans already generated). Inform the user: "Batch planning paused. [M] of [N] features spec'd. Plans are generating in background for completed specs. Run `arn-code-batch-implement` when ready — it will pick up completed plans."
 
 ---
 
@@ -473,7 +473,7 @@ For each feature (in order):
 - **If PLAN_PREVIEW exists:** present a summary of the plan (phases, deliverables, key decisions).
 - **If planner failed:** retry once in the foreground. If it fails again, inform the user with the error and ask:
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   **"Plan generation failed for F-XXX. How would you like to proceed?"**
 
@@ -486,7 +486,7 @@ For each feature (in order):
 
 Before presenting the plan to the user, parse each phase's `**Complexity:**` and `**Complexity rationale:**` fields (added by `arn-code-feature-planner` per its Complexity Assessment section). When presenting the plan summary, **always show the complexity rating per phase** (e.g., `Phase 3: Dispatch Site Edits — 7 deliverables — complexity: complex`).
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Does this plan for F-XXX look right?"**
 
@@ -495,7 +495,7 @@ Options:
 2. **Adjust** — Let me refine the plan
 3. **Skip this feature** — Remove from the batch
 
-If **Approve**: run the **Complex Phase Upgrade Gate** below (Step 3.5c) before invoking save-plan. After the gate completes, invoke `Skill: arn-code:arn-code-save-plan`. Proceed to the next feature's plan.
+If **Approve**: run the **Complex Phase Upgrade Gate** below (Step 3.5c) before invoking save-plan. After the gate completes, invoke Codex skill `arn-code-save-plan`. Proceed to the next feature's plan.
 
 If **Adjust**: let the user provide feedback. Spawn the `arn-code-feature-planner` agent via the Task tool (foreground), passing the model from `.arness/agent-models/code.md` as the `model` parameter (see `plugins/arn-code/skills/arn-code-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback), with revision instructions and the current plan path. Re-present with the same 3 options. Repeat until approved or skipped.
 
@@ -520,7 +520,7 @@ Before invoking save-plan for an approved plan, check whether to upgrade complex
 - If `balanced` or `custom`: continue.
 - If field missing or unknown: treat as `unknown` and continue.
 
-**Two-tier preference lookup** for `pipeline.complex-phase-upgrade` per `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`:
+**Two-tier preference lookup** for `pipeline.complex-phase-upgrade` per `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`:
 
 1. Read `.arness/workflow.local.yaml` — if file exists and key present, use that value.
 2. Else read `~/.arness/workflow-preferences.yaml` — if file exists and key present, use that value.
@@ -535,7 +535,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, `null`, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"N phases in F-XXX are rated complex (rationale: ...). Upgrade ALL of them to Opus for execution? Reviewer dispatches stay on configured tier. This answer will apply to subsequent batch entries in this session."**
 
@@ -548,7 +548,7 @@ If **No**: no override applied. Set `complexUpgradeSessionAnswer = no`.
 
 **Follow-up (only when preference was null — first encounter):** After the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -591,14 +591,14 @@ If any features were skipped, list them separately: "Skipped: F-XXX (spec error)
 
 Before launching batch-implement, all planning artifacts must be on main so workers can find them.
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-batch-planning/references/plan-shipping.md` and follow its procedure. This handles:
+Read `<arn-code-plugin-root>/skills/arn-code-batch-planning/references/plan-shipping.md` and follow its procedure. This handles:
 - Creating a plans branch (if on main)
 - Staging and committing all plan artifacts
 - Pushing and creating a PR (platform-dependent)
 - Waiting for the user to confirm the PR is merged
 - Checking out main and pulling
 
-If Git is `no`: skip shipping. Inform the user that plans are local only and batch-implement requires git. Offer to exit or implement features one at a time via `/arn-implementing`.
+If Git is `no`: skip shipping. Inform the user that plans are local only and batch-implement requires git. Offer to exit or implement features one at a time via `arn-implementing`.
 
 ---
 
@@ -606,14 +606,14 @@ If Git is `no`: skip shipping. Inform the user that plans are local only and bat
 
 After plans are on main (PR merged and pulled):
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Plans are on main. Launch batch implementation?"**
 
 Options:
-1. **Launch batch implementation** — Invoke `Skill: arn-code:arn-code-batch-implement`
+1. **Launch batch implementation** — Invoke Codex skill `arn-code-batch-implement`
 2. **Not yet** ��� Exit
 
-If **Launch batch implementation**: invoke `Skill: arn-code:arn-code-batch-implement`.
+If **Launch batch implementation**: invoke Codex skill `arn-code-batch-implement`.
 
-If **Not yet**: "Run `/arn-code-batch-implement` when ready. All plans are saved on main."
+If **Not yet**: "Run `arn-code-batch-implement` when ready. All plans are saved on main."

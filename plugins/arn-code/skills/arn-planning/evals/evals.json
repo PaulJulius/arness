@@ -11,7 +11,7 @@
         "File count criterion is rated low",
         "Domain sensitivity criterion is rated low",
         "Reversibility risk criterion is rated low",
-        "The user is presented with a tier selection gate via AskUserQuestion"
+        "The user is presented with a tier selection gate via a user prompt"
       ]
     },
     {

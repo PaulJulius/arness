@@ -26,11 +26,11 @@ This is a conversational skill. It runs in normal conversation (NOT plan mode).
 
 ## Prerequisites
 
-1. **Arness must be configured.** Read the project's CLAUDE.md and check for a `## Arness` section. If missing, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
+1. **Arness must be configured.** Read the project's CLAUDE.md and check for a `## Arness` section. If missing, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
 
 2. **Sketch strategy must exist.** Read `ui-patterns.md` from the project's code patterns directory (the path under **Code patterns:** in the `## Arness` config). Look for a `## Sketch Strategy` section. If absent, halt with:
 
-   "No sketch strategy found. Run `/arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework."
+   "No sketch strategy found. Run `arn-implementing` to get started — pattern documentation will be generated on first use, including the sketch strategy if your project has a UI framework."
 
    Do not proceed without a sketch strategy.
 
@@ -56,8 +56,8 @@ Entry points:
   Assess:  Should this be sketched? (threshold rules)
             |
             +--- Below threshold --> "This change is small enough to implement
-            |                         directly. Proceed with /arn-code-swift or
-            |                         /arn-code-feature-spec instead."
+            |                         directly. Proceed with arn-code-swift or
+            |                         arn-code-feature-spec instead."
             |
             +--- Above threshold --> Continue
             |
@@ -80,7 +80,7 @@ Entry points:
 
 Load the sketch setup and paradigm routing rules:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/sketch-setup.md`
+> Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/sketch-setup.md`
 
 Follow the setup sequence:
 
@@ -94,11 +94,11 @@ Follow the setup sequence:
 
 3. **Load paradigm reference** -- based on the paradigm extracted from the sketch strategy:
 
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/paradigm-<paradigm>.md`
+   > Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/paradigm-<paradigm>.md`
 
    If the paradigm-specific reference file does not exist, fall back to:
 
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/paradigm-stub.md`
+   > Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/paradigm-stub.md`
 
 4. Hold the sketch strategy context (paradigm, artifact structure, preview mechanism) and paradigm reference for use by the builder agent.
 
@@ -106,7 +106,7 @@ Follow the setup sequence:
 
 Determine what to sketch from one of these sources (check in order):
 
-1. **From conversation context** -- if invoked after `/arn-code-feature-spec` or `/arn-code-swift`, the feature description and architectural decisions are already in the conversation. Extract the interface-relevant portions.
+1. **From conversation context** -- if invoked after `arn-code-feature-spec` or `arn-code-swift`, the feature description and architectural decisions are already in the conversation. Extract the interface-relevant portions.
 
 2. **From a spec file** -- if the user references a spec (e.g., "sketch F-001" or "sketch the auth feature"), read the spec file from the project's specs directory.
 
@@ -127,7 +127,7 @@ Not every interface change warrants a sketch. Apply these threshold rules based 
 
 For below-threshold changes, suggest the direct path:
 
-"This change is straightforward enough to implement directly. Would you like to proceed with `/arn-code-swift` instead?"
+"This change is straightforward enough to implement directly. Would you like to proceed with `arn-code-swift` instead?"
 
 **Offer sketching (above threshold):**
 - Web: new pages or routes, new forms with 3+ fields, new sections or panels, layout changes (sidebar, navigation, dashboard grids), multi-component features, features where the visual result is ambiguous
@@ -220,7 +220,7 @@ After the builder agent completes:
 
 Load the iteration guide:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/iteration-guide.md`
+> Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/iteration-guide.md`
 
 Follow the feedback loop protocol:
 - User describes what to change
@@ -242,17 +242,17 @@ When the user is satisfied (or decides to move on), offer three options:
 
 Before performing the promote or keep action, present the detected components and let the user confirm target paths and promotion modes (direct vs refine).
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-sketch/references/iteration-guide.md` for the full component mapping population procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-sketch/references/iteration-guide.md` for the full component mapping population procedure.
 
 Write the confirmed mapping to the manifest before proceeding with the chosen action.
 
-If the user proceeds to `/arn-code-feature-spec` or `/arn-code-plan` after sketching, mention that the sketch exists as a reference:
+If the user proceeds to `arn-code-feature-spec` or `arn-code-plan` after sketching, mention that the sketch exists as a reference:
 
 "The sketch at `arness-sketches/[feature-name]/` shows the approved design with component mapping. Implementation should match this preview -- the manifest's `componentMapping` tells executors exactly which files to promote and how."
 
 ## Error Handling
 
-- **No sketch strategy found** -- Halt with: "No sketch strategy found in `ui-patterns.md`. Run `/arn-implementing` to get started — pattern documentation will be generated on first use." If the user believes a sketch strategy should exist, suggest re-running the codebase analyzer.
+- **No sketch strategy found** -- Halt with: "No sketch strategy found in `ui-patterns.md`. Run `arn-implementing` to get started — pattern documentation will be generated on first use." If the user believes a sketch strategy should exist, suggest re-running the codebase analyzer.
 - **Paradigm reference file not found** -- Load `paradigm-stub.md` as a fallback. Inform the user: "No paradigm-specific reference found for '[paradigm]'. Using generic sketch guidelines. The sketch may need manual adjustments."
 - **Build fails after sketch creation** -- Read the error output. Common causes: missing imports, incorrect API usage, missing dependencies. Re-spawn the builder agent with the error context to fix.
 - **Preview fails** -- For web: suggest the user check their dev server configuration. For CLI/TUI: check that required dependencies are installed and the sketch script is executable. This is outside Arness's direct control.
@@ -268,7 +268,7 @@ After the initial proposal is presented (Step 3c), if the feature involves UI an
 
 "This feature involves interface work. Would you like to see a visual preview before we dive deeper?"
 
-The user can also request a sketch at any time during the exploration conversation. In both cases, `arn-code-feature-spec` invokes `Skill: arn-code:arn-code-sketch` with the current feature context.
+The user can also request a sketch at any time during the exploration conversation. In both cases, `arn-code-feature-spec` invokes Codex skill `arn-code-sketch` with the current feature context.
 
 ### From arn-code-feature-spec-teams
 

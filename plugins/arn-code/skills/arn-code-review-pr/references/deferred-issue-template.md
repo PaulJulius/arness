@@ -1,6 +1,6 @@
 # Deferred Issue Template
 
-Template for issues created from deferred PR review findings. Used by `/arn-code-review-pr` when the user chooses to create issues for items that don't need to be fixed in the current PR. Supports both GitHub and Jira issue trackers.
+Template for issues created from deferred PR review findings. Used by `arn-code-review-pr` when the user chooses to create issues for items that don't need to be fixed in the current PR. Supports both GitHub and Jira issue trackers.
 
 ## Template
 
@@ -32,7 +32,7 @@ From PR #<pr_number> review by @<reviewer>
 - **Plan reference**: <plans-dir>/<PROJECT_NAME>/ (if available)
 
 ---
-*Created from PR review via `/arn-code-review-pr`*
+*Created from PR review via `arn-code-review-pr`*
 ```
 
 ## Labels

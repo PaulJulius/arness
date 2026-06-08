@@ -8,7 +8,7 @@ The Atlassian Remote MCP Server is the official, cloud-hosted MCP server for Jir
 
 - A Jira Cloud instance with an active account
 - Claude Code installed and running
-- Project initialized with `/arn-code-init` (or in the process of running it)
+- Project initialized with `arn-code-init` (or in the process of running it)
 
 ## Setup Procedure
 
@@ -56,6 +56,6 @@ Look for `atlassian` in the server list with a `connected` status.
 ## Notes
 
 - The MCP server is added to the project's `.mcp.json`, not the Arness plugin's `.mcp.json`
-- Arness uses the MCP server's `list_projects` tool during `/arn-code-init` to let the user pick their Jira project
-- Once configured, Arness skills (`/arn-code-create-issue`, `/arn-code-pick-issue`, `/arn-code-review-pr`) use the MCP server transparently for all Jira operations
+- Arness uses the MCP server's `list_projects` tool during `arn-code-init` to let the user pick their Jira project
+- Once configured, Arness skills (`arn-code-create-issue`, `arn-code-pick-issue`, `arn-code-review-pr`) use the MCP server transparently for all Jira operations
 - No API keys or tokens need to be stored in project files -- OAuth 2.1 handles authentication at runtime

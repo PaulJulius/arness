@@ -63,16 +63,29 @@ cached_schema=$(jq -r '.schemaVersion // empty' "$CACHE_FILE" 2>/dev/null)
 [ "$cached_schema" = "$SCHEMA_VERSION" ] || miss "schemaVersion mismatch (cache: ${cached_schema:-empty}, expected: $SCHEMA_VERSION)"
 
 # --- 4. Plugin version matches? ---
+# Prefer Codex plugin metadata, then fall back to legacy plugin metadata and the
+# root legacy marketplace entry. If no version is resolvable, skip this check.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-MARKETPLACE_JSON="$(cd "$PLUGIN_ROOT/.." && pwd)/.claude-plugin/marketplace.json"
+REPO_ROOT="$(cd "$PLUGIN_ROOT/../.." && pwd)"
+CODEX_PLUGIN_JSON="$PLUGIN_ROOT/.codex-plugin/plugin.json"
+CLAUDE_PLUGIN_JSON="$PLUGIN_ROOT/.claude-plugin/plugin.json"
+MARKETPLACE_JSON="$REPO_ROOT/.claude-plugin/marketplace.json"
+current_version=""
 
-if [ -f "$MARKETPLACE_JSON" ]; then
-  current_version=$(jq -r --arg name "$PLUGIN_NAME" '.plugins[] | select(.name==$name) | .version' "$MARKETPLACE_JSON" 2>/dev/null)
-  cached_version=$(jq -r '.pluginVersion // empty' "$CACHE_FILE")
-  if [ -n "$current_version" ] && [ "$current_version" != "$cached_version" ]; then
-    miss "pluginVersion changed (cache: $cached_version, current: $current_version)"
-  fi
+if [ -f "$CODEX_PLUGIN_JSON" ]; then
+  current_version=$(jq -r '.version // empty' "$CODEX_PLUGIN_JSON" 2>/dev/null)
+fi
+if [ -z "$current_version" ] && [ -f "$CLAUDE_PLUGIN_JSON" ]; then
+  current_version=$(jq -r '.version // empty' "$CLAUDE_PLUGIN_JSON" 2>/dev/null)
+fi
+if [ -z "$current_version" ] && [ -f "$MARKETPLACE_JSON" ]; then
+  current_version=$(jq -r --arg name "$PLUGIN_NAME" '.plugins[]? | select(.name == $name) | .version // empty' "$MARKETPLACE_JSON" 2>/dev/null)
+fi
+
+cached_version=$(jq -r '.pluginVersion // empty' "$CACHE_FILE")
+if [ -n "$current_version" ] && [ "$current_version" != "$cached_version" ]; then
+  miss "pluginVersion changed (cache: $cached_version, current: $current_version)"
 fi
 
 # --- 5. Compute current fingerprints ---

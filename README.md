@@ -6,11 +6,11 @@
 
 > Arness — H not required.
 
-**Structured AI workflows for Claude Code. From first idea to production deploy.**
+**Structured AI workflows for Claude Code and Codex. From first idea to production deploy.**
 
 Seven entry commands. That's all you need to remember. Behind them, 134 specialist skills and agents handle the details across three independent plugins — ideation, development, and infrastructure.
 
-Most AI coding tools help you write code faster. Arness helps you build software better. It gives your Claude Code session a structured pipeline: specs before code, plans before execution, reviews before shipping. Every stage produces a human-readable artifact that feeds the next. Nothing is hidden, nothing is locked in.
+Most AI coding tools help you write code faster. Arness helps you build software better. It gives your AI coding session a structured pipeline: specs before code, plans before execution, reviews before shipping. Every stage produces a human-readable artifact that feeds the next. Nothing is hidden, nothing is locked in.
 
 ## Three Plugins, One Lifecycle
 
@@ -69,7 +69,7 @@ Three ceremony tiers — swift, standard, and thorough — match process to scop
 /plugin install arn-infra@arn-marketplace    # Infrastructure & deployment
 ```
 
-Then run the entry point that matches what you want to do — Arness auto-configures on first use:
+Then run the entry point that matches what you want to do — Arness auto-configures on first use. Commands are shown with Claude Code slash syntax; in Codex, invoke the same skill names without relying on the slash prefix:
 
 ```
 /arn-brainstorming    New product — discover, validate, prototype, extract features
@@ -98,7 +98,7 @@ Then run the entry point that matches what you want to do — Arness auto-config
 
 ## Requirements
 
-- [Claude Code](https://claude.ai/code) (CLI, Desktop, or Web)
+- [Claude Code](https://claude.ai/code) or Codex with plugin support
 - Git
 - GitHub CLI (`gh`) or Bitbucket CLI (`bkt`) for platform integration (optional)
 - Jira via [Atlassian MCP](https://mcp.atlassian.com) for Jira issue tracking (optional)

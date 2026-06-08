@@ -31,7 +31,7 @@ This skill produces a single documentation file (or directory for complex projec
    - **Specs directory** -- path to the directory containing specification files
    - **Code patterns** -- path to the directory containing stored pattern documentation
    - **Docs directory** -- path to the directory where documentation is written
-2. **Template version check**: If `Template version` and `Template updates` fields are present in the `## Arness` section, run the template version check procedure from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If these fields are not present, treat as legacy and skip.
+2. **Template version check**: If `Template version` and `Template updates` fields are present in the `## Arness` section, run the template version check procedure from `<arn-code-plugin-root>/skills/arn-code-save-plan/references/template-versioning.md` before proceeding. If these fields are not present, treat as legacy and skip.
 3. Ask for `PROJECT_NAME` if not provided in the trigger message.
 4. Verify the project directory exists with reports: `<plans-dir>/<PROJECT_NAME>/reports/`
 5. If Docs directory is not in config, default to `.arness/docs/`
@@ -50,7 +50,7 @@ Read these files from `<plans-dir>/<PROJECT_NAME>/`:
 
 If reports are missing, warn the user that the project may not have been fully executed yet and:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Some reports are missing. The project may not have been fully executed yet. Proceed with available data?"**
 
@@ -103,7 +103,7 @@ Compare what was planned (INTRODUCTION.md, phase plans, spec) with what was buil
 
 ### Step 6: Generate Documentation
 
-Use the template from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-document-project/references/doc-template.md`.
+Use the template from `<arn-code-plugin-root>/skills/arn-code-document-project/references/doc-template.md`.
 
 **Single file** for simple projects (fewer than 15 changed files AND 3 or fewer phases):
 - Write to `<docs-dir>/<PROJECT_NAME>.md`
@@ -126,14 +126,14 @@ After writing:
    - Key divergences found (plan vs reality)
    - Any gaps or concerns (e.g., missing reports, incomplete spec)
 
-Suggest next step: "Run `/arn-code-ship` to commit your changes and create a pull request."
+Suggest next step: "Run `arn-code-ship` to commit your changes and create a pull request."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing in CLAUDE.md** -- inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` or `/arn-shipping` to get started — it will set everything up automatically."
-- **Project directory missing** -- suggest running `/arn-code-save-plan` and `/arn-code-execute-plan` first.
-- **Reports directory empty** -- suggest running `/arn-code-execute-plan` to generate reports.
+- **`## Arness` config missing in CLAUDE.md** -- inform the user: "Arness is not configured for this project yet. Run `arn-implementing` or `arn-shipping` to get started — it will set everything up automatically."
+- **Project directory missing** -- suggest running `arn-code-save-plan` and `arn-code-execute-plan` first.
+- **Reports directory empty** -- suggest running `arn-code-execute-plan` to generate reports.
 - **Docs directory does not exist** -- create it with `mkdir -p`.
 - **Git not available** -- skip git diff analysis, rely on report data only.

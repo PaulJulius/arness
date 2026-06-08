@@ -167,7 +167,7 @@ Execution will proceed, but you are approaching your budget limit."
 **Action:** Log the cost estimate. Proceed without gate enforcement.
 
 **Presentation:**
-"**Cost estimate:** $X/month (no threshold configured -- consider setting one in `/arn-infra-init`)"
+"**Cost estimate:** $X/month (no threshold configured -- consider setting one in `arn-infra-init`)"
 
 ---
 

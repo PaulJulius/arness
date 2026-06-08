@@ -22,11 +22,11 @@ If a triage implications brief exists (from `arn-infra-triage`), this skill uses
 
 ## Prerequisites
 
-Read the `## Arness` section from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read the `## Arness` section from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
-- **Deferred** -- if `yes`, inform the user that infrastructure is deferred and suggest running `/arn-infra-assess` first
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Deferred** -- if `yes`, inform the user that infrastructure is deferred and suggest running `arn-infra-assess` first
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Providers** -- which cloud providers to generate IaC for
 - **Providers config** -- path to `providers.md` for per-provider scope and IaC tool overrides
 - **Default IaC tool** -- the default IaC tool to use when no per-provider override exists
@@ -70,7 +70,7 @@ Check tool readiness for each provider's IaC tool:
 - Are validation tools available? (e.g., `checkov`, `trivy`, `infracost`)
 
 **If a required IaC tool is missing:**
-Warn: "The IaC tool `[tool]` is not installed. Arness Infra cannot generate or validate `[tool]` code without it. Run `/arn-infra-discover` to check and install required tools."
+Warn: "The IaC tool `[tool]` is not installed. Arness Infra cannot generate or validate `[tool]` code without it. Run `arn-infra-discover` to check and install required tools."
 Ask whether to continue (generate code that cannot be locally validated) or stop.
 
 ---
@@ -145,7 +145,7 @@ Generate full IaC code. Load the appropriate tool-specific reference:
 
 For multi-provider setups:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"You have multiple providers configured: [list]. Which provider(s) would you like to generate IaC for now?"**
 
@@ -296,7 +296,7 @@ Present each generated file to the user with the provider and tool context:
 **Validation results:** [summary]
 **Cost estimate:** [if Level 2+ was run]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"How would you like to proceed with the generated infrastructure code?"**
 
@@ -329,20 +329,20 @@ Present the summary:
 "Infrastructure code is ready. Here is the recommended path:
 
 1. **Review the spec:** Read `[INFRA spec path]` for the full infrastructure architecture overview
-2. **Deploy:** Run `/arn-infra-deploy` to deploy to your first environment
-3. **Set up CI/CD:** Run `/arn-infra-pipeline` to generate a deployment pipeline
-4. **Manage environments:** Run `/arn-infra-env` to configure environment promotion
+2. **Deploy:** Run `arn-infra-deploy` to deploy to your first environment
+3. **Set up CI/CD:** Run `arn-infra-pipeline` to generate a deployment pipeline
+4. **Manage environments:** Run `arn-infra-env` to configure environment promotion
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Infrastructure deferred (`Deferred: yes`):** Inform the user that infrastructure is deferred. Suggest running `/arn-infra-assess` to produce a full infrastructure plan first, then re-running define.
-- **No providers configured:** Suggest running `/arn-infra-init` to configure providers. Stop.
-- **Required IaC tool not installed:** Warn about the missing tool. Offer to continue (generate code without local validation) or stop and run `/arn-infra-discover`.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Infrastructure deferred (`Deferred: yes`):** Inform the user that infrastructure is deferred. Suggest running `arn-infra-assess` to produce a full infrastructure plan first, then re-running define.
+- **No providers configured:** Suggest running `arn-infra-init` to configure providers. Stop.
+- **Required IaC tool not installed:** Warn about the missing tool. Offer to continue (generate code without local validation) or stop and run `arn-infra-discover`.
 - **Specialist agent fails:** Report the error. Fall back to generating basic IaC directly using the loaded reference patterns. Present with a note: "Generated using fallback patterns -- review carefully before use."
 - **Specialist agent returns empty output:** Inform the user and ask for more details about requirements. Retry with additional context.
 - **Cost analyst agent fails:** Present the generated code without cost estimation. Warn: "Cost estimation could not be performed. Review the resources manually against your budget before deploying."
@@ -351,5 +351,5 @@ Or run `/arn-infra-wizard` for the full guided pipeline."
 - **Cost threshold exceeded:** Present the cost estimate with a clear warning. Require explicit user acknowledgment before proceeding. Suggest cost-reduction alternatives (smaller instances, reserved pricing, PaaS migration).
 - **Multiple providers and one fails:** Complete successful providers, report the failure for the problematic provider. Do not block the entire operation.
 - **Triage brief is outdated or references changed requirements:** Note the discrepancy and ask the user whether to proceed with the brief or re-analyze the application context.
-- **Provider or environment config file not found:** Warn that the referenced file does not exist. Suggest re-running `/arn-infra-init` to regenerate configuration files. Stop.
+- **Provider or environment config file not found:** Warn that the referenced file does not exist. Suggest re-running `arn-infra-init` to regenerate configuration files. Stop.
 - **Re-running is safe:** Re-running regenerates IaC files (after user approval). The INFRA spec is overwritten with the latest state. Existing manually customized IaC files are shown in a diff before overwriting.

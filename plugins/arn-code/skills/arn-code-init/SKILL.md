@@ -27,11 +27,11 @@ Read the project's CLAUDE.md and look for a `## Arness` section. If no CLAUDE.md
 
 **If the section exists:**
 1. Parse all config fields from the existing `## Arness` block
-2. Read the current plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
+2. Read the current plugin version from `<arn-code-plugin-root>/.codex-plugin/plugin.json`
 3. Show the user their current configuration and version comparison:
    - Config template version vs current plugin version
    - Number of config fields present vs expected
-4. Ask via `AskUserQuestion`:
+4. Ask via `user prompt`:
    - **Review** — Show current configuration summary, no changes
    - **Upgrade (recommended)** — Check for gaps and update only what's needed. Best after a plugin update.
    - **Reconfigure** — Re-run the full setup flow from scratch (change directories, regenerate patterns, etc.)
@@ -71,7 +71,7 @@ Check if the project uses Git, determine the code hosting platform, and identify
 
 **3.1. Git check:**
 1. Run `git rev-parse --is-inside-work-tree` to check for a git repository
-2. If Git is not detected, inform the user: "This project is not a git repository. Git-dependent skills (`/arn-code-ship`, `/arn-code-review-pr`, `/arn-code-create-issue`, `/arn-code-pick-issue`) will be unavailable." Record Git: no, Platform: none, Issue tracker: none and proceed to Step 3A/3B.
+2. If Git is not detected, inform the user: "This project is not a git repository. Git-dependent skills (`arn-code-ship`, `arn-code-review-pr`, `arn-code-create-issue`, `arn-code-pick-issue`) will be unavailable." Record Git: no, Platform: none, Issue tracker: none and proceed to Step 3A/3B.
 
 **3.2. Remote classification:**
 1. Run `git remote -v` and classify the remote URL:
@@ -95,23 +95,23 @@ Check if the project uses Git, determine the code hosting platform, and identify
 | `arness-priority-low` | `c5def5` | Low priority |
 | `arness-rejected` | `e4e669` | Issue reviewed and rejected as invalid or out of scope |
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md` for label details and which skills use each label.
+> Read `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md` for label details and which skills use each label.
 
 **3.3b. If candidate is bitbucket:**
 1. Run `bkt --version` to check if the Bitbucket CLI is installed
-   - If NOT available → read and show the setup instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/bkt-setup.md`, then **STOP init**
+   - If NOT available → read and show the setup instructions from `<arn-code-plugin-root>/skills/arn-code-init/references/bkt-setup.md`, then **STOP init**
 2. Run `bkt auth status` to check authentication
-   - If NOT authenticated → read and show the auth instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/bkt-setup.md`, then **STOP init**
+   - If NOT authenticated → read and show the auth instructions from `<arn-code-plugin-root>/skills/arn-code-init/references/bkt-setup.md`, then **STOP init**
 3. Platform: **bitbucket** (confirmed)
 4. Ask the user: "Do you use Jira for issue tracking on this project?"
    - **YES** → verify the Atlassian MCP server:
      - Attempt to list Jira projects via the MCP tool
-     - If MCP NOT available → read and show the setup instructions from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/jira-mcp-setup.md`, then **STOP init**
+     - If MCP NOT available → read and show the setup instructions from `<arn-code-plugin-root>/skills/arn-code-init/references/jira-mcp-setup.md`, then **STOP init**
      - If MCP available → list projects, present to user, user picks one
      - Store: Issue tracker: **jira**, Jira site: (from MCP context or ask user), Jira project: (user's pick)
-     - No label creation needed (Jira labels are implicit — see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md`)
+     - No label creation needed (Jira labels are implicit — see `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md`)
    - **NO** → Issue tracker: **none**
-     - Inform the user: "Issue management skills (`/arn-code-create-issue`, `/arn-code-pick-issue`) will be unavailable. PR and code workflow skills still work via bkt."
+     - Inform the user: "Issue management skills (`arn-code-create-issue`, `arn-code-pick-issue`) will be unavailable. PR and code workflow skills still work via bkt."
 
 **3.4. Record results:**
 - **Git:** yes | no
@@ -143,7 +143,7 @@ Proceed to **Step 4**.
 
 ### Step 3B: Gather Technology Choices
 
-Walk the user through the questions defined in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/greenfield-questions.md`.
+Walk the user through the questions defined in `<arn-code-plugin-root>/skills/arn-code-init/references/greenfield-questions.md`.
 
 **Required questions** (always ask):
 1. Project type — backend, frontend, or fullstack?
@@ -199,11 +199,11 @@ Ask the user: "Where should Arness store feature and bug specifications?"
 
 Create the directory if it does not exist: `mkdir -p <chosen-path>`
 
-These specifications are created by `arn-code-feature-spec` and `arn-code-bug-spec` and drive the planning workflow via `/arn-code-plan`.
+These specifications are created by `arn-code-feature-spec` and `arn-code-bug-spec` and drive the planning workflow via `arn-code-plan`.
 
 ### Step 6: Write Pattern Documentation
 
-Read the pattern documentation schema at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md`. This defines the exact structure each file must follow.
+Read the pattern documentation schema at `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md`. This defines the exact structure each file must follow.
 
 **Greenfield Architecture Bridge:**
 
@@ -264,7 +264,7 @@ Would you like to use the defaults, or design custom ones?"
 
 For default templates, copy all JSON templates from the plugin to `.arness/templates/`, generate SHA-256 checksums, and write a `.checksums.json` file for version tracking. For custom templates, show the defaults as a starting point and iterate with the user. After setup, ask the user's preference for handling future template updates (ask, auto, or manual).
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/template-setup.md` for the full template setup procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-init/references/template-setup.md` for the full template setup procedure.
 
 ### Step 8: Choose Documentation Directory
 
@@ -275,7 +275,7 @@ Ask the user: "Where should Arness save project documentation?"
 
 Create the directory if it does not exist: `mkdir -p <chosen-path>`
 
-Documentation generated by `/arn-code-document-project` will be saved here.
+Documentation generated by `arn-code-document-project` will be saved here.
 
 ### Step 8b: Configure Linting
 
@@ -284,7 +284,7 @@ Read `<code-patterns-dir>/linting.md` (written in Step 6). Use its content to de
 - If `linting.md` contains the marker `No linters detected.` → suggested default: `None`
 - Otherwise (linters were detected) → suggested default: `Enabled`
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **How should Arness handle linting for this project? \<suggested default shown above\>**
 > 1. **Enabled** — discover and use the project's linters as a gate before commits
@@ -297,13 +297,13 @@ If `linting.md` does not exist (e.g., the analyzer failed earlier in Step 6, or 
 
 ### Step 8c: Choose Model Profile for arn-code Agents
 
-Run the **Profile selection** procedure documented in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the AskUserQuestion or file-copy logic here.
+Run the **Profile selection** procedure documented in `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` under the "Model profile field" section. That procedure is the single source of truth for the prompt + write + copy + checksum flow — do NOT duplicate the user prompt or file-copy logic here.
 
 The procedure performs (in order):
 1. Cross-plugin default suggestion (read sibling plugin profile fields if present in the existing `## Arness` block)
-2. AskUserQuestion with title "Choose model profile for arn-code agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
+2. Ask the user with title "Choose model profile for arn-code agents" and two options: `all-opus` (default unless a sibling chose `balanced`) and `balanced`
 3. Append `- **Code agent model profile:** <choice>` to the `## Arness` block
-4. `mkdir -p .arness/agent-models/` then copy `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/code.md`
+4. `mkdir -p .arness/agent-models/` then copy `<arn-code-plugin-root>/skills/arn-code-init/references/agent-models-presets/<choice>.md` to `.arness/agent-models/code.md`
 5. Compute SHA-256 and record it in `.arness/agent-models/.checksums.json` along with the profile name and version
 6. Inform the user with a one-line confirmation
 
@@ -354,10 +354,10 @@ Ask the user:
 
 "Would you like to enable persistent task lists? (Recommended)
 
-This sets `CLAUDE_CODE_TASK_LIST_ID` in your project's `.claude/settings.json` so that tasks created by `/arn-code-taskify` survive across sessions. Without this, tasks are lost when a session ends and must be recreated.
+This sets `CLAUDE_CODE_TASK_LIST_ID` in your project's `.claude/settings.json` so that tasks created by `arn-code-taskify` survive across sessions. Without this, tasks are lost when a session ends and must be recreated.
 
 Benefits:
-- Resume `/arn-code-execute-plan` after a session restart
+- Resume `arn-code-execute-plan` after a session restart
 - Multiple sessions on the same project see the same task state
 - Worktree-based parallel execution shares the task list"
 
@@ -385,7 +385,7 @@ Options:
 **If No:**
 - Do not write to `.claude/settings.json`
 - Omit `Task list ID` from the `## Arness` config block
-- Inform: "Task lists will be session-scoped. You can enable persistence later by re-running `/arn-code-init`."
+- Inform: "Task lists will be session-scoped. You can enable persistence later by re-running `arn-code-init`."
 
 ### Step 10: Verify and Summarize
 
@@ -412,10 +412,10 @@ Confirm with the user:
 List all created/modified files with their paths.
 
 **Next steps:**
-- To spec a new feature: run `/arn-code-feature-spec` (or `/arn-code-feature-spec-teams` for team debate)
-- To spec a bug fix: run `/arn-code-bug-spec`
-- To create an issue: run `/arn-code-create-issue` (requires Issue tracker: github or jira)
-- To pick an issue from the backlog: run `/arn-code-pick-issue` (requires Issue tracker: github or jira)
+- To spec a new feature: run `arn-code-feature-spec` (or `arn-code-feature-spec-teams` for team debate)
+- To spec a bug fix: run `arn-code-bug-spec`
+- To create an issue: run `arn-code-create-issue` (requires Issue tracker: github or jira)
+- To pick an issue from the backlog: run `arn-code-pick-issue` (requires Issue tracker: github or jira)
 
 ## Upgrade Flow
 
@@ -427,8 +427,8 @@ Invoke the `arn-code-doctor` agent via the Task tool, passing the model from `.a
 - Description: "Comprehensive health check for arn-code-init upgrade. Check ALL categories: config fields, directories, template files, checksums, Git/Platform/Issue tracker state, platform labels, and pattern doc schema compliance. Use only Read/Glob/Grep and the allowed Bash commands (git status, git remote -v, gh auth status, gh label list, bkt --version, bkt auth status, ls). Do NOT run claude CLI commands."
 - Project root path
 - The parsed `## Arness` config content
-- Plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
-- Instruction to read the knowledge base at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-report/references/arness-knowledge-base.md`
+- Plugin version from `<arn-code-plugin-root>/.codex-plugin/plugin.json`
+- Instruction to read the knowledge base at `<arn-code-plugin-root>/skills/arn-code-report/references/arness-knowledge-base.md`
 
 The agent should check for:
 - Platform field presence and validity (github | bitbucket | none)
@@ -482,7 +482,7 @@ Process these categories silently, then report what was done:
 
 2. **Missing directories** (for config fields that already have a value but the directory doesn't exist): `mkdir -p <path>` for each.
 
-3. **Missing platform labels** (if Platform is github): Run `gh label create --force` for each missing label per `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/platform-labels.md`. These commands are idempotent. Skip label creation for Bitbucket and Jira (Jira labels are implicit).
+3. **Missing platform labels** (if Platform is github): Run `gh label create --force` for each missing label per `<arn-code-plugin-root>/skills/arn-code-init/references/platform-labels.md`. These commands are idempotent. Skip label creation for Bitbucket and Jira (Jira labels are implicit).
 
 Report to the user what was auto-fixed:
 ```
@@ -515,7 +515,7 @@ For each missing config field that needs a user-provided value, ask **one focuse
 - Jira site and Jira project are only asked when Issue tracker is jira and the fields are missing. If the Atlassian MCP server is available, list projects and let the user pick instead of typing manually.
 - If a field had a backward-compatibility default (e.g., Docs directory defaults to `.arness/docs/`), still ask so it gets persisted explicitly. Mention the current default: "This field wasn't set in your config. The default is `.arness/docs/`. Would you like to use this, or choose a different path?"
 - After each directory answer, create the directory if it does not exist: `mkdir -p <path>`
-- If Report templates is missing and the user chooses "default", copy template files and generate checksums per the template setup procedure in `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/template-setup.md`.
+- If Report templates is missing and the user chooses "default", copy template files and generate checksums per the template setup procedure in `<arn-code-plugin-root>/skills/arn-code-init/references/template-setup.md`.
 
 ---
 
@@ -541,7 +541,7 @@ In all cases, update `Template version` in the config to the current plugin vers
 
 This step only runs if the doctor flagged `pattern_schema` issues.
 
-- **Files exist but non-compliant** (missing required sections, wrong structure): Ask the user: "Your pattern documentation files exist but don't fully comply with the current schema. Would you like me to regenerate them? Your existing content will be used as context." If yes → re-invoke `arn-code-codebase-analyzer` (existing project) or `arn-code-pattern-architect` (greenfield), validate output against the schema at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-init/references/pattern-schema.md`, and write the updated files.
+- **Files exist but non-compliant** (missing required sections, wrong structure): Ask the user: "Your pattern documentation files exist but don't fully comply with the current schema. Would you like me to regenerate them? Your existing content will be used as context." If yes → re-invoke `arn-code-codebase-analyzer` (existing project) or `arn-code-pattern-architect` (greenfield), validate output against the schema at `<arn-code-plugin-root>/skills/arn-code-init/references/pattern-schema.md`, and write the updated files.
 - **Files entirely missing** (directory exists but pattern doc files absent): Ask the user: "No pattern documentation files found. Would you like to generate them now? This will analyze your codebase." If yes → run the full Flow A (Step 3A) or Flow B (Step 3B) detection + Step 6 writing flow.
 
 ---
@@ -564,7 +564,7 @@ Replace the existing `## Arness` section in place. Format matches Step 9 exactly
 
 If deferred visual testing layers were detected (`visual_deferred_layers` category):
 
-Present: "Deferred visual testing layers found: [layer names]. Run `/arn-spark-visual-readiness` (requires arn-spark plugin) to check if they can be activated now."
+Present: "Deferred visual testing layers found: [layer names]. Run `arn-spark-visual-readiness` (requires arn-spark plugin) to check if they can be activated now."
 
 This is informational only — do not auto-fix or block the upgrade flow.
 

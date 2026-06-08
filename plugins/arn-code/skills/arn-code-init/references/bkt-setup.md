@@ -52,4 +52,4 @@ Both commands must succeed before Arness can use Bitbucket integration.
 - `bkt` supports both Bitbucket Cloud and Bitbucket Data Center
 - Arness currently targets Bitbucket Cloud only (Data Center is out of scope)
 - `bkt` supports JSON and YAML output formats, which Arness uses for structured data parsing
-- If `bkt` is not installed or not authenticated, Arness will skip Bitbucket platform detection during `/arn-code-init`
+- If `bkt` is not installed or not authenticated, Arness will skip Bitbucket platform detection during `arn-code-init`

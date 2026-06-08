@@ -19,7 +19,7 @@ Guide a product from nameless concept to validated brand name through a structur
 ## Prerequisites
 
 1. Read the project's CLAUDE.md for the `## Arness` section.
-2. Extract **Vision directory** and **Reports directory** paths. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+2. Extract **Vision directory** and **Reports directory** paths. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 3. Create directories if they do not exist.
 
 ## Step 0: Context Gathering
@@ -32,7 +32,7 @@ Check for `<vision-dir>/product-concept.md`:
 
 **If not found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"No product concept found. How should I learn about your product?"**
 1. **Describe your product** — Provide a description in the next message
@@ -43,7 +43,7 @@ If option 3: invoke `arn-spark-brand-strategist` in `brand-dna` mode with instru
 
 ### Target market
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What is the primary target market? This determines trademark databases and languages for linguistic screening."**
 1. **United States** — USPTO trademark search, English + Spanish linguistic check
@@ -57,7 +57,7 @@ Check for `<vision-dir>/naming-brief.md`:
 
 **If found:**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"A naming brief already exists. How would you like to proceed?"**
 1. **Resume from where I left off** — Continue from the first incomplete section
@@ -78,7 +78,7 @@ The agent returns: brand personality profile, audience vocabulary, competitor na
 
 Present the Brand DNA analysis to the user.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Proceed with the recommended naming categories?"**
 1. **Yes, proceed with [recommended categories]** (Recommended) — Use the strategist's recommendation (substitute actual category names from the Brand DNA analysis)
@@ -86,7 +86,7 @@ Ask (using `AskUserQuestion`):
 
 If option 2:
 
-Ask (using `AskUserQuestion`, `multiSelect: true`):
+Ask (using `user prompt`, `multiSelect: true`):
 
 **"Select naming categories to explore (select all that apply):"**
 1. **Descriptive** — Names that describe what the product does (PayPal, Dropbox)
@@ -97,7 +97,7 @@ Ask (using `AskUserQuestion`, `multiSelect: true`):
 Then prompt (free-text): "Any existing name ideas, words you love, or words you hate? These will seed the creative sprint. Type 'none' or 'skip' to continue without seeds."
 
 Write initial `<vision-dir>/naming-brief.md` using the creative brief template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/creative-brief-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-naming/references/creative-brief-template.md`
 
 Populate: Context and Brand DNA sections. Mark remaining sections as "-- Pending --".
 
@@ -124,7 +124,7 @@ Update `naming-brief.md` with Creative Sprint Results section (generation stats,
 ## Step 3: Qualitative Filter (Six Senses)
 
 Load the scoring methodology:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/naming-methodology.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-naming/references/naming-methodology.md`
 
 Invoke the `arn-spark-brand-strategist` agent in `scoring` mode via the Task tool, passing the model from `.arness/agent-models/spark.md` as the `model` parameter (see `plugins/arn-spark/skills/arn-spark-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context: full candidate list, user-starred favorites, dead directions.
 
@@ -151,21 +151,21 @@ Update `naming-brief.md` with Qualitative Filter Results section.
 ### 4a — Domain Availability
 
 Load the WHOIS/RDAP server reference:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/whois-server-map.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-naming/references/whois-server-map.md`
 
 **How it works:** Both scripts use RDAP (the modern IETF standard) as the primary lookup method, with port-43 WHOIS and system `whois` as built-in fallbacks. The fallback chain per domain is: RDAP → port-43 WHOIS → system whois → manual URL. The scripts handle this automatically — no manual fallback logic needed.
 
 **Environment detection** (priority order):
 
-1. Check Python: run `python3 --version`. If available, use `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/scripts/whois-check.py`.
-2. Check Node.js: run `node --version`. If available, use `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/scripts/whois-check.js`.
+1. Check Python: run `python3 --version`. If available, use `<arn-spark-plugin-root>/skills/arn-spark-naming/scripts/whois-check.py`.
+2. Check Node.js: run `node --version`. If available, use `<arn-spark-plugin-root>/skills/arn-spark-naming/scripts/whois-check.js`.
 3. Neither available: skip automated checking. Present manual fallback URLs (`https://www.whois.com/whois/[domain]`) for each domain.
 
 Note: System `whois` is NOT required — both scripts have it as a built-in last-resort fallback (gracefully skipped on Windows where `whois` is not available). Python and Node.js scripts work identically across Linux, macOS, Windows, and WSL2.
 
 **Rate limit discovery:** Before running queries, use WebSearch for `"[RDAP or WHOIS server name]" rate limit` for the primary TLD servers involved. Set `delay_seconds` to the most conservative discovered limit. Floor: 2 seconds. Default if unknown: 3 seconds.
 
-**Domain list construction:** Each finalist name × TLDs. Start with global TLDs: `.com` (essential), `.io`, `.co`, `.dev`, `.app`, `.ai`. Then add country-specific TLDs based on target market (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/whois-server-map.md` for the market-to-TLD mapping):
+**Domain list construction:** Each finalist name × TLDs. Start with global TLDs: `.com` (essential), `.io`, `.co`, `.dev`, `.app`, `.ai`. Then add country-specific TLDs based on target market (see `<arn-spark-plugin-root>/skills/arn-spark-naming/references/whois-server-map.md` for the market-to-TLD mapping):
 - US: add `.us`
 - EU: add `.eu`, `.de`, `.fr`, `.it`, `.es`, `.nl`
 - UK: add `.co.uk`
@@ -175,7 +175,7 @@ The scripts handle compound ccTLDs (`.com.br`, `.co.uk`, `.com.au`, etc.) and RD
 
 **Execution:**
 ```bash
-echo '{"domains": ["name1.com", "name1.io", ...], "delay_seconds": N}' | python3 ${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/scripts/whois-check.py
+echo '{"domains": ["name1.com", "name1.io", ...], "delay_seconds": N}' | python3 <arn-spark-plugin-root>/skills/arn-spark-naming/scripts/whois-check.py
 ```
 
 Parse JSON output. Each result includes a `method` field ("rdap", "whois", "system-whois", or "none") and a `manual_url` for any domain that couldn't be determined. If exit code 1 (RDAP rate limit circuit breaker): read partial results, report what was checked, offer manual URLs for unchecked domains.
@@ -183,7 +183,7 @@ Parse JSON output. Each result includes a `method` field ("rdap", "whois", "syst
 ### 4b — Trademark Screening
 
 Load trademark database reference:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/trademark-databases.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-naming/references/trademark-databases.md`
 
 **Tier 1 (automated):** Use WebSearch for `"[name]" trademark [industry]` and `"[name]" registered trademark` for each finalist.
 
@@ -216,7 +216,7 @@ Update `<vision-dir>/naming-brief.md` with:
 ### Write naming report
 
 Load the report template:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-naming/references/naming-report-template.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-naming/references/naming-report-template.md`
 
 Write `<reports-dir>/naming-report.md` with all sections populated.
 
@@ -226,7 +226,7 @@ Write `<reports-dir>/naming-report.md` with all sections populated.
 
 Present the proposed change: adding the brand name to the product concept's Vision section.
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Update the product concept with the chosen brand name?"**
 1. **Yes, update it** — Add brand name to the Vision section of product-concept.md
@@ -270,6 +270,6 @@ Present to the user:
 
 - Product-concept.md updates are NET-NEW information (brand name addition), not stress-test-driven modifications. This does not conflict with the concept-review exclusivity rule (from `arn-spark-concept-review`, which restricts stress-test-recommendation consolidation to that skill alone).
 - User approval gate is MANDATORY before writing to product-concept.md.
-- All reference/script paths use `${CLAUDE_PLUGIN_ROOT}`.
+- All reference/script paths use `<arn-spark-plugin-root>`.
 - WHOIS queries use a circuit breaker — any error stops all remaining queries immediately to protect the user's IP.
 - The naming brief overwrites on re-run (git provides history). The user is warned and offered resume/start-fresh in Step 0.

@@ -64,7 +64,7 @@ The complete pipeline for complex features — multi-phase work that touches man
 
 4. **Validate** — `/arn-code-review-plan` checks the plan for completeness, pattern compliance, and feasibility before any code is written.
 
-5. **Taskify** — `/arn-code-taskify` converts `TASKS.md` into a Claude Code task list with dependencies, so execution respects the correct ordering.
+5. **Taskify** — `/arn-code-taskify` converts `TASKS.md` into an executable task list with dependencies. In Claude Code it can use host task APIs; in Codex it falls back to file-backed execution from `TASKS.md` and `PROGRESS_TRACKER.json`.
 
 6. **Execute** — `/arn-code-execute-plan` dispatches task-executor agents in parallel batches with reviewer validation gates between them. `/arn-code-execute-plan-teams` uses multi-agent collaboration for particularly complex tasks.
 

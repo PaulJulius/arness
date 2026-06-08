@@ -23,7 +23,7 @@ This skill is a **sequencer and decision-gate handler**. It MUST NOT duplicate s
 
 ## Prerequisites: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 After configuration is ensured, extract the following from `## Arness`:
 - **Plans directory** — for detecting plan previews and project folders
@@ -41,9 +41,9 @@ Check the trigger message to determine the entry path:
 |--------------|--------|
 | No args | Proceed to Step 1 (State Detection), then G1 if no resume |
 | Text description (e.g., "planning: add rate limiting") | Extract description, proceed to Step 3 (Scope Assessment) |
-| Issue reference (`#42`, `PROJ-123`) | Invoke `Skill: arn-code:arn-code-pick-issue` with the reference, then proceed to Step 3 with the loaded issue context |
-| Feature backlog reference (`F-003`) | Invoke `Skill: arn-code:arn-code-pick-issue` with the reference, then proceed to Step 3 |
-| "pick" keyword | Invoke `Skill: arn-code:arn-code-pick-issue` (browse mode), then proceed to Step 3 |
+| Issue reference (`#42`, `PROJ-123`) | Invoke Codex skill `arn-code-pick-issue` with the reference, then proceed to Step 3 with the loaded issue context |
+| Feature backlog reference (`F-003`) | Invoke Codex skill `arn-code-pick-issue` with the reference, then proceed to Step 3 |
+| "pick" keyword | Invoke Codex skill `arn-code-pick-issue` (browse mode), then proceed to Step 3 |
 | "resume" | Proceed to Step 1 (State Detection) |
 
 ---
@@ -104,7 +104,7 @@ Present the backlog context before asking:
 
 The unblocked features ready for implementation are available via the backlog."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What would you like to work on?"**
 
@@ -125,7 +125,7 @@ Options:
 
 **If no greenfield backlog (default):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"What are you planning?"**
 
@@ -135,11 +135,11 @@ Options:
 3. **Report a bug** — Investigate a bug and develop it into a fix or spec
 
 Based on choice:
-- **Pick from backlog** → `Skill: arn-code:arn-code-pick-issue`. When pick-issue completes (issue selected and context loaded), proceed to Step 3 (Scope Assessment) with the issue context.
-- **Batch plan** → `Skill: arn-code:arn-code-batch-planning`. Exit arn-planning — batch-planning orchestrates the multi-feature flow including spec, plan, save-plan for each feature, then chains to batch-implement.
+- **Pick from backlog** → Codex skill `arn-code-pick-issue`. When pick-issue completes (issue selected and context loaded), proceed to Step 3 (Scope Assessment) with the issue context.
+- **Batch plan** → Codex skill `arn-code-batch-planning`. Exit arn-planning — batch-planning orchestrates the multi-feature flow including spec, plan, save-plan for each feature, then chains to batch-implement.
 - **Describe a feature** → Ask the user to describe the feature. Proceed to Step 3 with the description.
-- **Report a bug** → `Skill: arn-code:arn-code-bug-spec`. Bug-spec handles its own investigation flow:
-  - If bug-spec resolves via **simple path** (fix applied, no spec): "Bug fixed. No planning needed." Offer: chain to `/arn-shipping` or exit.
+- **Report a bug** → Codex skill `arn-code-bug-spec`. Bug-spec handles its own investigation flow:
+  - If bug-spec resolves via **simple path** (fix applied, no spec): "Bug fixed. No planning needed." Offer: chain to `arn-shipping` or exit.
   - If bug-spec produces a **spec file**: proceed to G3 (Spec Review).
 
 ---
@@ -171,7 +171,7 @@ Analyze the description (from user input, issue, or backlog item) for intent sig
 → **TYPE = feature**
 
 **Ambiguous** (no clear signals or mixed signals):
-→ Ask (using `AskUserQuestion`): "Is this a bug fix or a new feature?"
+→ Ask the user: "Is this a bug fix or a new feature?"
 
 #### Step 3C: Scope Router (features only)
 
@@ -179,7 +179,7 @@ For TYPE = bug, skip scope routing — always route to bug-spec.
 
 For TYPE = feature, apply the severity-aware scope router:
 
-1. **Read criteria:** Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-planning/references/scope-router-criteria.md`
+1. **Read criteria:** Read `<arn-code-plugin-root>/skills/arn-planning/references/scope-router-criteria.md`
 
 2. **Supplementary signal (optional):** If there is a working tree with changes, run `git diff --stat` silently as a supplementary signal for file count and cross-module impact. This does not override the description-based assessment but can confirm or adjust estimates.
 
@@ -196,7 +196,7 @@ For TYPE = feature, apply the severity-aware scope router:
 
 Based on TYPE and recommended tier:
 
-- **TYPE = bug** → `Skill: arn-code:arn-code-bug-spec`
+- **TYPE = bug** → Codex skill `arn-code-bug-spec`
   - If bug-spec simple path → offer arn-shipping, exit planning
   - If bug-spec produces spec → proceed to G3
 
@@ -216,7 +216,7 @@ Planning [<recommended-tier>]: entry -> SCOPE-ROUTER -> spec -> plan -> save -> 
 
 Present the recommendation as a one-sentence summary: "Based on [key factors], I recommend **[tier]** for this change."
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Recommended tier: [tier]. How would you like to proceed?"**
 
@@ -239,11 +239,11 @@ If recommended tier is **thorough**:
 
 Based on the user's selection:
 
-- **Swift**: `Skill: arn-code:arn-implementing` (with swift intent + the description as context). Exit planning — implementing takes over.
-- **Standard**: `Skill: arn-code:arn-implementing` (with standard intent + the description as context). Exit planning — implementing takes over.
-- **Thorough**: Proceed to feature spec. If the user upgraded to thorough from a lower recommendation, skip the expert debate question and proceed directly to `Skill: arn-code:arn-code-feature-spec`. Otherwise, check the expert-debate preference:
+- **Swift**: Codex skill `arn-implementing` (with swift intent + the description as context). Exit planning — implementing takes over.
+- **Standard**: Codex skill `arn-implementing` (with standard intent + the description as context). Exit planning — implementing takes over.
+- **Thorough**: Proceed to feature spec. If the user upgraded to thorough from a lower recommendation, skip the expert debate question and proceed directly to Codex skill `arn-code-feature-spec`. Otherwise, check the expert-debate preference:
 
-  **Preference check:** Read `pipeline.expert-debate` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+  **Preference check:** Read `pipeline.expert-debate` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
   1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.expert-debate` is present, use that value and note source.
   2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.expert-debate` is present, use that value and note source.
@@ -251,17 +251,17 @@ Based on the user's selection:
 
   Branch on the resolved value:
 
-  - If `standard`: Show status line: "Preference: standard spec, no expert debate ([source])". Auto-proceed to `Skill: arn-code:arn-code-feature-spec`.
+  - If `standard`: Show status line: "Preference: standard spec, no expert debate ([source])". Auto-proceed to Codex skill `arn-code-feature-spec`.
 
-  - If `auto`: Only propose expert debate when the scope router score is **16 or higher** (top-quartile complexity). If score is 16+, present the expert debate gate below. If score is below 16, show status line: "Preference: standard spec (auto mode, score [N] below expert-debate threshold of 16) ([source])". Auto-proceed to `Skill: arn-code:arn-code-feature-spec`.
+  - If `auto`: Only propose expert debate when the scope router score is **16 or higher** (top-quartile complexity). If score is 16+, present the expert debate gate below. If score is below 16, show status line: "Preference: standard spec (auto mode, score [N] below expert-debate threshold of 16) ([source])". Auto-proceed to Codex skill `arn-code-feature-spec`.
 
-  - If `ask`: Present the expert debate gate below (when scope router total was 16+). If score is below 16, proceed directly to `Skill: arn-code:arn-code-feature-spec` (expert debate is not applicable at lower scores). Do NOT show the "remember this?" follow-up.
+  - If `ask`: Present the expert debate gate below (when scope router total was 16+). If score is below 16, proceed directly to Codex skill `arn-code-feature-spec` (expert debate is not applicable at lower scores). Do NOT show the "remember this?" follow-up.
 
-  - If null (or invalid value): Present the expert debate gate below (when scope router total was 16+). If score is below 16, proceed directly to `Skill: arn-code:arn-code-feature-spec`. After the user answers, show the "remember this?" follow-up (see below).
+  - If null (or invalid value): Present the expert debate gate below (when scope router total was 16+). If score is below 16, proceed directly to Codex skill `arn-code-feature-spec`. After the user answers, show the "remember this?" follow-up (see below).
 
   **Gate (shown when scope router total is 16+ and value is `auto` with score 16+, `ask`, null, or invalid):**
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   **"This is a significant feature. How would you like to develop the specification?"**
 
@@ -269,13 +269,13 @@ Based on the user's selection:
   1. **Standard feature spec** — Single-agent exploration with the architect
   2. **Expert debate** — Multi-agent debate between architect, UX specialist, and security specialist (higher token cost)
 
-  If **Standard feature spec**: `Skill: arn-code:arn-code-feature-spec`
-  If **Expert debate**: `Skill: arn-code:arn-code-feature-spec-teams`
+  If **Standard feature spec**: Codex skill `arn-code-feature-spec`
+  If **Expert debate**: Codex skill `arn-code-feature-spec-teams`
     - If feature-spec-teams is unavailable, fall back to standard feature-spec.
 
   **Follow-up (only when preference was null and the gate was shown):** After the user answers, ask:
 
-  Ask (using `AskUserQuestion`):
+  Ask the user:
 
   **"Should Arness remember this choice for future sessions?"**
 
@@ -300,7 +300,7 @@ Planning [thorough]: entry -> scope-router -> SPEC -> plan -> save -> review-pla
                                               ^^^^
 ```
 
-**Preference check:** Read `pipeline.spec-review` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.spec-review` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.spec-review` is present, use that value and note source as "project override in workflow.local.yaml".
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.spec-review` is present, use that value and note source as "stored in workflow-preferences.yaml".
@@ -312,7 +312,7 @@ Branch on the resolved value:
 
 - If `proceed`: Show status line: "Preference: proceeding to plan ([source])". Auto-proceed to Step 6 (Plan Generation).
 
-- If `upload`: Check if Issue tracker is `none`. If `none`, fall through to the gate below — show the gate but do NOT show the "remember this?" follow-up (the user already has a stored preference; it is just inapplicable in this project because no issue tracker is configured. Do not modify the stored preference). If Issue tracker is not `none`: show status line "Preference: uploading as issue ([source])". Auto-proceed to `Skill: arn-code:arn-code-create-issue` with the spec content. After issue is created, exit planning.
+- If `upload`: Check if Issue tracker is `none`. If `none`, fall through to the gate below — show the gate but do NOT show the "remember this?" follow-up (the user already has a stored preference; it is just inapplicable in this project because no issue tracker is configured. Do not modify the stored preference). If Issue tracker is not `none`: show status line "Preference: uploading as issue ([source])". Auto-proceed to Codex skill `arn-code-create-issue` with the spec content. After issue is created, exit planning.
 
 - If `ask`: Present the gate below. Do NOT show the "remember this?" follow-up afterward.
 
@@ -320,7 +320,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Spec ready. What next?"**
 
@@ -333,11 +333,11 @@ If **Review spec**: Read the spec file and present a summary (problem statement,
 
 If **Proceed to plan**: Continue to Step 6 (Plan Generation).
 
-If **Upload as issue**: `Skill: arn-code:arn-code-create-issue` with the spec content. After issue is created, exit planning. "Issue created. Run `/arn-planning` when ready to plan the implementation."
+If **Upload as issue**: Codex skill `arn-code-create-issue` with the spec content. After issue is created, exit planning. "Issue created. Run `arn-planning` when ready to plan the implementation."
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -360,7 +360,7 @@ Planning [thorough]: entry -> scope-router -> spec -> PLAN -> save -> review-pla
 
 Derive the spec name from the spec filename (e.g., `FEATURE_websocket-notifications.md` → `websocket-notifications`) and invoke the plan skill:
 
-> `Skill: arn-code:arn-code-plan <spec-name>`
+> Codex skill `arn-code-plan <spec-name>`
 
 The plan skill has its own feedback loop — the user iterates with the planner agent until the plan is approved. When it completes, a `PLAN_PREVIEW_<spec-name>.md` file exists in the plans directory.
 
@@ -376,7 +376,7 @@ Planning [thorough]: entry -> scope-router -> spec -> plan -> SAVE -> review-pla
 
 Inform: "Plan approved. Converting to structured project..."
 
-> `Skill: arn-code:arn-code-save-plan`
+> Codex skill `arn-code-save-plan`
 
 Save-plan auto-detects the PLAN_PREVIEW file and creates the project structure (INTRODUCTION.md, phase plans, TASKS.md, PROGRESS_TRACKER.json).
 
@@ -390,7 +390,7 @@ Planning [thorough]: entry -> scope-router -> spec -> plan -> save -> REVIEW-PLA
                                                                        ^^^^^^^^^^^
 ```
 
-**Preference check:** Read `pipeline.plan-review` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.plan-review` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.plan-review` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.plan-review` is present, use that value and note source.
@@ -398,7 +398,7 @@ Planning [thorough]: entry -> scope-router -> spec -> plan -> save -> REVIEW-PLA
 
 Branch on the resolved value:
 
-- If `review`: Show status line: "Preference: reviewing plan before execution ([source])". Auto-proceed to `Skill: arn-code:arn-code-review-plan`. After review completes, proceed to Step 9.
+- If `review`: Show status line: "Preference: reviewing plan before execution ([source])". Auto-proceed to Codex skill `arn-code-review-plan`. After review completes, proceed to Step 9.
 
 - If `skip`: Show status line: "Preference: skipping plan review ([source])". Auto-proceed to Step 9 (Taskify).
 
@@ -408,7 +408,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"The structured plan has been created. Review it before execution?"**
 
@@ -416,12 +416,12 @@ Options:
 1. **Review plan** (Recommended for complex features) — Validate completeness, consistency, and pattern compliance
 2. **Skip** — Proceed to task creation
 
-If **Review plan**: `Skill: arn-code:arn-code-review-plan`
+If **Review plan**: Codex skill `arn-code-review-plan`
 If **Skip**: Proceed to Step 9.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -444,7 +444,7 @@ Planning [thorough]: entry -> scope-router -> spec -> plan -> save -> review-pla
 
 Inform: "Creating task list..."
 
-> `Skill: arn-code:arn-code-taskify`
+> Codex skill `arn-code-taskify`
 
 Taskify converts TASKS.md into Claude Code tasks with dependency management.
 
@@ -458,16 +458,16 @@ Planning [thorough]: entry -> scope-router -> spec -> plan -> save -> review-pla
                                                                                                  ^^^^^
 ```
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Planning complete. Your plan is structured and tasks are created. Start implementing?"**
 
 Options:
 1. **Start implementing** — Begin execution of the plan
-2. **Not yet** — Exit (run `/arn-implementing` when ready)
+2. **Not yet** — Exit (run `arn-implementing` when ready)
 
-If **Start implementing**: `Skill: arn-code:arn-implementing`
-If **Not yet**: Exit with: "Run `/arn-implementing` when ready to start building."
+If **Start implementing**: Codex skill `arn-implementing`
+If **Not yet**: Exit with: "Run `arn-implementing` when ready to start building."
 
 ---
 
@@ -483,9 +483,9 @@ No action is needed from arn-planning to manage sketch — it is fully delegated
 
 - **`## Arness` config missing:** Handled by Step 0 (ensure-config) — this should not occur if Step 0 completed successfully.
 - **Issue tracker not configured:** Omit "Pick from backlog" at G1 and "Upload as issue" at G3.
-- **Bug-spec simple path (no spec):** "Bug fixed. No planning needed." Offer `/arn-shipping` or exit.
-- **Swift or standard redirect from scope router:** Chain to `/arn-implementing` with the selected tier intent. Exit planning.
+- **Bug-spec simple path (no spec):** "Bug fixed. No planning needed." Offer `arn-shipping` or exit.
+- **Swift or standard redirect from scope router:** Chain to `arn-implementing` with the selected tier intent. Exit planning.
 - **Multiple specs or plans during resume:** List them and ask which to resume.
 - **feature-spec-teams unavailable:** Fall back to standard `arn-code-feature-spec`.
 - **Sub-skill fails:** Present the error. Ask: retry / skip / abort.
-- **User says "stop" or "pause":** Show what was completed. Inform: "Run `/arn-planning` again to resume — artifact detection will pick up where you left off."
+- **User says "stop" or "pause":** Show what was completed. Inform: "Run `arn-planning` again to resume — artifact detection will pick up where you left off."

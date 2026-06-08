@@ -283,4 +283,4 @@ netlify env:list
 - DNS resolution (up to 48h for propagation, typically 5-30 minutes)
 - SSL certificate provisioning (1-5 minutes for Let's Encrypt, up to 24h for CA-issued)
 
-**Recommendation:** Run immediate checks right after deployment. If DNS or SSL checks fail, suggest re-running verification after a delay: "DNS/SSL checks may need time to propagate. Re-run `/arn-infra-verify` in [estimated time]."
+**Recommendation:** Run immediate checks right after deployment. If DNS or SSL checks fail, suggest re-running verification after a delay: "DNS/SSL checks may need time to propagate. Re-run `arn-infra-verify` in [estimated time]."

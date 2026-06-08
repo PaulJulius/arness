@@ -1,6 +1,6 @@
 # PR Review Report Format
 
-Standard report format for `/arn-code-review-pr` findings.
+Standard report format for `arn-code-review-pr` findings.
 
 ## Format
 

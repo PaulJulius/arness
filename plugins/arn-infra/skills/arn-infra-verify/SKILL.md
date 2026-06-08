@@ -23,12 +23,12 @@ This skill invokes the `arn-infra-verifier` agent to perform the actual health c
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Verification is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Verification is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Environments** -- environment names for target selection
 - **Environments config** -- path to `environments.md` for deployment state
 - **Resource manifest** -- path to `active-resources.json` for expected resource state
@@ -52,7 +52,7 @@ Ask the user which environment to verify (if not specified in the invocation):
 
 Read the environment's deployment state from `environments.md`:
 - **Last deployed:** timestamp of the most recent deployment
-- If `Last deployed` is `--` (never deployed): inform the user: "The [environment] environment has not been deployed yet. Run `/arn-infra-deploy` first." Stop.
+- If `Last deployed` is `--` (never deployed): inform the user: "The [environment] environment has not been deployed yet. Run `arn-infra-deploy` first." Stop.
 
 ---
 
@@ -98,7 +98,7 @@ Glob <specs-dir>/INFRA_*
 If found, read it for the expected resource topology (resource types, counts, configurations).
 
 **If no expected state is available:**
-Warn: "No resource manifest or handoff file found for [environment]. I can still run basic health checks if you provide endpoint URLs. Would you like to provide URLs manually, or run `/arn-infra-deploy` first?"
+Warn: "No resource manifest or handoff file found for [environment]. I can still run basic health checks if you provide endpoint URLs. Would you like to provide URLs manually, or run `arn-infra-deploy` first?"
 
 If the user provides URLs manually, proceed with those as the expected state.
 
@@ -150,7 +150,7 @@ Produce a structured verification report with overall PASS/WARN/FAIL verdict.
 
 Read the verification report from the agent. Parse the overall status: PASS, WARN, or FAIL.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-verify/references/verification-report-template.md` for the expected report format.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-verify/references/verification-report-template.md` for the expected report format.
 
 **On PASS:**
 
@@ -205,8 +205,8 @@ Read the verification report from the agent. Parse the overall status: PASS, WAR
    - Endpoint unreachable: "Check if the service is running. Review deployment logs."
    - DNS not resolving: "Check DNS configuration. Allow up to 48h for propagation."
    - SSL invalid: "Check certificate configuration. Renew if expired."
-   - Resource missing: "Resource may have been deleted outside of IaC. Run `/arn-infra-deploy` to reconcile."
-   - Resource drift: "Resource configuration differs from expected. Run `/arn-infra-define` and re-deploy."
+   - Resource missing: "Resource may have been deleted outside of IaC. Run `arn-infra-deploy` to reconcile."
+   - Resource drift: "Resource configuration differs from expected. Run `arn-infra-define` and re-deploy."
 
    Adapt remediation detail to experience level:
    - **Beginner:** Provide step-by-step remediation commands with explanations.
@@ -228,13 +228,13 @@ Read the verification report from the agent. Parse the overall status: PASS, WAR
 
 7. Offer remediation options:
 
-   Ask (using `AskUserQuestion`):
+   Ask the user:
 
    **"How would you like to handle the verification failures?"**
 
    Options:
-   1. **Rollback** -- Roll back to the previous deployment using `/arn-infra-deploy` rollback procedures
-   2. **Re-deploy** -- Fix the issues and re-deploy with `/arn-infra-deploy`
+   1. **Rollback** -- Roll back to the previous deployment using `arn-infra-deploy` rollback procedures
+   2. **Re-deploy** -- Fix the issues and re-deploy with `arn-infra-deploy`
    3. **Investigate** -- Examine the failures in more detail
    4. **Ignore** -- Accept the current state (not recommended for staging/production)
 
@@ -259,33 +259,33 @@ Present the verification summary:
 **Recommended next steps:**
 
 [If PASS:]
-1. **Promote:** Run `/arn-infra-deploy` targeting the next environment in the pipeline
-2. **Set up monitoring:** Run `/arn-infra-monitor` to configure observability
-3. **Set up CI/CD:** Run `/arn-infra-pipeline` to automate future deployments
+1. **Promote:** Run `arn-infra-deploy` targeting the next environment in the pipeline
+2. **Set up monitoring:** Run `arn-infra-monitor` to configure observability
+3. **Set up CI/CD:** Run `arn-infra-pipeline` to automate future deployments
 
 [If WARN:]
 1. **Address warnings:** Review the warnings and fix non-critical issues
-2. **Re-verify:** Run `/arn-infra-verify` again after addressing warnings
+2. **Re-verify:** Run `arn-infra-verify` again after addressing warnings
 3. **Promote with caution:** The deployment is functional but has minor issues
 
 [If FAIL:]
 1. **Fix failures:** Address the critical failures listed above
 2. **Rollback:** Run rollback procedures if the environment is unusable
-3. **Re-deploy:** Fix and re-deploy with `/arn-infra-deploy`
-4. **Re-verify:** Run `/arn-infra-verify` after fixes
+3. **Re-deploy:** Fix and re-deploy with `arn-infra-deploy`
+4. **Re-verify:** Run `arn-infra-verify` after fixes
 
-Or run `/arn-infra-wizard` for the full guided pipeline."
+Or run `arn-infra-wizard` for the full guided pipeline."
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Environment never deployed:** Inform the user and suggest running `/arn-infra-deploy`. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Environment never deployed:** Inform the user and suggest running `arn-infra-deploy`. Stop.
 - **No resource manifest or handoff file:** Offer manual endpoint entry or suggest deploying first. If the user provides endpoints, run basic HTTP/DNS/SSL checks only (skip resource state comparison).
 - **Verifier agent fails:** Fall back to running basic health checks directly (curl for HTTP, dig for DNS, openssl for SSL). Report partial results with a note: "Full verification could not be completed. Running basic checks only."
 - **Verifier agent returns empty output:** Inform the user and offer to retry. If retry fails, fall back to basic checks.
-- **Provider CLI not available for resource state comparison:** Skip resource state checks. Note in the report: "Resource state comparison skipped -- [CLI] not available. Install via `/arn-infra-discover`."
+- **Provider CLI not available for resource state comparison:** Skip resource state checks. Note in the report: "Resource state comparison skipped -- [CLI] not available. Install via `arn-infra-discover`."
 - **DNS propagation in progress:** If DNS checks fail but the deployment is recent (within the last hour), note: "DNS changes may still be propagating. Re-run verification in 30-60 minutes."
 - **SSL certificate not yet issued:** If SSL checks fail for a new deployment, note: "SSL certificate may still be provisioning. For Let's Encrypt, this typically takes 1-5 minutes. Re-run verification shortly."
 - **Issue tracker unavailable:** Skip label updates. Log verification results in environments.md only.

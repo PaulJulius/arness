@@ -24,7 +24,7 @@ This is an execution skill. It runs in normal conversation (NOT plan mode).
 
 ## Step 0: Ensure Configuration
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
+Read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` and follow its instructions. This guarantees a user profile exists and `## Arness` is configured with Arness Code fields before proceeding.
 
 ## Pipeline Position
 
@@ -45,7 +45,7 @@ Full:   init --> [ feature-spec | bug-spec | SWIFT ] --> plan --> ...
                       (1-3 files)         (4-8 files)         (9+ files)
                           |                   |                   |
                        Plan -->            Plan -->           Redirect to
-                       Execute             TaskCreate -->     /arn-code-feature-spec
+                       Execute             TaskCreate -->     arn-code-feature-spec
                        in session          Execute
                           |                   |
                        Review              Review
@@ -89,7 +89,7 @@ Hold this context for use throughout the workflow.
 
 #### 2a. Pre-check specialist relevance
 
-Before invoking any agents, read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the pre-check logic using the pattern documentation loaded in Step 1 and the user's feature description. This produces two boolean flags:
+Before invoking any agents, read `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/specialist-pre-check.md` and apply the pre-check logic using the pattern documentation loaded in Step 1 and the user's feature description. This produces two boolean flags:
 
 - `ui_involved`: true if ANY of: (1) `ui-patterns.md` exists AND contains a `## Sketch Strategy` section, (2) the feature description contains UI terms (component, page, form, button, layout, dashboard, UI, UX, screen, view, modal, dialog, command, terminal, output, widget, window, panel, console, display, prompt, menu, toolbar, status bar, progress, table, tree -- case-insensitive), (3) `architecture.md` contains a frontend, CLI, TUI, desktop, or mobile framework in its Technology Stack section
 - `security_relevant`: true if BOTH: (1) `security-patterns.md` exists, AND (2) the feature description contains security terms (auth, login, password, token, payment, upload, API key, PII, encrypt, permission, session, cookie, CORS, CSRF, rate limit, secret, credential -- case-insensitive)
@@ -163,7 +163,7 @@ After the architect assessment, check the sketch-preview preference before decid
 
 If the prerequisite conditions are NOT met, skip this step silently (regardless of preference value).
 
-**Preference check (only when prerequisite conditions are met):** Read `pipeline.sketch-preview` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check (only when prerequisite conditions are met):** Read `pipeline.sketch-preview` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.sketch-preview` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.sketch-preview` is present, use that value and note source.
@@ -171,7 +171,7 @@ If the prerequisite conditions are NOT met, skip this step silently (regardless 
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: generating sketch preview ([source])". Auto-proceed to invoke `Skill: arn-code:arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
+- If `always`: Show status line: "Preference: generating sketch preview ([source])". Auto-proceed to invoke Codex skill `arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
 
 - If `never`: Show status line: "Preference: skipping sketch preview ([source])". Skip silently even if interface scope is detected. Continue to Step 2c.
 
@@ -181,7 +181,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"This change includes significant interface work. Want to see a preview first?"**
 
@@ -189,12 +189,12 @@ Options:
 1. **Yes, sketch first** -- Generate a visual preview before implementing
 2. **No, proceed with implementation** -- Continue to implementation
 
-If **Yes, sketch first**: invoke `Skill: arn-code:arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
+If **Yes, sketch first**: invoke Codex skill `arn-code-sketch` with the feature description and architect assessment. After the sketch session, continue to Step 2c.
 If **No, proceed with implementation**: continue to Step 2c.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -257,7 +257,7 @@ This is an internal assessment. Do NOT present it as a formal step.
 
 Evaluate the change against 6 complexity criteria. Each criterion rates as simple, moderate, or complex.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/complexity-criteria.md` for the full criteria definitions, routing conditions, and edge case handling.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/complexity-criteria.md` for the full criteria definitions, routing conditions, and edge case handling.
 
 **Core routing rules:**
 
@@ -282,7 +282,7 @@ Auto-generate a project name from the description (e.g., `SWIFT_rate-limiting-ap
 mkdir -p <plans-dir>/SWIFT_<name>
 ```
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-plan-template.md` for the plan template.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-plan-template.md` for the plan template.
 
 **Sketch annotation (conditional):** If `componentMapping` was loaded in Step 2c, add a "Sketch Source" column to the "Files to Modify" table in the plan. For each file in the deliverables, check if it appears as a `targetFile` in `componentMapping`. If it does, show the sketch source file and promotion mode:
 
@@ -384,7 +384,7 @@ If `CHANGE_RECORD_TEMPLATE.json` is not found, generate a minimal CHANGE_RECORD 
 
 After the report and change record are generated:
 
-**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
@@ -392,7 +392,7 @@ After the report and change record are generated:
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke `Skill: arn-code:arn-code-simplify`. After simplification completes, proceed to review.
+- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke Codex skill `arn-code-simplify`. After simplification completes, proceed to review.
 
 - If `skip`: Show status line: "Preference: skipping simplification ([source])". Auto-proceed directly to review.
 
@@ -402,7 +402,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like to check for simplification opportunities before review?"**
 
@@ -410,12 +410,12 @@ Options:
 1. **Yes** -- Check for simplification opportunities
 2. **Skip** -- Proceed directly to review
 
-If **Yes**: invoke `Skill: arn-code:arn-code-simplify` (auto-detects swift scope from SWIFT_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/SWIFT_<name>/SIMPLIFICATION_REPORT.json`.
+If **Yes**: invoke Codex skill `arn-code-simplify` (auto-detects swift scope from SWIFT_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/SWIFT_<name>/SIMPLIFICATION_REPORT.json`.
 If **Skip**: proceed directly to review.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -428,18 +428,18 @@ If **No**: Write `ask` to `~/.arness/workflow-preferences.yaml` under `pipeline.
 
 #### 5. Lightweight review
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
 
 Perform the review and record findings in the report's `review` section. Present the verdict to the user:
-- **PASS** -- all checks green. Offer `/arn-code-ship`.
-- **PASS WITH WARNINGS** -- minor deviations noted. Present warnings, then offer `/arn-code-ship`.
+- **PASS** -- all checks green. Offer `arn-code-ship`.
+- **PASS WITH WARNINGS** -- minor deviations noted. Present warnings, then offer `arn-code-ship`.
 - **NEEDS FIXES** -- errors found. Present errors, offer to fix before shipping.
 
 #### 6. Ship
 
-Offer: "Run `/arn-code-ship` to commit and create a PR."
+Offer: "Run `arn-code-ship` to commit and create a PR."
 
-Note: Commit messages for swift-tier changes should include the `[swift]` tier tag. The `/arn-code-ship` skill reads `CHANGE_RECORD.json` to detect the tier and prepend the tag automatically.
+Note: Commit messages for swift-tier changes should include the `[swift]` tier tag. The `arn-code-ship` skill reads `CHANGE_RECORD.json` to detect the tier and prepend the tag automatically.
 
 ---
 
@@ -455,7 +455,7 @@ Auto-generate a project name. Create the project folder:
 mkdir -p <plans-dir>/SWIFT_<name>
 ```
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-plan-template.md` for the plan template.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-plan-template.md` for the plan template.
 
 The moderate plan includes numbered implementation tasks and test tasks.
 
@@ -507,7 +507,7 @@ Write to: `<plans-dir>/SWIFT_<name>/CHANGE_RECORD.json`
 
 After the report and change record are generated:
 
-**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/preferences-schema.md`):
+**Preference check:** Read `pipeline.simplification` using the two-tier lookup chain (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/preferences-schema.md`):
 
 1. Read `.arness/workflow.local.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
 2. If not found, read `~/.arness/workflow-preferences.yaml` — if the file exists and `pipeline.simplification` is present, use that value and note source.
@@ -515,7 +515,7 @@ After the report and change record are generated:
 
 Branch on the resolved value:
 
-- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke `Skill: arn-code:arn-code-simplify`. After simplification completes, proceed to review.
+- If `always`: Show status line: "Preference: running simplification pass ([source])". Auto-proceed to invoke Codex skill `arn-code-simplify`. After simplification completes, proceed to review.
 
 - If `skip`: Show status line: "Preference: skipping simplification ([source])". Auto-proceed directly to review.
 
@@ -525,7 +525,7 @@ Branch on the resolved value:
 
 **Gate (shown when value is `ask`, null, or invalid):**
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Would you like to check for simplification opportunities before review?"**
 
@@ -533,12 +533,12 @@ Options:
 1. **Yes** -- Check for simplification opportunities
 2. **Skip** -- Proceed directly to review
 
-If **Yes**: invoke `Skill: arn-code:arn-code-simplify` (auto-detects swift scope from SWIFT_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/SWIFT_<name>/SIMPLIFICATION_REPORT.json`.
+If **Yes**: invoke Codex skill `arn-code-simplify` (auto-detects swift scope from SWIFT_REPORT.json). The SIMPLIFICATION_REPORT.json is written to `<plans-dir>/SWIFT_<name>/SIMPLIFICATION_REPORT.json`.
 If **Skip**: proceed directly to review.
 
 **Follow-up (only when preference was null):** After the user answers the gate, ask:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Should Arness remember this choice for future sessions?"**
 
@@ -551,7 +551,7 @@ If **No**: Write `ask` to `~/.arness/workflow-preferences.yaml` under `pipeline.
 
 #### 6. Lightweight review
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
+> Read `<arn-code-plugin-root>/skills/arn-code-swift/references/swift-review-checklist.md` for the review procedure and verdict logic.
 
 Same review procedure as the simple path. Record findings in the report's `review` section. Present the verdict.
 
@@ -561,15 +561,15 @@ If **NEEDS FIXES**: present the errors, offer to fix them. After fixes, re-run t
 
 After the review completes, refresh stored pattern documentation to capture any new patterns introduced by this moderate-path implementation.
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/pattern-refresh.md` and follow the pattern refresh procedure.
 
 This is automatic and non-blocking. If the refresh fails, proceed to ship without blocking.
 
 #### 7. Ship
 
-Offer: "Run `/arn-code-ship` to commit and create a PR."
+Offer: "Run `arn-code-ship` to commit and create a PR."
 
-Note: Commit messages for swift-tier changes should include the `[swift]` tier tag. The `/arn-code-ship` skill reads `CHANGE_RECORD.json` to detect the tier and prepend the tag automatically.
+Note: Commit messages for swift-tier changes should include the `[swift]` tier tag. The `arn-code-ship` skill reads `CHANGE_RECORD.json` to detect the tier and prepend the tag automatically.
 
 ---
 
@@ -579,7 +579,7 @@ The change is too complex for arn-code-swift. Inform the user:
 
 "This change is more complex than a swift implementation -- [reason from architect assessment]. I recommend the full feature pipeline:
 
-Run `/arn-code-feature-spec` to develop a detailed specification, then `/arn-code-plan` to create a phased implementation plan."
+Run `arn-code-feature-spec` to develop a detailed specification, then `arn-code-plan` to create a phased implementation plan."
 
 Offer to seed the feature-spec conversation with the context gathered so far (the architect's assessment, the user's description, the pattern documentation loaded in Step 1).
 

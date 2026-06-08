@@ -1,0 +1,31 @@
+{
+  "name": "arn-infra",
+  "version": "2.4.0",
+  "description": "Infrastructure and deployment workflows for Codex. Plan, define, deploy, review, and monitor infrastructure changes.",
+  "author": {
+    "name": "Fryderyk Benigni",
+    "url": "https://github.com/fredcallagan"
+  },
+  "repository": "https://github.com/AppsVortex/arness",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Arness Infra",
+    "shortDescription": "Plan and manage infrastructure changes.",
+    "longDescription": "Arness Infra supports infrastructure assessment, containerization, IaC definition, CI/CD pipelines, environments, secrets, deployment, verification, monitoring, and change documentation. It keeps infrastructure artifacts under .arness.",
+    "developerName": "AppsVortex",
+    "category": "Development",
+    "capabilities": [
+      "Infrastructure planning",
+      "Containerization",
+      "IaC generation",
+      "CI/CD setup",
+      "Deployment review"
+    ],
+    "defaultPrompt": [
+      "Assess this project's infrastructure.",
+      "Plan an infrastructure change.",
+      "Review and document infrastructure work."
+    ]
+  }
+}

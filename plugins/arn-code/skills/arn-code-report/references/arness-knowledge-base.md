@@ -14,14 +14,14 @@ Three ceremony tiers (selected by scope router in arn-planning):
 - **Thorough** (full ceremony): Full pipeline above (spec → plan → save → taskify → execute → review → docs → ship)
 
 Alternative paths:
-- `/arn-code-feature-spec-teams` — team debate variant of feature spec
-- `/arn-code-execute-plan-teams` — Agent Teams variant of execution (requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
-- `/arn-code-execute-task` — single task execution (alternative to full plan execution)
-- `/arn-code-standard` — collapsed spec-plan-execute for medium complexity (standard tier)
-- `/arn-code-review-pr` — PR feedback loop (standalone, requires Platform: github or bitbucket)
-- `/arn-code-create-issue` / `/arn-code-pick-issue` — issue management (standalone, requires Issue tracker: github or jira)
-- `/arn-code-catch-up` -- retroactive documentation of out-of-pipeline commits (standalone)
-- `/arn-code-report` — diagnostic reporting (standalone)
+- `arn-code-feature-spec-teams` — team debate variant of feature spec
+- `arn-code-execute-plan-teams` — Agent Teams variant of execution (requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
+- `arn-code-execute-task` — single task execution (alternative to full plan execution)
+- `arn-code-standard` — collapsed spec-plan-execute for medium complexity (standard tier)
+- `arn-code-review-pr` — PR feedback loop (standalone, requires Platform: github or bitbucket)
+- `arn-code-create-issue` / `arn-code-pick-issue` — issue management (standalone, requires Issue tracker: github or jira)
+- `arn-code-catch-up` -- retroactive documentation of out-of-pipeline commits (standalone)
+- `arn-code-report` — diagnostic reporting (standalone)
 
 ## Config Requirements
 
@@ -164,7 +164,7 @@ The thorough tier also produces a CHANGE_RECORD.json in the project root:
 | Templates not found | Template directory missing or empty after init | Check `<template-path>/` exists and contains JSON files |
 | Checksums missing | arn-code-init completed but the checksum generation step was skipped or failed | Check `.checksums.json` exists in template directory |
 | Spec not found by arn-code-plan | Specs directory misconfigured, or spec was saved with wrong name/path | Check `<specs-dir>/` exists and list its contents |
-| Plan preview not found by save-plan | /arn-code-plan was not run, or plan was not approved | Check `<plans-dir>/` for PLAN_PREVIEW_*.md files |
+| Plan preview not found by save-plan | arn-code-plan was not run, or plan was not approved | Check `<plans-dir>/` for PLAN_PREVIEW_*.md files |
 | arn-code-save-plan fails | Plans directory doesn't exist | Check `<plans-dir>/` exists via `ls` |
 | TASKS.md has no parseable tasks | TASKS.md format doesn't match expected `### Task N:` heading pattern | Check TASKS.md exists and has correct format |
 | Task list empty after arn-code-taskify | TASKS.md was empty or had parsing errors during taskify | Check TASKS.md content for task entries |
@@ -176,9 +176,9 @@ The thorough tier also produces a CHANGE_RECORD.json in the project root:
 | Pattern docs incomplete | arn-code-codebase-analyzer or arn-code-pattern-architect returned partial output | Check pattern doc files exist and have content |
 | Bitbucket skills fail | `bkt` not installed or not authenticated | Run `bkt --version` and `bkt auth status` |
 | Jira skills fail | Atlassian MCP server not configured or auth expired | Run `/mcp` to check server status, check `.mcp.json` |
-| Jira project not found | Wrong project key or MCP auth issue | Verify `Jira project` in config, re-run `/arn-planning` to reconfigure |
+| Jira project not found | Wrong project key or MCP auth issue | Verify `Jira project` in config, re-run `arn-planning` to reconfigure |
 | PR creation fails on Bitbucket | `bkt` auth expired or wrong workspace | Check `bkt auth status`, verify remote URL |
-| Old `GitHub: yes` config | Pre-0.9.0 config not migrated | Run any entry-point skill (e.g., `/arn-planning`) — ensure-config auto-migrates legacy fields |
+| Old `GitHub: yes` config | Pre-0.9.0 config not migrated | Run any entry-point skill (e.g., `arn-planning`) — ensure-config auto-migrates legacy fields |
 | STANDARD_* artifacts not detected | arn-code-standard directory uses wrong prefix or naming | Check `<plans-dir>/` for directories matching `STANDARD_*` pattern; verify `STANDARD_<name>.md` exists inside |
 | CHANGE_RECORD.json missing | Tier skill completed but did not generate the unified change envelope | Check the tier output directory (SWIFT_*, STANDARD_*, or project root) for CHANGE_RECORD.json; re-run the tier skill if missing |
 | Standard tier not offered by scope router | Scope router criteria not updated or severity score calculation incorrect | Check `references/scope-router-criteria.md` in arn-planning for the 6-criterion weighted scoring thresholds |
@@ -194,9 +194,9 @@ arn-code-init
 arn-code-feature-spec / arn-code-bug-spec
   outputs: spec file in <specs-dir>/ (e.g., FEATURE_websocket.md, BUGFIX_checkout-500.md)
   intermediate: DRAFT_FEATURE_<name>.md written during exploration (auto-deleted on finalization)
-  consumed by: /arn-code-plan (loads finalized spec as context for plan writing)
+  consumed by: arn-code-plan (loads finalized spec as context for plan writing)
 
-/arn-code-plan (skill, invokes arn-code-feature-planner agent)
+arn-code-plan (skill, invokes arn-code-feature-planner agent)
   outputs: PLAN_PREVIEW_<spec-name>.md written to <plans-dir>/
   consumed by: arn-code-save-plan (reads PLAN_PREVIEW from plans directory)
 
@@ -327,7 +327,7 @@ Maintainers update this section when bumping the plugin version to document what
 - Added limitations documentation to arn-code-feature-spec-teams (no greenfield, no XL, no drafts)
 - Added commit convention detection to arn-code-ship
 - Added trigger message inference to arn-code-create-issue
-- Standardized AskUserQuestion references in arn-code-review-plan
+- Standardized user prompt references in arn-code-review-plan
 - Fixed fragile cross-reference in arn-code-bug-spec (now points to template-versioning.md)
 - Added fallback file naming convention (arness-report-YYYY-MM-DD.md) to arn-code-report
 - Fixed hardcoded template count in arn-code-init ("6 JSON templates" → "all JSON templates")
@@ -348,6 +348,6 @@ Maintainers update this section when bumping the plugin version to document what
 
 ## Version Information
 
-- Plugin version is in `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json` (field: `version`)
+- Plugin version is in `<arn-code-plugin-root>/.codex-plugin/plugin.json` (field: `version`)
 - Template version in user config tracks which plugin version templates were copied from
 - Skill versions are in each SKILL.md frontmatter (field: `version`)

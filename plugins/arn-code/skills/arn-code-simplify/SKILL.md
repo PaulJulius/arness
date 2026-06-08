@@ -22,7 +22,7 @@ This is an execution skill. It runs in normal conversation (NOT plan mode).
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed without it.
 
 ## Pipeline Position
 
@@ -45,7 +45,7 @@ Arness-simplify is an optional step between execution and review. It can be trig
    - Template path
    - Template version and Template updates preference (if present)
 
-2. If the `## Arness` section is missing, inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started — it will set everything up automatically." Do not proceed.
+2. If the `## Arness` section is missing, inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started — it will set everything up automatically." Do not proceed.
 
 3. Load pattern documentation from the code patterns directory:
    - `code-patterns.md` (required)
@@ -54,7 +54,7 @@ Arness-simplify is an optional step between execution and review. It can be trig
    - `ui-patterns.md` (if it exists)
    - `security-patterns.md` (if it exists)
 
-4. If pattern documentation is missing, invoke the `arn-code-codebase-analyzer` agent to generate fresh analysis. If the analyzer is unavailable, suggest running `/arn-implementing` to get started.
+4. If pattern documentation is missing, invoke the `arn-code-codebase-analyzer` agent to generate fresh analysis. If the analyzer is unavailable, suggest running `arn-implementing` to get started.
 
 Hold this context for use throughout the workflow.
 
@@ -62,7 +62,7 @@ Hold this context for use throughout the workflow.
 
 ### Step 2: Resolve Scope
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-simplify/references/scope-detection.md` for the full scope detection algorithm.
+> Read `<arn-code-plugin-root>/skills/arn-code-simplify/references/scope-detection.md` for the full scope detection algorithm.
 
 1. **If invoked with an explicit scope** (e.g., from arn-code-execute-task passing a report path): use the provided scope directly.
 
@@ -76,9 +76,9 @@ Hold this context for use throughout the workflow.
 
 ### Step 3: Dispatch Parallel Reviewers
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-simplify/references/review-prompts.md` for the three reviewer prompt templates and output format.
+> Read `<arn-code-plugin-root>/skills/arn-code-simplify/references/review-prompts.md` for the three reviewer prompt templates and output format.
 
-Dispatch three Agent tool calls **in a single message** so they run in parallel. Each call passes the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-reviewer`) as the `model` parameter (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). The three reviewers share the same synthetic name — apply the multi-agent rule by passing the looked-up value to each call independently.
+Dispatch three Agent tool calls **in a single message** so they run in parallel. Each call passes the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-reviewer`) as the `model` parameter (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). The three reviewers share the same synthetic name — apply the multi-agent rule by passing the looked-up value to each call independently.
 
 1. **Code Reuse Reviewer** -- fill the review-prompts.md template with the file list and pattern documentation. Instruct the agent to focus on duplicated logic, missed utilities, and copy-paste patterns.
 
@@ -138,7 +138,7 @@ If all files fit in a single batch, dispatch once. If batched, dispatch the thre
 - Log: "Auto-all mode: approving [N] findings ([M] deferred)."
 - Proceed directly to Step 6
 
-This mode is used by batch-implement workers that cannot prompt the user. It follows the same logic as the user selecting `"all"` but without requiring AskUserQuestion.
+This mode is used by batch-implement workers that cannot prompt the user. It follows the same logic as the user selecting `"all"` but without requiring user prompt.
 
 **Interactive mode (all other preference values):**
 
@@ -159,7 +159,7 @@ The user may also change individual finding statuses (e.g., "approve SIM-001 but
 
 The orchestrator pre-sorts the approved findings by dependency order (if finding B depends on finding A's changes, A comes first), then dispatches a single anonymous Agent call to perform the apply work. The model is configurable via the agent-models config.
 
-**Dispatch the applier as an anonymous Agent tool call**, passing the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-applier`) as the `model` parameter (see `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). Do NOT add any tool restriction — the applier inherits `Edit`, `Write`, `Bash`, `Read`, `Grep`, `Glob` from the orchestrator's toolbelt by default, and needs all of them.
+**Dispatch the applier as an anonymous Agent tool call**, passing the model from `.arness/agent-models/code.md` (look up `arn-code-simplify-applier`) as the `model` parameter (see `<arn-code-plugin-root>/skills/arn-code-ensure-config/references/step-0-fast-path.md` "Dispatch convention" for fallback behavior). Do NOT add any tool restriction — the applier inherits `Edit`, `Write`, `Bash`, `Read`, `Grep`, `Glob` from the orchestrator's toolbelt by default, and needs all of them.
 
 **Applier prompt contents:**
 
@@ -248,20 +248,20 @@ Based on the scope context, offer the appropriate next step:
 
 | Scope Context | Next Step Offer |
 |---------------|----------------|
-| Pipeline | "Run `/arn-code-review-implementation` to review the full implementation." |
-| Swift | "Run `/arn-code-ship` to commit and create a PR." |
-| Bugfix | "Run `/arn-code-ship` to commit and create a PR." |
+| Pipeline | "Run `arn-code-review-implementation` to review the full implementation." |
+| Swift | "Run `arn-code-ship` to commit and create a PR." |
+| Bugfix | "Run `arn-code-ship` to commit and create a PR." |
 | Task | "Simplification complete for this task. Returning to execution." |
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing** -- inform the user: "Arness is not configured for this project yet. Run `/arn-implementing` to get started."
-- **Pattern docs missing** -- invoke `arn-code-codebase-analyzer` to generate fresh analysis. If unavailable, suggest running `/arn-implementing` to get started.
+- **`## Arness` config missing** -- inform the user: "Arness is not configured for this project yet. Run `arn-implementing` to get started."
+- **Pattern docs missing** -- invoke `arn-code-codebase-analyzer` to generate fresh analysis. If unavailable, suggest running `arn-implementing` to get started.
 - **Reviewer agent fails** -- merge findings from the other two reviewers and note the missing perspective in the report. Add a warning about incomplete coverage for that axis.
 - **All three reviewers fail** -- inform the user that simplification analysis could not be completed. Suggest retrying or proceeding to the next pipeline step.
-- **SIMPLIFICATION_REPORT_TEMPLATE.json missing** -- if the template file does not exist at the configured template path, generate the report with a minimal structure (`reportType`, `projectName`, `scopeContext`, `findings`, `summary`, `warnings`, `nextSteps`) and warn the user: "Report template not found. Generated report with minimal structure. Run `/arn-implementing` to get started."
+- **SIMPLIFICATION_REPORT_TEMPLATE.json missing** -- if the template file does not exist at the configured template path, generate the report with a minimal structure (`reportType`, `projectName`, `scopeContext`, `findings`, `summary`, `warnings`, `nextSteps`) and warn the user: "Report template not found. Generated report with minimal structure. Run `arn-implementing` to get started."
 - **Test self-heal exhaustion** -- after 3 failed attempts for a finding, revert that finding's changes and continue with the next finding. Record the failure details in the report.
 - **No findings** -- if all three reviewers return zero findings, generate a clean report with `summary.totalFindings: 0` and inform the user: "No simplification opportunities found. The implementation looks clean."
 - **Scope detection fails** -- if no artifacts are found during auto-detection, ask the user to provide an explicit scope (project name, artifact path, or file list).

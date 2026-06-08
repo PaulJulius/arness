@@ -121,7 +121,7 @@ Structure your output per generated file:
 - Never hardcode credentials, secrets, or sensitive values in generated configs. Use variable references, environment variables, or secret manager references.
 - For Terraform users, include a comment noting the BSL license change and recommending OpenTofu as a drop-in replacement.
 - When generating for multiple providers, produce separate, independently deployable units per provider.
-- Use `${CLAUDE_PLUGIN_ROOT}` for any path references to plugin files.
+- Use `<arn-infra-plugin-root>` for any path references to plugin files.
 - When the tooling manifest indicates a recommended tool is available but not installed, mention it but do not block progress.
 - Do not write files directly. Return all generated content as structured output for the calling skill to write.
 - Follow the provider's official documentation and best practices for resource configuration.

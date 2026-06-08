@@ -25,7 +25,7 @@ The primary artifacts are:
 
 ## Prerequisites
 
-Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `/arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
+Read the project's `CLAUDE.md` for a `## Arness` section. If no `## Arness` section exists or Arness Spark fields are missing, inform the user: "Arness Spark is not configured for this project yet. Run `arn-brainstorming` to get started — it will set everything up automatically." Do not proceed without it.
 
 Extract:
 - **Plans directory**
@@ -35,7 +35,7 @@ Extract:
 
 Check for `### Visual Testing` subsection:
 1. If found: parse all fields (see Step 1 for details)
-2. If NOT found: "No visual testing configuration found in CLAUDE.md. Run `/arn-spark-visual-strategy` first to set up your visual testing strategy." Exit.
+2. If NOT found: "No visual testing configuration found in CLAUDE.md. Run `arn-spark-visual-strategy` first to set up your visual testing strategy." Exit.
 
 ## Workflow
 
@@ -65,9 +65,9 @@ Read CLAUDE.md `### Visual Testing` section.
 
 Build a layer list with all extracted data. Layer 1 is always the top-level config (implicit, always active). Additional layers come from `#### Layer N:` subsections.
 
-**If no `### Visual Testing` found:** suggest `/arn-spark-visual-strategy` and exit.
+**If no `### Visual Testing` found:** suggest `arn-spark-visual-strategy` and exit.
 
-**If no deferred layers:** "All visual testing layers are active. No deferred layers to promote." Present a summary table of active layers and suggest `/arn-code-review-implementation` for a full multi-layer quality check. Exit.
+**If no deferred layers:** "All visual testing layers are active. No deferred layers to promote." Present a summary table of active layers and suggest `arn-code-review-implementation` for a full multi-layer quality check. Exit.
 
 ### Step 2: Validate Active Layers
 
@@ -91,7 +91,7 @@ If an active layer's pipeline fails: report it as a **WARNING** but continue. Do
 ### Step 3: Check Activation Criteria
 
 Read the readiness checklist:
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-readiness/references/readiness-checklist.md`
+> Read `<arn-spark-plugin-root>/skills/arn-spark-visual-readiness/references/readiness-checklist.md`
 
 For each deferred layer:
 
@@ -111,7 +111,7 @@ For each deferred layer:
 
      Inform the user: "This Layer 2 is currently configured for static screenshot capture. The platform's UI automation framework is available, which means journey-based interaction testing is possible. Journey mode walks through the app like a user — clicking buttons, filling forms, navigating screens — and captures screenshots at each step."
 
-     Ask (using `AskUserQuestion`):
+     Ask the user:
 
      **"Would you like to upgrade to journey interaction mode?"**
 
@@ -140,7 +140,7 @@ For each deferred layer whose activation criteria are met:
 For each qualifying layer:
 
 1. Read the spike checklist:
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/spike-checklist.md`
+   > Read `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/spike-checklist.md`
 
 2. Determine the spike workspace: `[spikes-dir]/visual-readiness-spike-layer-[N]/`
 
@@ -168,7 +168,7 @@ For each qualifying layer:
 
 For each deferred layer that was partially validated, ask before promoting:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Layer [N] ([Name]) validated with caveats: [caveats]. Promote to active?**
 > 1. **Yes** — Promote to active with caveats noted
@@ -188,7 +188,7 @@ For each deferred layer that was validated (Validated or user-approved Partially
    b. Add `**Journey manifest:**` field with path `<baselines-dir>/layer-2/journey-manifest.json`
    c. Add `**Journey runner:**` field with path `scripts/journey-runner.<ext>` (`.ps1` for Windows, `.swift` or `.applescript` for macOS)
    d. Invoke the `arn-spark-visual-test-engineer` agent via the Task tool, passing the model from `.arness/agent-models/spark.md` as the `model` parameter (see `plugins/arn-spark/skills/arn-spark-ensure-config/references/ensure-config.md` "Dispatch convention" for fallback). Context:
-      - Journey schema reference: `${CLAUDE_PLUGIN_ROOT}/skills/arn-spark-visual-strategy/references/journey-schema.md`
+      - Journey schema reference: `<arn-spark-plugin-root>/skills/arn-spark-visual-strategy/references/journey-schema.md`
       - Journey manifest output path: the path from step (b)
       - Target platform: detected from the layer's `**Environment:**` field
       - Accessibility tree hints: any automation IDs discovered during the UIA Availability check
@@ -238,7 +238,7 @@ If Git is configured and newly activated layers produce output directories:
 | [path] | [ephemeral / shared] | [ignore / track] | [yes / no] |
 | ... | ... | ... | ... |
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 > **Proceed with these .gitignore recommendations?**
 > 1. **Yes** — Apply the recommendations
@@ -269,7 +269,7 @@ Present the readiness report:
 **Recommendations:**
 - [Action items based on results, e.g., 'Update Layer 1 baselines for 3 new screens', 'Re-evaluate Layer 2 after Windows CI runner is configured']
 
-Run `/arn-code-review-implementation` to execute a full multi-layer quality check with all active layers."
+Run `arn-code-review-implementation` to execute a full multi-layer quality check with all active layers."
 
 ## Agent Invocation Guide
 
@@ -277,15 +277,15 @@ Run `/arn-code-review-implementation` to execute a full multi-layer quality chec
 |-----------|--------|
 | Validate a deferred layer (Step 4) | Invoke `arn-spark-visual-test-engineer` sequentially (foreground, not background) with layer spec, environment, workspace, spike checklist. Wait for completion before the next layer. |
 | Agent permission denied | Re-run `arn-spark-visual-test-engineer` in foreground. If still denied, execute validation directly in conversation (write POC files and run capture commands yourself). |
-| User asks about initial visual setup | Defer: "Initial visual testing setup is handled by `/arn-spark-visual-strategy`." |
-| User asks about quality gate | Defer: "The multi-layer quality gate runs during `/arn-code-review-implementation`." |
+| User asks about initial visual setup | Defer: "Initial visual testing setup is handled by `arn-spark-visual-strategy`." |
+| User asks about quality gate | Defer: "The multi-layer quality gate runs during `arn-code-review-implementation`." |
 | User asks about specific layer tooling | Discuss and invoke `arn-spark-tech-evaluator` if a deep comparison is needed. |
 | Cross-environment validation deferred | Record the deferral with instructions. Leave layer as deferred with updated evidence. |
 
 ## Error Handling
 
-- **No `### Visual Testing` in CLAUDE.md** -- suggest running `/arn-spark-visual-strategy` first to set up visual testing. Exit without further action.
-- **No deferred layers** -- report all layers active, present a summary table, suggest `/arn-code-review-implementation` for a full multi-layer quality check. Exit.
+- **No `### Visual Testing` in CLAUDE.md** -- suggest running `arn-spark-visual-strategy` first to set up visual testing. Exit without further action.
+- **No deferred layers** -- report all layers active, present a summary table, suggest `arn-code-review-implementation` for a full multi-layer quality check. Exit.
 - **Spike validation fails** -- leave the layer as deferred, record the failure reason and evidence. Suggest manual investigation or alternative approaches.
 - **Agent permission denied** -- re-run `arn-spark-visual-test-engineer` in foreground. If still denied, execute validation directly in conversation (write POC files and run capture commands).
 - **Criteria ambiguous** -- ask the user for explicit confirmation rather than assuming. Present the evidence collected and let the user decide.

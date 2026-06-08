@@ -1,6 +1,6 @@
 # Issue Report Template
 
-Template for GitHub issues created by `/arn-infra-report`. The skill assembles this template with data from the user's description and the arn-infra-doctor agent's diagnostic findings.
+Template for GitHub issues created by `arn-infra-report`. The skill assembles this template with data from the user's description and the arn-infra-doctor agent's diagnostic findings.
 
 ## Template Format
 
@@ -41,7 +41,7 @@ The issue body follows this structure:
 - **Cloud CLI:** <aws/gcloud/az version or not installed>
 
 ---
-*Filed via `/arn-infra-report` — Arness Infra v<version>*
+*Filed via `arn-infra-report` — Arness Infra v<version>*
 ```
 
 ## Issue Title Format

@@ -7,14 +7,14 @@ This procedure covers copying report templates to a project and generating check
 1. Create the directory: `mkdir -p .arness/templates`
 2. Copy **all** JSON templates from the plugin's default template directory to the project:
    ```
-   cp ${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/*.json .arness/templates/
+   cp <arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/*.json .arness/templates/
    ```
    This uses glob-based copying so that new templates added in future plugin versions are automatically included without maintaining a hardcoded list.
 3. Generate checksums via Bash (handle both Linux and macOS):
    ```
    sha256sum .arness/templates/*.json 2>/dev/null || shasum -a 256 .arness/templates/*.json
    ```
-4. Read the plugin version from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`
+4. Read the plugin version from `<arn-code-plugin-root>/.codex-plugin/plugin.json`
 5. Write `.arness/templates/.checksums.json`:
    ```json
    {
@@ -29,7 +29,7 @@ This procedure covers copying report templates to a project and generating check
 
 ## Custom Templates
 
-1. Show defaults from `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-save-plan/report-templates/default/` as starting point
+1. Show defaults from `<arn-code-plugin-root>/skills/arn-code-save-plan/report-templates/default/` as starting point
 2. Ask: "What would you change? Which fields do you need or don't need?"
 3. Iterate until satisfied
 4. Save custom templates to `.arness/templates/` (or user-chosen path)

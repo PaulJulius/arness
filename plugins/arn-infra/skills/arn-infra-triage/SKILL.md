@@ -19,9 +19,9 @@ Infrastructure request issues are typically created by Arness Core when a comple
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is currently in deferred mode. Triage is not available until infrastructure is un-deferred. Run `/arn-infra-assess` to un-defer and produce a full infrastructure assessment." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is currently in deferred mode. Triage is not available until infrastructure is un-deferred. Run `arn-infra-assess` to un-defer and produce a full infrastructure assessment." Stop.
 
 Extract `Infra specs directory` for use in Step 6 save path. If not configured, default to `.arness/infra-specs`.
 
@@ -29,7 +29,7 @@ Extract:
 - **Issue tracker** -- where to read/update issues (github, jira, none)
 - **Project topology** -- how to resolve the application project (monorepo, separate-repo, infra-only)
 - **Application path** -- path to the application project root
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 - **Jira site** and **Jira project** -- if Issue tracker is jira
 
 ## Workflow
@@ -52,7 +52,7 @@ The user provides an issue reference. Accept any of:
 
 Extract structured fields from the issue body. If the issue follows the `infra-request-template.md` format (created by Arness Core), parsing is automatic:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-triage/references/infra-request-template.md` for the expected format.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-triage/references/infra-request-template.md` for the expected format.
 
 **Structured parsing (template format):**
 - **Feature:** Name and issue/PR reference
@@ -98,7 +98,7 @@ implications brief following the template format.
 --- END INSTRUCTIONS ---
 ```
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-triage/references/implications-brief-template.md` for the brief format.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-triage/references/implications-brief-template.md` for the brief format.
 
 Pass the implications brief template to the agent so it produces correctly structured output.
 
@@ -139,7 +139,7 @@ Present the infrastructure implications brief to the user. Adapt detail level ba
 
 ### Step 6: Offer Next Steps
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Infrastructure implications have been analyzed. What would you like to do?"**
 
@@ -154,20 +154,20 @@ If **Save for later**: write the brief to `<infra-specs-dir>/INFRA_<feature-name
 
 If **Act on this now**:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which implementation path?"**
 
 Options:
-1. **Generate IaC directly** -- Feed this brief into `/arn-infra-define` to generate IaC configurations
-2. **Full guided pipeline** -- Feed this brief into `/arn-infra-wizard` for end-to-end infrastructure setup
-3. **Structured change pipeline** -- Feed this brief into `/arn-infra-change-spec` for structured change management with review gates, cost tracking, and audit trails. Recommended for complex or multi-environment changes.
+1. **Generate IaC directly** -- Feed this brief into `arn-infra-define` to generate IaC configurations
+2. **Full guided pipeline** -- Feed this brief into `arn-infra-wizard` for end-to-end infrastructure setup
+3. **Structured change pipeline** -- Feed this brief into `arn-infra-change-spec` for structured change management with review gates, cost tracking, and audit trails. Recommended for complex or multi-environment changes.
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
 - **Issue not found:** If the issue number does not exist or the URL is invalid, inform the user and ask for a valid reference.
 - **Issue has no `arn-infra-request` label:** Warn: "This issue does not have the `arn-infra-request` label. It may not be a standard infrastructure request. Proceed anyway?" If yes, continue. If no, stop.
 - **Request analyzer agent fails:** Report the error. Fall back to presenting the raw issue content and ask the user to manually identify infrastructure needs.

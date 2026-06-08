@@ -19,9 +19,9 @@ This is the final step in the infrastructure change pipeline: change-spec -> cha
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Documentation generation is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Documentation generation is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra docs directory** -- where documentation artifacts are written (default: `.arness/infra-docs`)
@@ -29,7 +29,7 @@ Extract:
 - **Infra specs directory** -- where change specs are stored (default: `.arness/infra-specs`)
 - **Providers** -- cloud providers configured
 - **Environments** -- environment names
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 
 Resolve **Infra docs directory** (default: `.arness/infra-docs`). If the directory does not exist on disk, offer to create it: "The infra docs directory `<path>` does not exist yet. I can create it now. Proceed?"
 
@@ -45,7 +45,7 @@ Filter to projects where `overallStatus === "completed"` or where at least one p
 
 **If one eligible project found:** Auto-select it.
 **If multiple eligible projects found:** Present the list. Ask the user to select.
-**If no eligible project found:** Inform the user: "No completed change projects found. Run `/arn-infra-execute-change` to execute a change plan first."
+**If no eligible project found:** Inform the user: "No completed change projects found. Run `arn-infra-execute-change` to execute a change plan first."
 
 ---
 
@@ -77,7 +77,7 @@ I will generate the following documentation:
 - Environment documentation (per-environment details)
 - Changelog entry (structured change record)"
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Proceed with generating documentation?"**
 
@@ -99,7 +99,7 @@ Before generating documentation artifacts in Steps 2-6, note the user's experien
 
 ### Step 2: Generate Runbook
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-document-change/references/runbook-template.md` for the runbook template.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-document-change/references/runbook-template.md` for the runbook template.
 
 Generate a runbook following the template structure with infrastructure-specific content from the phase reports and plan.
 
@@ -160,7 +160,7 @@ Write to: `<infra-docs-dir>/env-<environment-name>-<project-name>.md` (one per e
 
 ### Step 6: Generate Changelog Entry
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-document-change/references/changelog-template.md` for the changelog template.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-document-change/references/changelog-template.md` for the changelog template.
 
 Generate a structured changelog entry following the template. If an existing changelog file exists at `<infra-docs-dir>/CHANGELOG.md`, prepend the new entry. If no changelog exists, create it with the entry.
 
@@ -198,15 +198,15 @@ Write to: `<infra-docs-dir>/CHANGELOG.md` (prepend if exists, create if not)
 1. Review the generated documentation and fill in team-specific details (escalation contacts, internal URLs)
 2. Share the runbook with the operations team
 3. Add the architecture doc to your project wiki
-4. Consider running `/arn-infra-monitor` if monitoring is not yet configured"
+4. Consider running `arn-infra-monitor` if monitoring is not yet configured"
 
 ---
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **Project not found:** Suggest running `/arn-infra-save-plan` to create a structured project. Stop.
-- **Incomplete change data (no reports):** Warn: "No execution reports found. Documentation will be based on the plan only, not actual execution data. Consider running `/arn-infra-execute-change` first."
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **Project not found:** Suggest running `arn-infra-save-plan` to create a structured project. Stop.
+- **Incomplete change data (no reports):** Warn: "No execution reports found. Documentation will be based on the plan only, not actual execution data. Consider running `arn-infra-execute-change` first."
 - **Infra docs directory creation fails:** Report the error. Suggest checking file permissions and creating the directory manually.
 - **Template loading fails:** Warn about the missing template. Generate documentation using built-in structure (less detailed but functional).
 - **Partial generation (some artifacts fail):** Report which artifacts succeeded and which failed. Continue generating remaining artifacts. Present partial results.

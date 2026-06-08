@@ -35,19 +35,19 @@ Full Infrastructure Pipeline
   change-spec --> change-plan --> save-plan --> execute-change --> review-change --> document-change
 
   Agents:    change-planner (planning), change-reviewer (review)
-  Guided:    /arn-infra-wizard (Full Pipeline mode)
+  Guided:    arn-infra-wizard (Full Pipeline mode)
 ```
 
 ### Full Pipeline Stage-to-Skill Mapping
 
 | Stage | Primary Skill | Notes |
 |-------|--------------|-------|
-| `specced` | `/arn-infra-change-spec` | Creates INFRA_CHANGE_*.md spec in infra-specs directory |
-| `planned` | `/arn-infra-change-plan` | Invokes change-planner agent; writes PLAN_PREVIEW_INFRA_*.md |
-| `saved` | `/arn-infra-save-plan` | Structures plan into project directory with INTRODUCTION.md and PHASE_N_PLAN.md |
-| `executing` | `/arn-infra-execute-change` | Executes plan phases; writes INFRA_CHANGE_REPORT_PHASE_N.json |
-| `reviewed` | `/arn-infra-review-change` | Invokes change-reviewer agent; writes INFRA_REVIEW_REPORT.json |
-| `documented` | `/arn-infra-document-change` | Produces runbooks, changelogs, architecture docs in infra-docs directory |
+| `specced` | `arn-infra-change-spec` | Creates INFRA_CHANGE_*.md spec in infra-specs directory |
+| `planned` | `arn-infra-change-plan` | Invokes change-planner agent; writes PLAN_PREVIEW_INFRA_*.md |
+| `saved` | `arn-infra-save-plan` | Structures plan into project directory with INTRODUCTION.md and PHASE_N_PLAN.md |
+| `executing` | `arn-infra-execute-change` | Executes plan phases; writes INFRA_CHANGE_REPORT_PHASE_N.json |
+| `reviewed` | `arn-infra-review-change` | Invokes change-reviewer agent; writes INFRA_REVIEW_REPORT.json |
+| `documented` | `arn-infra-document-change` | Produces runbooks, changelogs, architecture docs in infra-docs directory |
 
 ### Full Pipeline Annotation Instructions
 
@@ -67,7 +67,7 @@ Full Infrastructure Pipeline
                                               YOU ARE HERE
 
   Agents:    change-planner (planning), change-reviewer (review)
-  Guided:    /arn-infra-wizard (Full Pipeline mode)
+  Guided:    arn-infra-wizard (Full Pipeline mode)
 ```
 
 **Multi-project example:**
@@ -99,20 +99,20 @@ Quick Infrastructure Mode
   init --> discover --> containerize --> define --> deploy --> verify --> monitor
 
   Standalone: arn-infra-triage, arn-infra-assess, arn-infra-secrets, arn-infra-env, arn-infra-migrate, arn-infra-cleanup
-  Guided:     /arn-infra-wizard (Quick mode)
+  Guided:     arn-infra-wizard (Quick mode)
 ```
 
 ### Quick Mode Stage-to-Skill Mapping
 
 | Stage | Primary Skill | Notes |
 |-------|--------------|-------|
-| `initialized` | `/arn-infra-init` | `## Arness` exists but no artifacts |
-| `discovered` | `/arn-infra-discover` | Tooling manifest populated |
-| `containerized` | `/arn-infra-containerize` | Dockerfile, docker-compose.* exist |
-| `defined` | `/arn-infra-define` | IaC files generated |
-| `deployed` | `/arn-infra-deploy` | Resources deployed |
-| `verified` | `/arn-infra-verify` | Health checks passed |
-| `monitored` | `/arn-infra-monitor` | Monitoring configured |
+| `initialized` | `arn-infra-init` | `## Arness` exists but no artifacts |
+| `discovered` | `arn-infra-discover` | Tooling manifest populated |
+| `containerized` | `arn-infra-containerize` | Dockerfile, docker-compose.* exist |
+| `defined` | `arn-infra-define` | IaC files generated |
+| `deployed` | `arn-infra-deploy` | Resources deployed |
+| `verified` | `arn-infra-verify` | Health checks passed |
+| `monitored` | `arn-infra-monitor` | Monitoring configured |
 
 ### Quick Mode Annotation Instructions
 
@@ -131,7 +131,7 @@ Quick Infrastructure Mode
                                      YOU ARE HERE
 
   Standalone: arn-infra-triage, arn-infra-assess, arn-infra-secrets, arn-infra-env, arn-infra-migrate, arn-infra-cleanup
-  Guided:     /arn-infra-wizard (Quick mode)
+  Guided:     arn-infra-wizard (Quick mode)
 ```
 
 ---
@@ -191,15 +191,15 @@ Check stages from **most advanced to least advanced**. The first matching rule d
 
 | Detected Stage | Next Command | Description |
 |----------------|--------------|-------------|
-| `none` | `/arn-infra-init` | Initialize Arness Infra configuration |
-| `initialized` | `/arn-infra-change-spec` | Write an infrastructure change specification |
-| `specced` | `/arn-infra-change-plan` | Generate a phased plan from the change spec |
-| `planned` | `/arn-infra-save-plan` | Structure the plan into a project with phases |
-| `saved` | `/arn-infra-execute-change` | Execute the plan phases |
-| `executing` | `/arn-infra-execute-change` | Continue executing remaining plan phases |
-| `executed` | `/arn-infra-review-change` | Review the completed infrastructure change |
-| `reviewed` | `/arn-infra-document-change` | Document the change (runbooks, changelogs) |
-| `documented` | `/arn-infra-change-spec` | Pipeline complete. Start a new change, or run `/arn-infra-verify` to re-validate. |
+| `none` | `arn-infra-init` | Initialize Arness Infra configuration |
+| `initialized` | `arn-infra-change-spec` | Write an infrastructure change specification |
+| `specced` | `arn-infra-change-plan` | Generate a phased plan from the change spec |
+| `planned` | `arn-infra-save-plan` | Structure the plan into a project with phases |
+| `saved` | `arn-infra-execute-change` | Execute the plan phases |
+| `executing` | `arn-infra-execute-change` | Continue executing remaining plan phases |
+| `executed` | `arn-infra-review-change` | Review the completed infrastructure change |
+| `reviewed` | `arn-infra-document-change` | Document the change (runbooks, changelogs) |
+| `documented` | `arn-infra-change-spec` | Pipeline complete. Start a new change, or run `arn-infra-verify` to re-validate. |
 
 **Note:** The `executing` stage persists as long as execution is in progress (not all phases complete). When all phases are done, detection advances to `executed`, which routes to review.
 
@@ -207,14 +207,14 @@ Check stages from **most advanced to least advanced**. The first matching rule d
 
 | Detected Stage | Next Command | Description |
 |----------------|--------------|-------------|
-| `none` | `/arn-infra-init` | Initialize Arness Infra configuration |
-| `initialized` | `/arn-infra-discover` | Audit installed tools and configure provider access |
-| `discovered` | `/arn-infra-containerize` | Generate Docker configurations |
-| `containerized` | `/arn-infra-define` | Generate IaC in the chosen tool |
-| `defined` | `/arn-infra-deploy` | Deploy to environments |
-| `deployed` | `/arn-infra-verify` | Validate the deployment |
-| `verified` | `/arn-infra-monitor` | Configure monitoring and alerting |
-| `monitored` | `/arn-infra-verify` | Pipeline complete. Re-verify periodically, or start a structured change with `/arn-infra-change-spec`. |
+| `none` | `arn-infra-init` | Initialize Arness Infra configuration |
+| `initialized` | `arn-infra-discover` | Audit installed tools and configure provider access |
+| `discovered` | `arn-infra-containerize` | Generate Docker configurations |
+| `containerized` | `arn-infra-define` | Generate IaC in the chosen tool |
+| `defined` | `arn-infra-deploy` | Deploy to environments |
+| `deployed` | `arn-infra-verify` | Validate the deployment |
+| `verified` | `arn-infra-monitor` | Configure monitoring and alerting |
+| `monitored` | `arn-infra-verify` | Pipeline complete. Re-verify periodically, or start a structured change with `arn-infra-change-spec`. |
 
 ---
 
@@ -227,9 +227,9 @@ When artifacts from both Quick mode and Full Pipeline mode are detected:
 | Any stage | Active (artifacts exist) | Show Full Pipeline diagram with position first, then Quick mode diagram with position. Note: "Both interactive and structured pipeline artifacts detected." |
 | Active | No artifacts | Show Quick mode diagram with position only |
 | No artifacts | Active | Show Full Pipeline diagram with position only |
-| `initialized` | `initialized` | Show both diagrams unmarked. Suggest: "Run `/arn-infra-wizard` to choose Quick mode or Full Pipeline mode." |
+| `initialized` | `initialized` | Show both diagrams unmarked. Suggest: "Run `arn-infra-wizard` to choose Quick mode or Full Pipeline mode." |
 
-**Mode upgrade hint:** When showing Quick mode and the user is at `defined` or later, add: "For complex infrastructure changes, consider switching to the Full Pipeline with `/arn-infra-change-spec` for structured planning and review gates."
+**Mode upgrade hint:** When showing Quick mode and the user is at `defined` or later, add: "For complex infrastructure changes, consider switching to the Full Pipeline with `arn-infra-change-spec` for structured planning and review gates."
 
 ---
 
@@ -241,7 +241,7 @@ Show the diagram(s), the detected stage key, and the next command. Example:
 
 ```
 Quick mode: defined
-Next: /arn-infra-deploy
+Next: arn-infra-deploy
 ```
 
 ### Intermediate
@@ -257,7 +257,7 @@ Quick Infrastructure Mode
                                      YOU ARE HERE
 
 Current stage: Infrastructure code defined (IaC files generated)
-Next step: /arn-infra-deploy -- deploy your infrastructure to the configured environments
+Next step: arn-infra-deploy -- deploy your infrastructure to the configured environments
 ```
 
 ### Beginner
@@ -275,7 +275,7 @@ Quick Infrastructure Mode
 Current stage: Infrastructure code defined
 What's done: You've initialized Arness Infra, discovered your tools, containerized your application, and generated infrastructure-as-code files for your chosen provider.
 Next step: Deploy your infrastructure to your environments.
-Run: /arn-infra-deploy
+Run: arn-infra-deploy
 This will apply your IaC definitions to create cloud resources in your staging environment first, then promote to production after verification.
 ```
 
@@ -286,15 +286,15 @@ This will apply your IaC definitions to create cloud resources in your staging e
 When Step 0 detects other plugin activity, append these hints at the bottom of the status output.
 
 **Code active:**
-"Development pipeline: active — run `/arn-code-help` for details."
+"Development pipeline: active — run `arn-code-help` for details."
 
 **Spark active:**
-"Spark exploration: active — run `/arn-spark-help` for details."
+"Spark exploration: active — run `arn-spark-help` for details."
 
 **Not configured (no ## Arness):**
-After suggesting `/arn-infra-wizard`:
-"Looking for development workflows? Try `/arn-code-help`. Starting a new product? Try `/arn-spark-help`."
+After suggesting `arn-infra-wizard`:
+"Looking for development workflows? Try `arn-code-help`. Starting a new product? Try `arn-spark-help`."
 
 **Own pipeline complete:**
-"Infrastructure pipeline complete. Start a new change with `/arn-infra-change-spec`."
-If Code is configured: "Build more features with `/arn-planning`."
+"Infrastructure pipeline complete. Start a new change with `arn-infra-change-spec`."
+If Code is configured: "Build more features with `arn-planning`."

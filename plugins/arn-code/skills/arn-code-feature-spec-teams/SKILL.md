@@ -19,7 +19,7 @@ Develop a feature idea through structured debate between specialist teammates �
 
 Pipeline position:
 ```
-arn-code-feature-spec-teams (team: propose -> critique -> revise -> resolve) -> /arn-code-plan
+arn-code-feature-spec-teams (team: propose -> critique -> revise -> resolve) -> arn-code-plan
 ```
 
 This is an alternative to `arn-code-feature-spec` (single-agent). Use this when:
@@ -30,7 +30,7 @@ This is an alternative to `arn-code-feature-spec` (single-agent). Use this when:
 
 ## Prerequisites
 
-If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `/arn-planning` to get started — it will set everything up automatically." Do not proceed without it. For standard single-agent feature spec, use `arn-code-feature-spec` instead.
+If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "Arness is not configured for this project yet. Run `arn-planning` to get started — it will set everything up automatically." Do not proceed without it. For standard single-agent feature spec, use `arn-code-feature-spec` instead.
 
 **Limitations compared to `arn-code-feature-spec`:**
 - XL feature decomposition is not supported. Use `arn-code-feature-spec` for features that need to be broken into sub-features.
@@ -55,7 +55,7 @@ Provide setup instructions:
   CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
   ```
 
-Suggest the alternative: "You can use `/arn-code-feature-spec` instead, which uses a single architect agent and doesn't require Agent Teams."
+Suggest the alternative: "You can use `arn-code-feature-spec` instead, which uses a single architect agent and doesn't require Agent Teams."
 
 **If enabled:** proceed to Step 1b.
 
@@ -69,7 +69,7 @@ This step activates only when greenfield artifacts exist. Projects without green
 
 2. If detected, or if conversation context includes feature file content (look for markers: `## Description`, `## Journey Steps`, `## Acceptance Criteria`):
 
-   > Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/greenfield-loading.md` for the full loading sequence.
+   > Read `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/greenfield-loading.md` for the full loading sequence.
 
    Execute the loading sequence to load:
    - Feature file (F-NNN) with description, journey steps, UI behavior, components, acceptance criteria
@@ -154,23 +154,23 @@ Present the proposed team to the user with token estimates:
 - 3-person team: estimate 60k-250k tokens (same range factors, plus three-way coordination overhead)
 - 4-person team: estimate 80k-300k tokens (include cost warning: "This is a large team. Consider whether security can be addressed during review-implementation instead.")
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Based on the feature, I'll create a team of [composition]. A typical arn-code-feature-spec session uses 20k-50k tokens; expect [40k-100k / 60k-250k] tokens for this team debate. Proceed?"**
 
 Options:
 1. **Yes, proceed with team debate** -- Create the team and start the debate
-2. **No, use standard spec instead** -- Fall back to `/arn-code-feature-spec` (lower cost)
+2. **No, use standard spec instead** -- Fall back to `arn-code-feature-spec` (lower cost)
 
-If the user declines, suggest `/arn-code-feature-spec` as the lower-cost alternative.
+If the user declines, suggest `arn-code-feature-spec` as the lower-cost alternative.
 
-If the feature is backend-only AND simple (no ambiguity, single obvious approach), suggest `/arn-code-feature-spec` instead — team debate adds cost without proportional value for straightforward features.
+If the feature is backend-only AND simple (no ambiguity, single obvious approach), suggest `arn-code-feature-spec` instead — team debate adds cost without proportional value for straightforward features.
 
 ---
 
 ### Step 4: Create Debate Team
 
-Read the debate protocol at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec-teams/references/debate-protocol.md`. The general debate rules (round structure, convergence criteria, escalation) are defined there. Do not duplicate them in individual spawn prompts — only include role-specific instructions.
+Read the debate protocol at `<arn-code-plugin-root>/skills/arn-code-feature-spec-teams/references/debate-protocol.md`. The general debate rules (round structure, convergence criteria, escalation) are defined there. Do not duplicate them in individual spawn prompts — only include role-specific instructions.
 
 Create the team based on the composition chosen in Step 3. Spawn prompts for each teammate include:
 
@@ -231,7 +231,7 @@ Create the team based on the composition chosen in Step 3. Spawn prompts for eac
 
 ### Step 5: Facilitate Debate
 
-Facilitate the structured debate following the round-by-round protocol. Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec-teams/references/debate-protocol.md` for the complete debate structure, convergence criteria, and escalation rules.
+Facilitate the structured debate following the round-by-round protocol. Read `<arn-code-plugin-root>/skills/arn-code-feature-spec-teams/references/debate-protocol.md` for the complete debate structure, convergence criteria, and escalation rules.
 
 Present a summary to the user after each round: what was proposed, what was challenged, what was resolved.
 
@@ -247,7 +247,7 @@ After the debate converges, if ALL of these conditions are met:
 
 Then offer a visual preview before synthesizing the final spec:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"The team has converged on a design. Would you like to see a visual preview before I write the final spec?"**
 
@@ -255,12 +255,12 @@ Options:
 1. **Yes, sketch it** -- Generate a sketch showing what the [components/screens/output] would look like
 2. **No, finalize the spec** -- Proceed to writing the specification
 
-If **Yes, sketch it**: Invoke `Skill: arn-code:arn-code-sketch` with the converged feature context (description, architect proposals, UX specialist output, resolved decisions). After the sketch session completes, capture any sketch context (manifest with `componentMapping` and `composition` fields) for inclusion in the spec's Sketch Reference section. Then proceed to Step 6.
+If **Yes, sketch it**: Invoke Codex skill `arn-code-sketch` with the converged feature context (description, architect proposals, UX specialist output, resolved decisions). After the sketch session completes, capture any sketch context (manifest with `componentMapping` and `composition` fields) for inclusion in the spec's Sketch Reference section. Then proceed to Step 6.
 If **No, finalize the spec**: Proceed to Step 6.
 
 If sketch conditions are NOT met (no UI involvement or no Sketch Strategy), skip this step entirely.
 
-**On-demand sketch during debate:** If the user asks to see a preview at any point during the debate rounds ("show me what this looks like", "can I see a preview"), and the conditions above are met, invoke `Skill: arn-code:arn-code-sketch` immediately. After the sketch completes, resume the debate where it left off.
+**On-demand sketch during debate:** If the user asks to see a preview at any point during the debate rounds ("show me what this looks like", "can I see a preview"), and the conditions above are met, invoke Codex skill `arn-code-sketch` immediately. After the sketch completes, resume the debate where it left off.
 
 ---
 
@@ -268,7 +268,7 @@ If sketch conditions are NOT met (no UI involvement or no Sketch Strategy), skip
 
 When debate converges (or user resolves remaining disagreements):
 
-1. Read the feature spec template at `${CLAUDE_PLUGIN_ROOT}/skills/arn-code-feature-spec/references/feature-spec-template.md`
+1. Read the feature spec template at `<arn-code-plugin-root>/skills/arn-code-feature-spec/references/feature-spec-template.md`
 
 2. Populate the template with:
    - **Problem Statement:** Refined feature description incorporating all debate outcomes
@@ -302,7 +302,7 @@ When debate converges (or user resolves remaining disagreements):
 
    "Feature specification saved to `<specs-dir>/FEATURE_<name>.md`.
 
-   To create an implementation plan, run `/arn-code-plan FEATURE_<name>`.
+   To create an implementation plan, run `arn-code-plan FEATURE_<name>`.
 
    The skill will load this spec and your project's codebase patterns, invoke the planner agent to generate a plan, and let you review and refine it before saving."
 
@@ -310,13 +310,13 @@ When debate converges (or user resolves remaining disagreements):
 
 ## Error Handling
 
-- **Agent Teams not enabled** -- provide setup instructions, suggest `/arn-code-feature-spec` as alternative
-- **`## Arness` config missing in CLAUDE.md** -- suggest running `/arn-planning` to get started
-- **Teammate crashes** -- report issue, offer to continue with remaining teammates or fall back to `/arn-code-feature-spec`
+- **Agent Teams not enabled** -- provide setup instructions, suggest `arn-code-feature-spec` as alternative
+- **`## Arness` config missing in CLAUDE.md** -- suggest running `arn-planning` to get started
+- **Teammate crashes** -- report issue, offer to continue with remaining teammates or fall back to `arn-code-feature-spec`
 - **Debate loops (>4 rounds without convergence)** -- escalate to user with both positions, ask for a decision, then synthesize
 - **Same disagreement persists across 2 consecutive rounds** -- escalate to user immediately
 - **Token budget concern** -- if the user expresses concern, offer to skip remaining rounds and synthesize from current state
-- **No frontend AND no UI scope** -- suggest `/arn-code-feature-spec` instead (team debate adds cost without value for simple backend features)
+- **No frontend AND no UI scope** -- suggest `arn-code-feature-spec` instead (team debate adds cost without value for simple backend features)
 - **Pattern documentation missing** -- handled by the first-run messaging (one-time pattern generation)
 - **Greenfield feature file not found** -- warn and fall back to standard flow (ask user to describe the feature). Teammates receive standard context only.
 - **UC documents not found** -- proceed with feature file only, note limitation in debate context sent to teammates

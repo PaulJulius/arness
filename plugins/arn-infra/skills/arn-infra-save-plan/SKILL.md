@@ -22,18 +22,18 @@ arn-infra-init -> arn-infra-change-spec -> arn-infra-change-plan -> **arn-infra-
 
 ## Prerequisites
 
-Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `/arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
+Read `## Arness` from the project's CLAUDE.md. If no `## Arness` section exists or Arness Infra fields are missing, inform the user: "Arness Infra is not configured for this project yet. Run `arn-infra-wizard` to get started — it will set everything up automatically." Do not proceed without it.
 
-Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Plan structuring is not available until infrastructure is fully configured. Run `/arn-infra-assess` to un-defer." Stop.
+Check the **Deferred** field. If `Deferred: yes`, inform the user: "Infrastructure is in deferred mode. Plan structuring is not available until infrastructure is fully configured. Run `arn-infra-assess` to un-defer." Stop.
 
 Extract:
 - **Infra plans directory** -- where structured plan projects live (e.g., `.arness/infra-plans`)
 - **Infra report templates** -- which report template set to use (default: `default`)
 - **Infra template path** -- where to copy report templates for the project (e.g., `.arness/infra-templates`)
 - **Infra template version** -- current template version for checksum tracking
-- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
+- **Experience level** -- derived from user profile. Read `~/.arness/user-profile.yaml` (or `.claude/arness-profile.local.md` if it exists — project override takes precedence). Apply the experience derivation mapping from `<arn-infra-plugin-root>/skills/arn-infra-ensure-config/references/experience-derivation.md`. If no profile exists, check for legacy `Experience level` in `## Arness` as fallback.
 
-If **Infra plans directory** is not configured, stop and instruct the user: "Infra plans directory is not configured. Run `/arn-infra-init` to set up infrastructure pipeline configuration."
+If **Infra plans directory** is not configured, stop and instruct the user: "Infra plans directory is not configured. Run `arn-infra-init` to set up infrastructure pipeline configuration."
 
 ---
 
@@ -57,7 +57,7 @@ Glob PLAN_PREVIEW_INFRA_*.md
 
 **If multiple previews found:** Present the list:
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Which plan would you like to structure?"**
 
@@ -66,7 +66,7 @@ Options:
 2. **[filename2]** -- [first line or title]
 ...
 
-**If still no preview found:** Inform the user: "No PLAN_PREVIEW_INFRA_*.md found. Run `/arn-infra-change-plan` first to generate a plan preview."
+**If still no preview found:** Inform the user: "No PLAN_PREVIEW_INFRA_*.md found. Run `arn-infra-change-plan` first to generate a plan preview."
 
 ---
 
@@ -89,7 +89,7 @@ Present a summary:
 - **Environments:** [list in promotion order]
 - **Blast radius:** [summary]
 
-Ask (using `AskUserQuestion`):
+Ask the user:
 
 **"Proceed with structuring this plan?"**
 
@@ -104,7 +104,7 @@ Options:
 Run the `save_infra_plan.sh` script to create the project directory:
 
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/scripts/save_infra_plan.sh "<project-name>" "<infra-plans-dir>" "<plan-preview-path>"
+bash <arn-infra-plugin-root>/skills/arn-infra-save-plan/scripts/save_infra_plan.sh "<project-name>" "<infra-plans-dir>" "<plan-preview-path>"
 ```
 
 This creates:
@@ -119,7 +119,7 @@ This creates:
 
 ### Step 4: Generate INTRODUCTION.md
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/references/infra-templates.md` for the INTRODUCTION.md template structure.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-save-plan/references/infra-templates.md` for the INTRODUCTION.md template structure.
 
 Generate `INTRODUCTION.md` in the project directory using the template from `infra-templates.md`. Populate all sections from the plan preview content:
 
@@ -139,7 +139,7 @@ Write to: `<infra-plans-dir>/<project-name>/INTRODUCTION.md`
 
 ### Step 5: Generate PHASE_N_PLAN.md Files
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/references/infra-templates.md` for the PHASE_N_PLAN.md template structure.
+> Read `<arn-infra-plugin-root>/skills/arn-infra-save-plan/references/infra-templates.md` for the PHASE_N_PLAN.md template structure.
 
 For each phase in the plan preview, generate a `PHASE_N_PLAN.md` file in the `plans/` directory using the infrastructure-specific template. Each phase plan includes:
 
@@ -181,9 +181,9 @@ Write to: `<infra-plans-dir>/<project-name>/TASKS.md`
 
 Copy the 3 infrastructure report templates from the plugin to the project's **Infra template path**:
 
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/report-templates/default/INFRA_CHANGE_REPORT_TEMPLATE.json`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/report-templates/default/INFRA_REVIEW_REPORT_TEMPLATE.json`
-> Read `${CLAUDE_PLUGIN_ROOT}/skills/arn-infra-save-plan/report-templates/default/INFRA_PROGRESS_REPORT_TEMPLATE.json`
+> Read `<arn-infra-plugin-root>/skills/arn-infra-save-plan/report-templates/default/INFRA_CHANGE_REPORT_TEMPLATE.json`
+> Read `<arn-infra-plugin-root>/skills/arn-infra-save-plan/report-templates/default/INFRA_REVIEW_REPORT_TEMPLATE.json`
+> Read `<arn-infra-plugin-root>/skills/arn-infra-save-plan/report-templates/default/INFRA_PROGRESS_REPORT_TEMPLATE.json`
 
 Write each template to the **Infra template path** directory. Generate SHA-256 checksums for each copied template using `sha256sum` or `shasum -a 256` for future update detection.
 
@@ -244,7 +244,7 @@ Adapt the summary presentation to the user's experience level.
 "**Structured project created:** `<infra-plans-dir>/<project-name>/`
 - INTRODUCTION.md, [N] phase plans, TASKS.md, PROGRESS_TRACKER.json
 - Report templates copied to `<infra-template-path>/`
-- Run `/arn-infra-execute-change` to begin execution."
+- Run `arn-infra-execute-change` to begin execution."
 
 **Intermediate:**
 Present the file tree with brief descriptions of each artifact and suggest the next step.
@@ -253,7 +253,7 @@ Present the file tree with brief descriptions of each artifact and suggest the n
 Present the file tree with explanations of what each file is for and a step-by-step guide for what to do next.
 
 **Next steps:**
-1. **Execute the plan** -- Run `/arn-infra-execute-change` to begin phased execution
+1. **Execute the plan** -- Run `arn-infra-execute-change` to begin phased execution
 2. **Review a phase plan** -- Read any `PHASE_N_PLAN.md` to review before execution
 3. **Edit the plan** -- Modify any phase plan or INTRODUCTION.md before proceeding
 
@@ -261,8 +261,8 @@ Present the file tree with explanations of what each file is for and a step-by-s
 
 ## Error Handling
 
-- **`## Arness` config missing:** Suggest running `/arn-infra-wizard` to get started. Stop.
-- **No PLAN_PREVIEW_INFRA_*.md found:** Suggest running `/arn-infra-change-plan` to generate a plan preview first. Stop.
+- **`## Arness` config missing:** Suggest running `arn-infra-wizard` to get started. Stop.
+- **No PLAN_PREVIEW_INFRA_*.md found:** Suggest running `arn-infra-change-plan` to generate a plan preview first. Stop.
 - **Directory creation fails:** Report the error with the path that failed. Check permissions and disk space.
 - **Script execution fails:** Report the script error. Fall back to creating the directory structure manually using `mkdir -p`.
 - **Template copy fails:** Report which template failed to copy. The project can still function -- templates can be copied manually later.

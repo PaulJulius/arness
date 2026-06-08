@@ -155,7 +155,7 @@ When populating this template:
 
 ## Save-Plan Compatibility Mapping
 
-**Note:** This template is used for the simple fix path's optional small plan (arn-code-bug-spec Step 6A). For complex bugs, a specification document is written instead, and the plan is generated via `/arn-code-plan`.
+**Note:** This template is used for the simple fix path's optional small plan (arn-code-bug-spec Step 6A). For complex bugs, a specification document is written instead, and the plan is generated via `arn-code-plan`.
 
 This mapping is provided for reference in case the user later decides to feed the FIX_PLAN.md into `arn-code-save-plan` for a more structured execution. In the typical simple path, the plan is executed directly. The following mapping shows how sections correspond:
 
