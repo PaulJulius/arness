@@ -51,3 +51,4 @@ porting_temp/
 # Arness project-specific data (plans, specs, patterns, templates)
 .arness/
 .claude_plans/
+.aider*

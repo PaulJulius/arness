@@ -371,7 +371,7 @@ def validate_markdown_links(validator: Validator) -> None:
 
 
 def markdown_files() -> list[Path]:
-    excluded_parts = {".git", ".arness", "node_modules", "dist", "build", "__pycache__"}
+    excluded_parts = {".git", ".arness", "node_modules", "dist", "build", "__pycache__", ".aider.chat.history.md"}
     files = []
     for path in REPO_ROOT.rglob("*.md"):
         if excluded_parts.intersection(path.relative_to(REPO_ROOT).parts):
@@ -395,7 +395,7 @@ def validate_path_hygiene(validator: Validator) -> None:
     user_home_linux = re.compile("/" + "home" + r"/(?!(username|user)\b)[A-Za-z0-9._-]+")
     user_home_windows = re.compile("C:" + r"\\+" + "Users" + r"\\+[A-Za-z0-9._-]+", re.IGNORECASE)
     file_extensions = {".md", ".json", ".yaml", ".yml", ".py", ".sh", ".js"}
-    excluded_parts = {".git", ".arness", "node_modules", "dist", "build", "__pycache__", "assets"}
+    excluded_parts = {".git", ".arness", "node_modules", "dist", "build", "__pycache__", "assets", ".aider.chat.history.md"}
 
     for path in sorted(REPO_ROOT.rglob("*")):
         if not path.is_file() or path.suffix not in file_extensions:
@@ -406,6 +406,65 @@ def validate_path_hygiene(validator: Validator) -> None:
         for pattern in (user_home_unix, user_home_linux, user_home_windows):
             match = pattern.search(text)
             validator.check(match is None, path, f"user-specific absolute path found: {match.group(0) if match else ''}")
+
+
+REQUIRED_COPILOT_PROMPTS = {
+    "arn-brainstorming.prompt.md",
+    "arn-planning.prompt.md",
+    "arn-implementing.prompt.md",
+    "arn-shipping.prompt.md",
+    "arn-reviewing-pr.prompt.md",
+    "arn-assessing.prompt.md",
+    "arn-infra-wizard.prompt.md",
+    "arn-code-taskify.prompt.md",
+    "arn-code-ship.prompt.md",
+}
+
+COPILOT_DOC_PATHS = [
+    REPO_ROOT / "README.md",
+    REPO_ROOT / ".github/copilot-instructions.md",
+    REPO_ROOT / "plugins/arn-code/README.md",
+    REPO_ROOT / "plugins/arn-spark/README.md",
+    REPO_ROOT / "plugins/arn-infra/README.md",
+]
+
+COPILOT_DOC_BAD_PHRASES = [
+    "Copilot marketplace",
+    "plugin manifest",
+    "Copilot plugin manifest",
+]
+
+COPILOT_SLASH_EXAMPLES = [
+    "/arn-brainstorming",
+    "/arn-planning",
+    "/arn-implementing",
+    "/arn-shipping",
+    "/arn-reviewing-pr",
+    "/arn-assessing",
+    "/arn-infra-wizard",
+    "/arn-code-taskify",
+    "/arn-code-ship",
+]
+
+
+def validate_copilot_support(validator: Validator) -> None:
+    instructions = REPO_ROOT / ".github/copilot-instructions.md"
+    validator.check(instructions.is_file(), instructions, "GitHub Copilot instructions file is required")
+
+    prompts_dir = REPO_ROOT / ".github/prompts"
+    validator.check(prompts_dir.is_dir(), prompts_dir, "Copilot prompts directory is required")
+    if prompts_dir.is_dir():
+        filenames = {path.name for path in prompts_dir.glob("*.prompt.md")}
+        missing = sorted(REQUIRED_COPILOT_PROMPTS - filenames)
+        validator.check(not missing, prompts_dir, f"missing Copilot prompt files: {', '.join(missing)}")
+
+    for path in COPILOT_DOC_PATHS:
+        text = validator.read_text(path)
+        for phrase in COPILOT_DOC_BAD_PHRASES:
+            validator.check(phrase not in text, path, f"Copilot docs must not refer to '{phrase}'")
+
+        has_slash_example = any(example in text for example in COPILOT_SLASH_EXAMPLES)
+        validator.check(has_slash_example, path, "Copilot docs should include slash-style /arn-... invocation examples")
 
 
 def validate_ci_configuration(validator: Validator) -> None:
@@ -427,6 +486,7 @@ def main() -> int:
     validate_evals(validator, all_skill_names)
     validate_markdown_links(validator)
     validate_path_hygiene(validator)
+    validate_copilot_support(validator)
     validate_ci_configuration(validator)
     return validator.finish()
 

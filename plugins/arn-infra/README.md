@@ -32,6 +32,17 @@ codex "arn-infra-wizard"
 /plugin install arn-infra@arn-marketplace
 ```
 
+### GitHub Copilot
+
+This fork supports GitHub Copilot Chat with repository prompt templates and instructions.
+Start the infra workflow by using the same Arness skill name in Copilot Chat, for example:
+
+```text
+/arn-infra-wizard
+```
+
+Arness preserves `.arness/` artifacts and writes shared project configuration to `CLAUDE.md`.
+
 ## Documentation
 
 Full guide: [docs/plugins/arn-infra.md](../../docs/plugins/arn-infra.md) · [arness.appsvortex.com](https://arness.appsvortex.com/)

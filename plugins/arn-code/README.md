@@ -26,6 +26,21 @@ After installing, start a new Codex thread in your project so the bundled skills
 /plugin install arn-code@arn-marketplace
 ```
 
+### GitHub Copilot
+
+This fork supports GitHub Copilot Chat with repository prompt templates and instructions.
+Use Copilot to run the same Arness skill names as the host-neutral workflows above, for example `/arn-planning`.
+
+Example prompts include:
+
+```text
+/arn-planning add rate limiting to the API
+/arn-code-taskify break this work into a task list
+/arn-code-ship prepare this change for review
+```
+
+Arness preserves `.arness/` artifacts and writes shared project config to `CLAUDE.md`.
+
 ## Use with Codex
 
 Start Codex from the root of the project you want Arness to work on, then prompt with the skill name and the work you want planned:

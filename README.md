@@ -6,7 +6,7 @@
 
 > Arness — H not required.
 
-**Structured AI workflows for Claude Code and Codex. From first idea to production deploy.**
+**Structured AI workflows for Claude Code, Codex, and Continue. From first idea to production deploy.**
 
 Seven entry commands. That's all you need to remember. Behind them, 135 specialist skills and agents handle the details across three independent plugins — ideation, development, and infrastructure.
 
@@ -55,7 +55,7 @@ Three ceremony tiers — swift, standard, and thorough — match process to scop
 | **Artifact-chain traceability** | Spec feeds plan feeds tasks feeds code feeds review feeds PR. Nothing is orphaned. |
 | **Graduated ceremony** | Swift (1-8 files), Standard (medium scope), Thorough (complex) — process scales to match the work. |
 | **Clean project structure** | Everything lives in `.arness/`. Your source tree stays yours. |
-| **No vendor lock-in** | Works with GitHub, Bitbucket, Jira, Figma, and Canva. Remove Arness and your code is untouched. |
+| **No vendor lock-in** | Works with GitHub, Bitbucket, Jira, Figma, Canva, and Continue. Remove Arness and your code is untouched. |
 
 ## Quick Start
 
@@ -82,6 +82,19 @@ codex plugin add arn-spark@arn-marketplace    # New product from scratch
 codex plugin add arn-code@arn-marketplace     # Development pipeline
 codex plugin add arn-infra@arn-marketplace    # Infrastructure & deployment
 ```
+
+### GitHub Copilot
+
+This fork supports GitHub Copilot Chat with repository prompt templates and repository-level instructions.
+Use the prompt templates in `.github/prompts/` or invoke the same Arness skill names directly in Copilot Chat, for example `/arn-planning`.
+
+Example Copilot prompt:
+
+```text
+/arn-planning add rate limiting to the API
+```
+
+Arness workflows preserve `.arness/` artifacts and the shared `CLAUDE.md` configuration block. Do not invent a new Copilot plugin API.
 
 After installing, start Codex in your project and ask for the Arness skill by name:
 

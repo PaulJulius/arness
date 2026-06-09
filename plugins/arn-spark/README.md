@@ -30,6 +30,17 @@ codex "arn-brainstorming a scheduling app for home service teams"
 /plugin install arn-spark@arn-marketplace
 ```
 
+### GitHub Copilot
+
+This fork supports GitHub Copilot Chat with repository prompt templates and instructions.
+Start the Spark workflow by using the same Arness skill name in Copilot Chat, for example:
+
+```text
+/arn-brainstorming a scheduling app for home service teams
+```
+
+Arness preserves `.arness/` artifacts and writes shared project configuration to `CLAUDE.md`.
+
 ## Documentation
 
 Full guide: [docs/plugins/arn-spark.md](../../docs/plugins/arn-spark.md) · [arness.appsvortex.com](https://arness.appsvortex.com/)
