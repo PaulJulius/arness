@@ -96,6 +96,24 @@ Example Copilot prompt:
 
 Arness workflows preserve `.arness/` artifacts and the shared `CLAUDE.md` configuration block. Do not invent a new Copilot plugin API.
 
+### Install Copilot support into another repo
+
+To copy this repository's GitHub Copilot instruction and prompt files into another project, run the installer script from the Arness repo:
+
+```bash
+./tools/install-copilot-support.sh /path/to/target-repo
+./tools/install-copilot-support.sh --dry-run /path/to/target-repo
+./tools/install-copilot-support.sh --force /path/to/target-repo
+```
+
+This copies `.github/copilot-instructions.md` and all `.github/prompts/*.prompt.md` files into the target repository. After installation, open Copilot Chat in the target repo and use prompt-file invocations such as:
+
+```text
+/arn-planning add rate limiting to the API
+/arn-code-taskify break this feature into executable tasks
+/arn-implementing continue the next task
+```
+
 After installing, start Codex in your project and ask for the Arness skill by name:
 
 ```bash

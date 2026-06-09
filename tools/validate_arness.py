@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+import stat
 import sys
 from pathlib import Path
 from urllib.parse import unquote
@@ -465,6 +466,17 @@ def validate_copilot_support(validator: Validator) -> None:
 
         has_slash_example = any(example in text for example in COPILOT_SLASH_EXAMPLES)
         validator.check(has_slash_example, path, "Copilot docs should include slash-style /arn-... invocation examples")
+
+    script_path = REPO_ROOT / "tools/install-copilot-support.sh"
+    validator.check(script_path.is_file(), script_path, "installer script is required")
+    if script_path.is_file():
+        mode = script_path.stat().st_mode
+        validator.check(mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH), script_path, "installer script must be executable")
+        script_text = validator.read_text(script_path)
+        validator.check(".github/copilot-instructions.md" in script_text, script_path, "installer script must mention .github/copilot-instructions.md")
+        validator.check(".github/prompts" in script_text, script_path, "installer script must mention .github/prompts")
+        for flag in ["--dry-run", "--force", "--help"]:
+            validator.check(flag in script_text, script_path, f"installer script must mention {flag}")
 
 
 def validate_ci_configuration(validator: Validator) -> None:
