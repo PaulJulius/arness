@@ -52,7 +52,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, Write]
-model: opus
+model: sonnet
 color: blue
 ---
 

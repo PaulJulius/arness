@@ -51,7 +51,7 @@ description: >-
   </commentary>
   </example>
 tools: [WebSearch]
-model: opus
+model: sonnet
 color: teal
 ---
 

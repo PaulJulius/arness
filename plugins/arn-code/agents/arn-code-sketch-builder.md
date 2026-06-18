@@ -36,7 +36,7 @@ description: >-
   assistant: (invokes arn-code-sketch-builder to copy files, update paths, and integrate)
   </example>
 tools: [Read, Write, Glob, Grep, Bash, Edit]
-model: opus
+model: sonnet
 color: purple
 ---
 

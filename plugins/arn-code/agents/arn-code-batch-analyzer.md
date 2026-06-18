@@ -51,7 +51,7 @@ description: >-
   This is a background agent with no user interaction — it runs autonomously
   and returns a structured file artifact.
 tools: [Read, Glob, Grep, Write, Bash]
-model: opus
+model: sonnet
 color: green
 ---
 

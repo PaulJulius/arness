@@ -26,7 +26,7 @@ description: >-
   assistant: (drift detector runs, reports that two referenced files were renamed and one architectural claim no longer holds)
   </example>
 tools: [Glob, Grep, Read, Bash]
-model: opus
+model: sonnet
 color: yellow
 ---
 

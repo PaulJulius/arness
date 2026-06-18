@@ -50,7 +50,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, WebSearch]
-model: opus
+model: sonnet
 color: yellow
 ---
 

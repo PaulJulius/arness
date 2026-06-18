@@ -26,7 +26,7 @@ tools:
   - Glob
   - Grep
   - Bash
-model: opus
+model: haiku
 color: red
 ---
 

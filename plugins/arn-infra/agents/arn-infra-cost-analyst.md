@@ -25,7 +25,7 @@ description: >-
   assistant: (invokes arn-infra-cost-analyst with the proposed resource list)
   </example>
 tools: [Read, Glob, Grep, Bash, WebSearch]
-model: opus
+model: sonnet
 color: green
 ---
 

@@ -24,7 +24,7 @@ description: >-
   assistant: (invokes arn-infra-pipeline-builder with environment config and deployment strategy)
   </example>
 tools: [Read, Glob, Grep, Bash, WebSearch]
-model: opus
+model: sonnet
 color: cyan
 ---
 

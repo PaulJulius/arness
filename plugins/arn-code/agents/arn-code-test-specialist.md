@@ -33,7 +33,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, Bash]
-model: opus
+model: haiku
 color: green
 ---
 

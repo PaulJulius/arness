@@ -23,7 +23,7 @@ description: >-
   assistant: (invokes arn-code-planner with investigation output + bugfix template)
   </example>
 tools: [Read]
-model: opus
+model: sonnet
 color: green
 ---
 
