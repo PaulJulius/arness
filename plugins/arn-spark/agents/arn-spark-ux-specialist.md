@@ -37,7 +37,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, LSP, WebSearch, Write]
-model: opus
+model: sonnet
 color: pink
 ---
 

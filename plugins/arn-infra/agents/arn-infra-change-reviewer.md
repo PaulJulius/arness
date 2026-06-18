@@ -25,7 +25,7 @@ description: >-
   assistant: (invokes arn-infra-change-reviewer with existing reports for fresh review)
   </example>
 tools: [Read, Glob, Grep, Bash]
-model: opus
+model: sonnet
 color: green
 ---
 

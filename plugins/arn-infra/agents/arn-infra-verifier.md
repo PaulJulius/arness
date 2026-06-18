@@ -24,7 +24,7 @@ description: >-
   assistant: (invokes arn-infra-verifier with production endpoints and expected state)
   </example>
 tools: [Read, Glob, Grep, Bash, WebSearch]
-model: opus
+model: haiku
 color: magenta
 ---
 

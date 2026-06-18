@@ -65,7 +65,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, Edit, Write, Bash, LSP]
-model: opus
+model: sonnet
 color: green
 ---
 

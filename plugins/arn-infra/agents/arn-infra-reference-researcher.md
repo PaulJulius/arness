@@ -24,7 +24,7 @@ description: >-
   assistant: (invokes arn-infra-reference-researcher with current dockerfile-patterns.md content and container research strategy)
   </example>
 tools: [Read, Glob, Grep, WebSearch, WebFetch]
-model: opus
+model: haiku
 color: cyan
 ---
 

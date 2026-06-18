@@ -31,7 +31,7 @@ description: >-
   assistant: (invokes arn-infra-doctor to check PROGRESS_TRACKER.json, phase reports, rollback artifacts, plan structure)
   </example>
 tools: [Read, Glob, Grep, Bash]
-model: opus
+model: haiku
 color: red
 ---
 

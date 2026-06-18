@@ -50,7 +50,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, WebSearch, WebFetch]
-model: opus
+model: sonnet
 color: purple
 ---
 

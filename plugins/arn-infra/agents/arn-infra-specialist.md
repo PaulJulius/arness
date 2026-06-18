@@ -26,7 +26,7 @@ description: >-
   assistant: (invokes arn-infra-specialist with application context and provider details)
   </example>
 tools: [Read, Glob, Grep, Bash, WebSearch]
-model: opus
+model: sonnet
 color: blue
 ---
 

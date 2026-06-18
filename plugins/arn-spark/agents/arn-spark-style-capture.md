@@ -40,7 +40,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Bash, Write]
-model: opus
+model: haiku
 color: white
 ---
 

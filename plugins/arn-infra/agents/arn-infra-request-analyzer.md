@@ -30,7 +30,7 @@ description: >-
   assistant: (invokes arn-infra-request-analyzer with the full application context for comprehensive analysis)
   </example>
 tools: [Read, Glob, Grep, Bash]
-model: opus
+model: sonnet
 color: yellow
 ---
 

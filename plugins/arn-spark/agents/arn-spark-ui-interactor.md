@@ -41,7 +41,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, Write, Bash]
-model: opus
+model: haiku
 color: red
 ---
 
