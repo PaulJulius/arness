@@ -22,7 +22,7 @@ description: >-
   user: "suggest best practices and project structure for a new Django app"
   </example>
 tools: [Read, Glob, WebSearch]
-model: opus
+model: sonnet
 color: magenta
 ---
 

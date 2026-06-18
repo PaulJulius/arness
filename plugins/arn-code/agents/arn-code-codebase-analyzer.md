@@ -22,7 +22,7 @@ description: >-
   user: "what conventions and patterns does this codebase follow?"
   </example>
 tools: [Glob, Grep, Read]
-model: opus
+model: haiku
 color: cyan
 ---
 

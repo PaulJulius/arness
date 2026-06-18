@@ -37,7 +37,7 @@ description: >-
   directories, templates, checksums, Git/GitHub state, labels, and pattern schema.
   </example>
 tools: [Read, Glob, Grep, Bash]
-model: opus
+model: haiku
 color: red
 ---
 

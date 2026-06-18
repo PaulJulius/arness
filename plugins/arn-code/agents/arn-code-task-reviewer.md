@@ -37,7 +37,7 @@ description: >-
   </commentary>
   </example>
 tools: [Read, Glob, Grep, Write, Bash, SendMessage, TaskUpdate, TaskList, TaskGet]
-model: opus
+model: sonnet
 color: green
 ---
 
