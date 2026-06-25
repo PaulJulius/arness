@@ -6,7 +6,7 @@ description: >-
   from plan", "turn plan into tasks", "arness code taskify", or wants to convert a structured project
   plan's TASKS.md into an executable task list with proper
   dependency management.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Arness Taskify
@@ -17,8 +17,12 @@ This skill does NOT execute tasks or assign them to agents — it only prepares 
 
 ## Host Compatibility
 
-- **Host task APIs available:** use `TaskCreate`, `TaskUpdate`, and `TaskList` as described in Steps 3-5.
-- **Codex or another host without task APIs:** do not call unavailable task APIs. Parse `TASKS.md`, validate dependencies, write a taskify report under `<project-folder>/reports/`, and mirror the parsed task list into the session plan or another host-native progress surface. `arn-code-execute-plan` can then execute from `TASKS.md` and `PROGRESS_TRACKER.json`.
+Task-list availability is a runtime capability, not a property of the host name. Detect it with the read-only `TaskList` probe.
+
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/task-api-detection.md` and follow the probe and terminology.
+
+- **Host task API mode** (probe reports APIs callable): use `TaskCreate`, `TaskUpdate`, and `TaskList` as described in Steps 3-5.
+- **Codex fallback mode** (probe reports APIs absent): do not call unavailable task APIs. Parse `TASKS.md`, validate dependencies, write a taskify report under `<project-folder>/reports/`, and mirror the parsed task list into the session plan or another host-native progress surface. `arn-code-execute-plan` can then execute from `TASKS.md` and `PROGRESS_TRACKER.json`.
 
 ## Workflow
 
@@ -180,5 +184,5 @@ To start execution:
 
 - If `## Arness` config is missing, do not proceed — suggest running `arn-planning` to get started.
 - If TASKS.md is empty or has no parseable task entries, report the issue and suggest checking the file format.
-- If `TaskCreate` fails for a specific task, report which task failed and continue creating the remaining tasks. The dependency setup in Step 4 will skip any task that was not created. If the failure is because the current host does not expose task APIs, switch to Codex fallback mode instead of treating it as a hard error.
+- If `TaskCreate` fails for a specific task, report which task failed and continue creating the remaining tasks. The dependency setup in Step 4 will skip any task that was not created. (Whether the host exposes task APIs at all is determined up front by the `TaskList` probe in Host Compatibility — see `arn-code-execute-plan/references/task-api-detection.md` — not by catching a `TaskCreate` failure; a per-task `TaskCreate` failure here is a task-level error, not a host-capability signal.)
 - If a circular dependency is detected during parsing, report the cycle and ask the user to fix TASKS.md before proceeding.

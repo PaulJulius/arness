@@ -1,6 +1,6 @@
 {
   "name": "arn-code",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "description": "Structured, artifact-driven development pipeline for Codex. Plan, implement, review, and ship features with three ceremony tiers.",
   "author": {
     "name": "Fryderyk Benigni",
