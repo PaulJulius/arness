@@ -63,10 +63,12 @@ If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "A
 
 ### Step 2: Verify Task List and Build Dependency Graph
 
-First determine task orchestration mode:
+First determine task orchestration mode. Task-list availability is a runtime capability, not a property of the host name — detect it with the read-only `TaskList` probe.
 
-- **Host task API mode:** `TaskList`, `TaskUpdate`, and task dispatch tools are available. Follow the task-list flow below.
-- **Codex fallback mode:** host task APIs are unavailable. Parse `<project-folder>/TASKS.md`, validate dependencies directly, use `PROGRESS_TRACKER.json` for persisted status, and mirror task statuses into the session plan. Do not call `TaskList`, `TaskUpdate`, or unavailable task dispatch APIs.
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/task-api-detection.md` and follow the probe and terminology.
+
+- **Host task API mode** (probe reports APIs callable): `TaskList`, `TaskUpdate`, and task dispatch tools are available. Follow the task-list flow below.
+- **Codex fallback mode** (probe reports APIs absent): parse `<project-folder>/TASKS.md`, validate dependencies directly, use `PROGRESS_TRACKER.json` for persisted status, and mirror task statuses into the session plan. Do not call `TaskList`, `TaskUpdate`, or unavailable task dispatch APIs.
 
 **Deferred Task List Setup (host task API mode only):**
 

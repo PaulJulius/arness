@@ -8,10 +8,11 @@ description: >-
   or wants to execute a structured project plan using host Agent Teams support
   (currently Claude Code's experimental Agent Teams feature). Creates a team of executor, reviewer,
   and architect teammates that collaborate on task implementation with
-  built-in quality gates. Requires the experimental Agent Teams feature
-  to be enabled. For standard subagent-based execution, use
-  arn-code-execute-plan instead.
-version: 0.3.0
+  built-in quality gates. Requires both the experimental Agent Teams feature
+  to be enabled AND host task-list APIs (TaskList/TaskCreate/TaskUpdate) to be
+  callable; if either is absent it routes to arn-code-execute-plan. For standard
+  subagent-based execution, use arn-code-execute-plan instead.
+version: 0.4.0
 ---
 
 # Arness Execute Plan Teams
@@ -37,9 +38,11 @@ If no `## Arness` section exists in the project's CLAUDE.md, inform the user: "A
 
 ## Workflow
 
-### Step 1: Check Agent Teams Availability
+### Step 1: Check Agent Teams AND Task-List API Availability
 
-Run via Bash: `echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
+This skill has **two** preconditions. "Agent Teams enabled" is necessary but **not sufficient** — the team's coordination backbone is the shared host task list, so the task-list APIs must also be callable. Verify both gates, in order, **before** loading config or creating the team (Steps 2-3). Detection must complete up front so the skill never spawns teammates it then has to tear down.
+
+**Gate 1 — Agent Teams env var.** Run via Bash: `echo $CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`
 
 **If the variable is not set, is empty, or is set to "0" or "false":**
 Inform the user: "This skill requires host Agent Teams support. In Claude Code, that is the experimental Agent Teams feature."
@@ -54,9 +57,17 @@ Provide setup instructions:
   CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
   ```
 
-Suggest the alternative: "You can use `arn-code-execute-plan` instead, which uses subagents and doesn't require Agent Teams."
+Suggest the alternative: "You can use `arn-code-execute-plan` instead, which uses subagents and doesn't require Agent Teams." Then stop — this gate is user-fixable, so do not auto-route.
 
-**If enabled:** proceed to Step 2.
+**Gate 2 — Task-list APIs callable.** The env var only proves Agent Teams *intent*; it does not prove the task-list APIs are exposed to the lead. On some hosts Agent Teams is on but `TaskList`/`TaskCreate`/`TaskUpdate` are not callable by the lead or teammates, in which case this skill would pass its own precondition and then fail mid-flight at Step 2 or Step 4.
+
+Detect with the read-only `TaskList` probe.
+
+> Read `<arn-code-plugin-root>/skills/arn-code-execute-plan/references/task-api-detection.md` and follow the probe and routing rule.
+
+**If the probe reports the APIs absent:** do not prompt — this is a host limitation the user cannot toggle. Inform the user in one line and auto-route: "Teams mode needs host task-list APIs, which aren't available on this host — running `arn-code-execute-plan` instead (same plan, same review gates)." Then invoke `arn-code-execute-plan` and stop.
+
+**If both gates pass:** proceed to Step 2.
 
 ### Step 2: Load Configuration and Verify Project
 
@@ -204,7 +215,8 @@ This is automatic and non-blocking. If the refresh fails, note it in the summary
 
 ## Error Handling
 
-- **Agent Teams not enabled** -- provide setup instructions, suggest `arn-code-execute-plan` as alternative
+- **Agent Teams not enabled** -- provide setup instructions, suggest `arn-code-execute-plan` as alternative (user-fixable, so do not auto-route)
+- **Task-list APIs absent (Agent Teams on, but `TaskList`/`TaskCreate`/`TaskUpdate` not callable)** -- detected by the Step 1 Gate 2 probe; auto-route to `arn-code-execute-plan` with a one-line notice. This is a host limitation the user cannot toggle, so do not prompt. See `arn-code-execute-plan/references/task-api-detection.md`.
 - **`## Arness` config missing in CLAUDE.md** -- suggest running `arn-implementing` to get started
 - **Project directory missing** -- suggest running `arn-code-save-plan` to create the project structure
 - **No tasks in TaskList** -- suggest running `arn-code-taskify` to convert TASKS.md into host tasks, or use `arn-code-execute-plan` in Codex fallback mode
